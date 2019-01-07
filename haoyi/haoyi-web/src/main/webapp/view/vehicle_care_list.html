@@ -1,0 +1,50 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<title>车辆保养管理</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<link rel="stylesheet" type="text/css" href="/static/js/jquery-easyui-1.6.11/themes/ui-cupertino/easyui.css"></link>
+	<link rel="stylesheet" type="text/css" href='/static/css/main.css'></link>
+	<script type='text/javascript' src='/static/js/jquery-1.7.1.min.js' ></script>
+	<script src="/static/js/jquery-easyui-1.6.11/jquery.easyui.min.js"></script>
+	<script src="/static/js/jquery-easyui-1.6.11/jquery.easyui.extend.min.js"></script>
+	<script type='text/javascript' src='/static/js/common.js' ></script>
+	<script type='text/javascript' src='/static/js/mustache.min.js' ></script>
+	<script type='text/javascript' src='/static/js/project/common.js' ></script>
+	<script type='text/javascript' src='/static/js/project/vehicle_care_list.js' ></script>
+</head>
+<body>
+	<div class='main-view-content'>
+		<div class='main-query-content'>
+			<form>
+				<span class='item'><label>车牌号:</label><input type='text' name='plateNumber' class="easyui-textbox" prompt="车牌号" /></span>
+				<span class='item'><label>司机姓名:</label><input type='text' name='ownerName' class="easyui-textbox" prompt="司机姓名" /></span>
+				<span class='item'><label>联系电话:</label><input type='text' name='contactNumber' class="easyui-textbox" prompt="联系电话" /></span>
+				<span class='item'><label>保养项目:</label><input type='text' id='itemName_query_view' name='itemName' class="easyui-combobox" dataDic = 'vehicle_care_item' prompt="保养项目" /></span>
+				<span class='item'><label>保养日期:</label><input type='text' name='careDateBegin' class="easyui-datetimebox" prompt="保养起始日期" />&nbsp;-&nbsp;<input type='text' name='careDateEnd' class="easyui-datetimebox" prompt="保养结束日期" /></span>
+				<span class='item'><button type='button' class='btn btn-search'>查询</button></span>
+			</form>
+		</div>
+		<div class='dataTable-toolbar'>
+			<span class='item'><button class='btn btn-add'>新增</button></span>
+			<span class='item'><label>合计保养金额:</label><label class='red totalAmt'>0</label><label>元</label></span>
+		</div>
+		<div class='main-dataTable-content'>
+			<table id="dataGrid" class="easyui-datagrid"></table>
+		</div>
+	</div>
+</body>
+</html>
+<script type='text/html' id='dialog_content_template'>
+	<form class='main-form-content dialog-content'>
+		<input name='id' type='hidden' value='{{id}}' />
+		<p class='item'><label for='plateNumber_view'>车牌号:</label><input type='text' name='plateNumber' id='plateNumber_view' class="easyui-combogrid" data-options="required:true" prompt="请输入车牌号" value='{{plateNumber}}' /></p>
+		<p class='item'><label for='ownerName_view'>司机姓名:</label><input type='text' name='ownerName' id='ownerName_view' class="easyui-textbox"  editable='false' data-options="required:true" prompt="请输入司机姓名" value='{{ownerName}}' /></p>
+		<p class='item'><label for='contactNumber_view'>联系电话:</label><input type='text' name='contactNumber' id='contactNumber_view' editable='false' data-options="required:true" class="easyui-textbox" prompt="请输入联系电话" value='{{contactNumber}}' /></p>
+		<p class='item'><label for='careDate_view'>保养日期:</label><input type='text' name='careDate' id='careDate_view' class="easyui-datetimebox" data-options="required:true" prompt="请输入保养日期" value='{{careDate}}' /></p>	
+		<p class='item'><label for='itemName_view'>保养项目:</label><input type='text' name='itemName' id='itemName_view' class="easyui-combobox" prompt="请输入保养项目" dataDic = 'vehicle_care_item' value='{{itemName}}' /></p>
+		<p class='item'><label for='price_view'>保养金额:</label><input type='text' name='price' id='price_view' class="easyui-numberbox" precision="2" prompt="请输入保养金额" value='{{price}}' /></p>
+		<p class='item'><label for='careInterval_view'>保养间距:</label><input type='text' name='careInterval' id='careInterval_view' class="easyui-numberbox" editable='false' prompt="保养间距" value='{{careInterval}}' /></p>
+		<p class='item'><label for='remarks_view'>备注:</label><input type='text' name='remarks' id='remarks_view' class="easyui-textbox" prompt="请输入备注" value='{{remarks}}' /></p>
+	</form>
+</script>
