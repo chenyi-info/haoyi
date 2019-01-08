@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+    <!--开启shiro的注解-->
+    <bean id="advisorAutoProxyCreator" class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator">
+        <property name="proxyTargetClass" value="true"></property>
+    </bean>
+    <bean class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor"/>
+    <!--注入自定义的Realm-->
+    <bean id="authRealm" class="com.hy.otw.service.auth.AuthRealmService">
+	     <property name="credentialsMatcher">
+	        <bean class="org.apache.shiro.authc.credential.HashedCredentialsMatcher">
+	            <!-- 加密算法 -->
+	            <property name="hashAlgorithmName" value="MD5"></property>
+	            <!-- 加密次数 -->
+	            <property name="hashIterations" value="1024"></property>
+	        </bean>
+	    </property>
+    </bean>
+    <!-- 配置权限管理器 --> 
+    <bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
+        <property name="realm" ref="authRealm"></property>
+        <!-- 使用下面配置的缓存管理器 -->  
+        <property name="cacheManager" ref="cacheManager"/>   
+    </bean>
+    
+  
+ 
+    <!--配置ShiroFilter-->
+    <bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
+        <property name="securityManager" ref="securityManager"></property>
+        <!--登入页面-->
+        <property name="loginUrl" value="/view/login.html"></property>
+        <!--登入成功页面-->
+        <property name="successUrl" value="/view/home.html"/>
+        <!-- 非法访问时，跳转的地址 -->
+		<property name="unauthorizedUrl" value="/403" />
+		<!-- 权限配置 -->
+        <property name="filterChainDefinitionMap" ref="chainDefinitionSectionMetaSource"></property>
+        <property name="filters">
+            <map>
+                <!--退出过滤器-->
+                <entry key="logout" value-ref="logoutFilter" />
+            </map>
+        </property>
+        <!--URL的拦截-->
+        <property name="filterChainDefinitions" >
+            <value>
+                /static/** = anon
+                /view/** = anon
+                /auth/login = anon
+                /** = authc
+                /auth/logout = logout
+            </value>
+        </property>
+    </bean>
+    <!--自定义退出LogoutFilter -->
+    <bean id="logoutFilter" class="com.hy.otw.service.auth.SystemLogoutFilterService">
+        <property name="redirectUrl" value="/view/login.html"/>
+    </bean>
+   
+   <bean id="chainDefinitionSectionMetaSource"  class="com.hy.otw.service.auth.ChainDefinitionSectionMetaSource"></bean>
+    
+</beans>

@@ -1,0 +1,49 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<title>车辆日常费用管理</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<link rel="stylesheet" type="text/css" href="/static/js/jquery-easyui-1.6.11/themes/ui-cupertino/easyui.css"></link>
+	<link rel="stylesheet" type="text/css" href='/static/css/main.css'></link>
+	<script type='text/javascript' src='/static/js/jquery-1.7.1.min.js' ></script>
+	<script src="/static/js/jquery-easyui-1.6.11/jquery.easyui.min.js"></script>
+	<script src="/static/js/jquery-easyui-1.6.11/jquery.easyui.extend.min.js"></script>
+	<script type='text/javascript' src='/static/js/common.js' ></script>
+	<script type='text/javascript' src='/static/js/mustache.min.js' ></script>
+	<script type='text/javascript' src='/static/js/project/common.js' ></script>
+	<script type='text/javascript' src='/static/js/project/vehicle_expenditure_list.js' ></script>
+</head>
+<body>
+	<div class='main-view-content'>
+		<div class='main-query-content'>
+			<form>
+				<span class='item'><label>车牌号:</label><input type='text' name='plateNumber' class="easyui-textbox" prompt="车牌号" /></span>
+				<span class='item'><label>司机姓名:</label><input type='text' name='ownerName' class="easyui-textbox" prompt="司机姓名" /></span>
+				<span class='item'><label>联系电话:</label><input type='text' name='contactNumber' class="easyui-textbox" prompt="联系电话" /></span>
+				<span class='item'><label>经手人:</label><input type='text' name='transactorName' class="easyui-textbox" prompt="经手人" /></span>
+				<span class='item'><label>支出日期:</label><input type='text' name='expenditureDateBegin' class="easyui-datetimebox" prompt="支出起始日期" />&nbsp;-&nbsp;<input type='text' name='expenditureDateEnd' class="easyui-datetimebox" prompt="支出结束日期" /></span>
+				<span class='item'><button type='button' class='btn btn-search'>查询</button></span>
+			</form>
+		</div>
+		<div class='dataTable-toolbar'>
+			<span class='item'><button class='btn btn-add'>新增</button></span>
+		</div>
+		<div class='main-dataTable-content'>
+			<table id="dataGrid" class="easyui-datagrid"></table>
+		</div>
+	</div>
+</body>
+</html>
+<script type='text/html' id='dialog_content_template'>
+	<form class='main-form-content dialog-content'>
+		<input name='id' type='hidden' value='{{id}}' />
+		<p class='item'><label for='plateNumber_view'>车牌号:</label><input type='text' name='plateNumber' id='plateNumber_view' class="easyui-combogrid" data-options="required:true" prompt="请输入车牌号" value='{{plateNumber}}' /></p>
+		<p class='item'><label for='ownerName_view'>司机姓名:</label><input type='text' name='ownerName' id='ownerName_view' class="easyui-textbox" data-options="required:true" prompt="请输入司机姓名" value='{{ownerName}}' /></p>
+		<p class='item'><label for='contactNumber_view'>联系电话:</label><input type='text' name='contactNumber' id='contactNumber_view' class="easyui-textbox" prompt="请输入联系电话" value='{{contactNumber}}' /></p>
+		<p class='item'><label for='expenditureDate_view'>支出日期:</label><input type='text' name='expenditureDate' id='expenditureDate_view' class="easyui-datetimebox" prompt="请输入支出日期" value='{{expenditureDate}}' /></p>	
+		<p class='item'><label for='itemName_view'>支出项目:</label><input type='text' name='itemName' id='itemName_view' class="easyui-textbox" prompt="请输入支出项目" value='{{itemName}}' /></p>
+		<p class='item'><label for='price_view'>支出金额:</label><input type='text' name='price' id='price_view' class="easyui-numberbox" precision="2" prompt="请输入支出金额" value='{{price}}' /></p>
+		<p class='item'><label for='transactorName_view'>经手人:</label><input type='text' name='transactorName' id='transactorName_view' class="easyui-textbox" prompt="请输入经手人" value='{{transactorName}}' /></p>
+		<p class='item'><label for='remarks_view'>备注:</label><input type='text' name='remarks' id='remarks_view' class="easyui-textbox" prompt="请输入备注" value='{{remarks}}' /></p>
+	</form>
+</script>
