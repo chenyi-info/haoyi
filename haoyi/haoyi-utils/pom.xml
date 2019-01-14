@@ -125,5 +125,23 @@
 		<version>1.4.0</version>
 	</dependency>
 	
+	<dependency>
+	    <groupId>org.apache.poi</groupId>
+	    <artifactId>poi</artifactId>
+	    <version>3.14</version>
+	</dependency>
+	
+	<dependency>
+	    <groupId>javax.servlet</groupId>
+	    <artifactId>servlet-api</artifactId>
+	    <version>3.0-alpha-1</version>
+	</dependency>
+	
+	<dependency>
+	    <groupId>cn.hutool</groupId>
+	    <artifactId>hutool-all</artifactId>
+	    <version>4.1.0</version>
+	</dependency>
+	
   </dependencies>
 </project>

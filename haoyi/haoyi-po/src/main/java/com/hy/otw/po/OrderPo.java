@@ -79,8 +79,11 @@ public class OrderPo extends BasePo{
 	@Column(name = "seal_number")
 	private String sealNumber;		//封号
 	
-	@Column(name = "order_price")
-	private BigDecimal orderPrice;	//订单金额
+	@Column(name = "customer_price")
+	private BigDecimal customerPrice;	//订单金额(客单价)
+	
+	@Column(name = "driver_price")
+	private BigDecimal driverPrice;	//划价(司机结算价)
 	
 	@Column(name = "other_amt")
 	private BigDecimal otherAmt;	//其它金额(杂费)

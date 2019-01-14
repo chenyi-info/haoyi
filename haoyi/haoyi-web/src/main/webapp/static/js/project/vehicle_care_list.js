@@ -149,7 +149,7 @@
 		$.ajax({
 			url:'/vehicleCare/totalAmt',
 			type:"get",
-			data:$(".main-form-content").serializeObject(),
+			data:$(".main-query-content form").serializeObject(),
 			dataType:'json'
 		}).done(function(data){
 			$('.dataTable-toolbar .totalAmt').html(data);
@@ -158,10 +158,16 @@
 		});
 	} 
 	
+	var downExcel = function(){
+		var criteria = $(".main-query-content form").serializeObject();
+		buildExportFormSubmit("/vehicleCare/loadExcel.do", criteria);
+	}
+	
 	var initializeUI = function(){
 		initDataGrid();
 		initQueryDataDic();
 		$('.dataTable-toolbar').delegate('button.btn-add','click',showAddDialog);
+		$('.dataTable-toolbar').delegate('button.btn-excel','click',downExcel);
 		$('.main-query-content').delegate('button.btn-search','click',initDataGrid);
 		$('.main-dataTable-content').delegate('button.btn-edit','click',showUpdateDialog);
 		$('.main-dataTable-content').delegate('button.btn-del','click',showDeleteDialog);

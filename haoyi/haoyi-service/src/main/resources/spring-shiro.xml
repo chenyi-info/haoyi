@@ -21,8 +21,6 @@
     <!-- 配置权限管理器 --> 
     <bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
         <property name="realm" ref="authRealm"></property>
-        <!-- 使用下面配置的缓存管理器 -->  
-        <property name="cacheManager" ref="cacheManager"/>   
     </bean>
     
   
@@ -35,31 +33,15 @@
         <!--登入成功页面-->
         <property name="successUrl" value="/view/home.html"/>
         <!-- 非法访问时，跳转的地址 -->
-		<property name="unauthorizedUrl" value="/403" />
-		<!-- 权限配置 -->
-        <property name="filterChainDefinitionMap" ref="chainDefinitionSectionMetaSource"></property>
-        <property name="filters">
-            <map>
-                <!--退出过滤器-->
-                <entry key="logout" value-ref="logoutFilter" />
-            </map>
-        </property>
+		<property name="unauthorizedUrl" value="/view/login.html" />
         <!--URL的拦截-->
         <property name="filterChainDefinitions" >
             <value>
+            	/auth/login = anon
                 /static/** = anon
-                /view/** = anon
-                /auth/login = anon
                 /** = authc
-                /auth/logout = logout
             </value>
         </property>
     </bean>
-    <!--自定义退出LogoutFilter -->
-    <bean id="logoutFilter" class="com.hy.otw.service.auth.SystemLogoutFilterService">
-        <property name="redirectUrl" value="/view/login.html"/>
-    </bean>
-   
-   <bean id="chainDefinitionSectionMetaSource"  class="com.hy.otw.service.auth.ChainDefinitionSectionMetaSource"></bean>
     
 </beans>

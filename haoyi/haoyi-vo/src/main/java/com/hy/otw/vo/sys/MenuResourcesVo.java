@@ -25,11 +25,13 @@ public class MenuResourcesVo extends BaseVo{
 	
 	private Integer level;			//菜单级别1:一级，2：二级，3：三级（功能菜单）
 
-	private String funcode;			//菜单编码
+	private String funCode;			//菜单编码
 	
 	private Long parentId;			//父级菜单id
 	
 	private Integer status;			//状态1：正常 0：关闭
+	
+	private Integer sort;			//排序
 	
 	private String remarks;			//备注
 	

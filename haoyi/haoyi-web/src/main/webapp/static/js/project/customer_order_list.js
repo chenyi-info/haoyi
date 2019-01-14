@@ -7,18 +7,19 @@
 	        	 }}, 
 	           	 {field:'companyName',title:'公司名称',width:'10%',align:'center'},  
 	           	 {field:'orderNO',title:'订单编号',width:'10%',align:'center'},
-	           	 {field:'address',title:'订单简址',width:'10%',align:'center'},
-	           	 {field:'cabinetModel',title:'柜型',width:'10%',align:'center'},
-	        	 {field:'cabinetNumber',title:'柜号',width:'5%',align:'center'},
+	           	 {field:'address',title:'订单简址',width:'5%',align:'center'},
+	           	 {field:'cabinetModel',title:'柜型',width:'5%',align:'center'},
+	        	 {field:'cabinetNumber',title:'柜号',width:'10%',align:'center'},
 	        	 {field:'sealNumber',title:'封号',width:'5%',align:'center'},
-	        	 {field:'orderPrice',title:'订单金额',width:'10%',align:'center'},
-	        	 {field:'otherAmt',title:'杂费金额',width:'5%',align:'center'},
+	        	 {field:'customerPrice',title:'订单金额',width:'5%',align:'center'},
+	        	 {field:'settlePrice',title:'实结金额',width:'5%',align:'center'},
+	        	 {field:'otherAmt',title:'应结金额',width:'5%',align:'center'},
 	        	 {field:'settleStatus',title:'结算状态',width:'5%',align:'center', formatter:function(value,row,index){
                  	return value == 1 ? '已结算' : '未结算';
                  }},
-	        	 {field:'remarks',title:'备注',width:'10%',align:'center'},
-	        	 {field:'opt',title:'操作',width:'10%',align:'center', formatter:function(value,row,index){
-                 	return "<button class='btn btn-edit'>修改</button>";
+	        	 {field:'remarks',title:'备注',width:'5%',align:'center'},
+	        	 {field:'opt',title:'操作',width:'20%',align:'center', formatter:function(value,row,index){
+                 	return "<button class='btn btn-add-oa'>添加杂费</button><button class='btn btn-sel-oa'>查看杂费</button><button class='btn btn-edit'>修改</button>";
                  }}
 	            ]];
 	var initDataGrid = function(){
@@ -162,13 +163,149 @@
 		});
 	} 
 	
+
+	var addOtherAmt = function(url, dataModel){
+		var maskObj = new mask();
+		$.ajax({
+			url:url,
+			type:"post",
+			data:dataModel,
+			dataType:'json',
+			beforeSend : function (){
+			    maskObj.showMask();// 显示遮蔽罩
+		    }
+		}).done(function(data){
+			maskObj.hideMask ();// 隐藏遮蔽罩
+			$('#main_dlg').dialog('destroy');
+			$.messager.alert('操作提示','操作成功');
+			$("#dataGrid").datagrid('reload');
+		}).fail(function(data){
+			maskObj.hideMask ();// 隐藏遮蔽罩
+			$.messager.alert('操作提示','操作失败');
+		});
+	} 
+	
+	var showOtherAmtDialog = function(){
+		var row = $('#dataGrid').datagrid('getSelected');
+		var dataModel = {};
+		dataModel.orderId = row.id;
+		dataModel.orderNO = row.orderNO;
+		dataModel.address = row.address;
+		dataModel.cabinetModel = row.cabinetModel;
+		dataModel.cabinetNumber = row.cabinetNumber;
+		dataModel.sealNumber = row.sealNumber;
+		var html = Mustache.render($('#otherAmt_dialog_content_template').html(),dataModel);
+		var diaHtml = "<div id='main_dlg'>"+html+"</div>";
+		$(diaHtml).dialog({    
+	 	    title: '订单杂费管理('+row.orderNO+')',    
+	 	    width: 400,    
+	 	    height: 500,    
+	 	    closed: false,    
+	 	    modal: true,
+	 	    onOpen:function(){
+	 	    	$.parser.parse('#main_dlg');
+	 	    	initDataDic();
+	 	    },
+	 	    onClose:function(){
+	 	    	$('#main_dlg').dialog('destroy');
+	 	   },
+	 	    buttons:[{
+				text:'保存',
+				handler:function(){
+					if($(".main-form-content").form ("validate")){
+						addOtherAmt('/orderOtherAmt/add', $(".main-form-content").serializeObject());
+					}
+				}
+			},{
+				text:'关闭',
+				handler:function(){
+					$('#main_dlg').dialog('destroy');
+				}
+			}]
+	     }); 
+	}
+	
+	
+	var itemColumns = [[
+		   	             {field:'expenditureDate',title:'支出日期',width:'20%',align:'center',formatter:function(value,row,index){
+		   	            	 return getYMDHMS(row.expenditureDate);
+			        	 }}, 
+			        	 {field:'orderNO',title:'订单编号',width:'15%',align:'center'},
+			        	 {field:'cabinetNumber',title:'柜号',width:'15%',align:'center'},
+			        	 {field:'address',title:'订单简址',width:'5%',align:'center'},
+			        	 {field:'itemName',title:'支付项目类型',width:'10%',align:'center'},
+			        	 {field:'price',title:'支付金额',width:'10%',align:'center'},
+			        	 {field:'targetName',title:'支出对象',width:'10%',align:'center'},
+			        	 {field:'propertyType',title:'归属类型',width:'5%',align:'center', formatter:function(value,row,index){
+			        		 return value == 1 ? '司机' : value == 2 ? '客户' : '自己';
+		                 }},
+		                 {field:'isSettle',title:'结算状态',width:'5%',align:'center', formatter:function(value,row,index){
+		                  	return value == 0 ? '已结算' :'未结算';
+		                 }},
+			        	 {field:'remarks',title:'备注',width:'5%',align:'center'}
+			            ]];
+		var initDialogDataGrid = function(dataModel){
+			$("#dialogDataGrid").datagrid({
+				url : '/orderOtherAmt/list',
+				queryParams : dataModel,
+				singleSelect: true, //是否单选
+				striped:true,//各行变色
+				pagination: true, //分页控件
+				pageNumber: 1,
+				pageSize: 50,
+				pageList: [50, 100, 150],
+				autoRowHeight: true,
+				fit: true,
+				fitColumns: true, //设置是否滚动条
+				nowrap: false,
+				remotesort: true,
+				checkOnSelect: false,
+				selectOnCheck: false,
+				method: "GET", //请求数据的方法
+				loadMsg: '数据加载中,请稍候......',
+				idField: 'id',
+				pagePosition: "bottom",
+				view:dataTableView,
+				emptyMsg:'未查询到内容',
+	            columns:itemColumns
+	        });
+		}
+		
+	var showOtherAmtItemDialog = function(){
+		var row = $('#dataGrid').datagrid('getSelected');
+		var diaHtml = "<div id='main_dlg' class='main-dialog-view-content'><table id='dialogDataGrid' class='easyui-datagrid'></table></div>";
+		$(diaHtml).dialog({    
+	 	    title: '杂费项('+row.orderNO+')',    
+	 	    width: 850,    
+	 	    height: 500,    
+	 	    closed: false,   
+	 	    resizable:true,
+	 	    modal: true,
+	 	    onOpen:function(){
+	 	    	$.parser.parse('#main_dlg');
+	 	    	initDialogDataGrid({'orderId':row.orderId,'propertyType':2});
+	 	    },
+	 	    onClose:function(){
+	 	    	$('#main_dlg').dialog('destroy');
+	 	   }
+	     }); 
+	}
+	
+	var downExcel = function(){
+		var criteria = $(".main-query-content form").serializeObject();
+		buildExportFormSubmit("/customerOrder/loadExcel.do", criteria);
+	}
+	
 	var initializeUI = function(){
 		initSettleStatus();
 		initDataGrid();
 		$('.dataTable-toolbar').delegate('button.btn-add','click',showAddDialog);
+		$('.dataTable-toolbar').delegate('button.btn-excel','click',downExcel);
 		$('.main-query-content').delegate('button.btn-search','click',initDataGrid);
 		$('.main-dataTable-content').delegate('button.btn-edit','click',showUpdateDialog);
 		$('.main-dataTable-content').delegate('button.btn-del','click',showDeleteDialog);
+		$('.main-dataTable-content').delegate('button.btn-add-oa','click',showOtherAmtDialog);
+		$('.main-dataTable-content').delegate('button.btn-sel-oa','click',showOtherAmtItemDialog);
 	}
 	initializeUI();
 	

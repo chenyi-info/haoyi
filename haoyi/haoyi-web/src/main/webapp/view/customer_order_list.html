@@ -27,6 +27,7 @@
 			</form>
 		</div>
 		<div class='dataTable-toolbar'>
+			<span class='item'><button class='btn btn-excel'>导出Excel</button></span>
 			<span class='item'><label>合计总金额:</label><label class='red totalAmt'>0</label><label>元</label></span>
 		</div>
 		<div class='main-dataTable-content'>
@@ -47,9 +48,28 @@
 		<p class='item'><label for='cabinetModel_view'>柜型:</label><input type='text' name='cabinetModel' id='cabinetModel_view' class="easyui-textbox" editable='false' prompt="请在订单管理补充柜型" value='{{cabinetModel}}' /></p>
 		<p class='item'><label for='cabinetNumber_view'>柜号:</label><input type='text' name='cabinetNumber' id='cabinetNumber_view' class="easyui-textbox" editable='false' prompt="请在订单管理补充柜号" value='{{cabinetNumber}}' /></p>
 		<p class='item'><label for='sealNumber_view'>封号:</label><input type='text' name='sealNumber' id='sealNumber_view' class="easyui-textbox" editable='false' prompt="请在订单管理补充封号" value='{{sealNumber}}' /></p>
-		<p class='item'><label for='settlePrice_view'>结算金额:</label><input type='text' name='settlePrice' id='settlePrice_view' class="easyui-numberbox" precision="2" prompt="请输入结算金额" value='{{settlePrice}}' /></p>
-		<p class='item'><label for='otherAmt_view'>其它金额:</label><label>{{#otherAmt}}{{otherAmt}}{{/otherAmt}}{{^otherAmt}}0.00{{/otherAmt}}</label></p>
+		<p class='item'><label for='customerPrice_view'>订单金额:</label><label>{{customerPrice}}</label></p>
+		<p class='item'><label for='settlePrice_view'>实结金额:</label><label>{{#settlePrice}}{{settlePrice}}{{/settlePrice}}{{^settlePrice}}0.00{{/settlePrice}}</label></p>
+		<p class='item'><label for='otherAmt_view'>应结金额:</label><label>{{#otherAmt}}{{otherAmt}}{{/otherAmt}}{{^otherAmt}}0.00{{/otherAmt}}</label></p>
 		<p class='item'><label for='settleStatus_true_view'>结算状态:</label><input type='radio' name='settleStatus' id='settleStatus_true_view' class="valign_m radio"  value='1' /><label for='settleStatus_true_view' class='radio'>是</label><input type='radio' name='settleStatus' id='settleStatus_false_view' class="valign_m radio" checked="checked"   value='0' /><label for='settleStatus_false_view' class='radio'>否</label></p>
+		<p class='item'><label for='remarks_view'>备注:</label><input type='text' name='remarks' id='remarks_view' class="easyui-textbox" prompt="请输入备注" value='{{remarks}}' /></p>
+	</form>
+</script>
+
+<script type='text/html' id='otherAmt_dialog_content_template'>
+	<form class='main-form-content dialog-content'>
+		<input name='id' type='hidden' value='{{id}}' />
+		<input name='propertyType' type='hidden' value='2' />
+		<input name='orderId' id='orderId_form' type='hidden' value='{{orderId}}' />
+		<p class='item'><label for='orderNO_view'>订单编号:</label><input type='text' name='orderNO' id='orderNO_view' class="easyui-textbox" editable='false' prompt="请输入订单编号" value='{{orderNO}}' /></p>
+		<p class='item'><label for='cabinetModel_view'>柜型:</label><input type='text' name='cabinetModel' id='cabinetModel_view' class="easyui-textbox" editable='false' prompt="请完善订单柜型" value='{{cabinetModel}}' /></p>
+		<p class='item'><label for='cabinetNumber_view'>订单柜号:</label><input type='text' name='cabinetNumber' id='cabinetNumber_view' class="easyui-textbox" editable='false' prompt="请完善订单柜号" value='{{cabinetNumber}}' /></p>
+		<p class='item'><label for='sealNumber_view'>订单封号:</label><input type='text' name='sealNumber' id='sealNumber_view' class="easyui-textbox" editable='false' prompt="请完善订单封号" value='{{sealNumber}}' /></p>
+		<p class='item'><label for='address_view'>订单简址:</label><input type='text' name='address' id='address_view' class="easyui-textbox" editable='false' prompt="请完善订单简址" value='{{address}}' /></p>
+		<p class='item'><label for='expenditureDate_view'>支出日期:</label><input type='text' name='expenditureDate' id='expenditureDate_view' class="easyui-datetimebox" prompt="请输入支出日期" value='{{expenditureDate}}' /></p>	
+		<p class='item'><label for='itemName_view'>支付项目类型:</label><input type='text' name='itemName' id='itemName_view' class="easyui-combobox" dataDic = 'other_amt_item' prompt="请输入支付项目类型" value='{{itemName}}' /></p>
+		<p class='item'><label for='price_view'>金额:</label><input type='text' name='price' id='price_view' class="easyui-numberbox" precision="2" prompt="请输入支出金额" value='{{price}}' /></p>
+		<p class='item'><label for='isSettle_true_view'>结算状态:</label><input type='radio' name='isSettle' id='isSettle_true_view' class="valign_m radio" value='0' /><label for='isSettle_true_view' class='radio'>已结算</label><input type='radio' name='isSettle' id='isSettle_false_view' class="valign_m radio" checked="checked"  value='1' /><label for='isSettle_false_view' class='radio'>未结算</label></p>
 		<p class='item'><label for='remarks_view'>备注:</label><input type='text' name='remarks' id='remarks_view' class="easyui-textbox" prompt="请输入备注" value='{{remarks}}' /></p>
 	</form>
 </script>

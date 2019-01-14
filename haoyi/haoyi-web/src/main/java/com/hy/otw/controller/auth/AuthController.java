@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.hy.otw.vo.UserInfoVo;
 import com.hy.otw.vo.http.ResponseMsgVo;
 
 /**
@@ -47,6 +48,14 @@ public class AuthController{
     @RequestMapping(value = "/logout", method = RequestMethod.GET)
     public void logout(HttpServletRequest request,HttpServletResponse response) throws Exception {
     	SecurityUtils.getSubject().logout();
+    }
+    
+    @RequestMapping(value = "/userInfo", method = RequestMethod.POST)
+    public UserInfoVo userInfo(HttpServletRequest request,HttpServletResponse response) throws Exception {
+    	UserInfoVo userInfo =  (UserInfoVo) SecurityUtils.getSubject().getPrincipal();
+    	userInfo.setPassword(null);
+    	userInfo.setSalt(null);
+    	return userInfo;
     }
     
 }

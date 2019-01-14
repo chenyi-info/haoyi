@@ -2,17 +2,17 @@ var gVersion="1.0.0";
 $(function() {
   init();
   menuInit();//菜单数据初始化
-  menuAnimate();//菜单动画
-  tabOpenEven();//打开菜单事件
-  tabCloseEven();//关闭菜单事件
 });
 
 function init() {
-	$("#userName").text(userInfo.loginName);
-	if(userInfo.loginCount<=1){
-		showUpdatePwd();
-		return;
-	}
+	$.ajax({
+		url:'/auth/userInfo.do',
+		type:"post"
+	}).done(function(data){
+		$("#userName").text(data.userName);
+	}).fail(function(data){
+		$.messager.alert('操作提示','获取登录信息失败');
+	});
 }
 
 function tabOpenEven(){
@@ -25,132 +25,28 @@ function tabOpenEven(){
       if(href){
         addTab(title, href);
       }
-		});
+  });
 }
 
 function menuInit() {
-  var mainURL = 'http://chenyi.tsh365.cn';
-  $("#menu").html('<div class="loading"><p class="bg-warning " style="padding:10px;color:#fff ;text-align:center">菜单加载中...</p></div>');
-  var menuData = [{
-					  "id": 1,
-					  "menuName": "我的业务",
-					  "menuPath": "/",
-					  "menulink": "/",
-					  "level": 1,
-					  "parentId": -1,
-					  "funCode": "hy_mgt",
-					  "isDisplay": 0
-				  },
-				  {
-					  "id": 2,
-					  "menuName": "车辆管理",
-					  "menuPath": mainURL+"/view/vehicle_list.html",
-					  "menulink": "/view/vehicle_list.html",
-					  "level": 2,
-					  "parentId": 1,
-					  "funCode": "vehicle_list",
-					  "isDisplay": 0
-				  },
-				  {
-					  "id": 9,
-					  "menuName": "客户管理",
-					  "menuPath": mainURL+"/view/customer_list.html",
-					  "menulink": "/view/customer_list.html",
-					  "level": 2,
-					  "parentId": 1,
-					  "funCode": "customer_list",
-					  "isDisplay": 0
-				  },
-				  {
-					  "id": 4,
-					  "menuName": "车辆保养管理",
-					  "menuPath": mainURL+"/view/vehicle_care_list.html",
-					  "menulink": "/view/vehicle_care_list.html",
-					  "level": 2,
-					  "parentId": 1,
-					  "funCode": "vehicle_care_list",
-					  "isDisplay": 0
-				  },
-				  {
-					  "id": 10,
-					  "menuName": "订单管理",
-					  "menuPath": mainURL+"/view/order_list.html",
-					  "menulink": "/view/order_list.html",
-					  "level": 2,
-					  "parentId": 1,
-					  "funCode": "order_list",
-					  "isDisplay": 0
-				  },
-				  {
-					  "id": 7,
-					  "menuName": "客户账单管理",
-					  "menuPath": mainURL+"/view/customer_order_list.html",
-					  "menulink": "/view/customer_order_list.html",
-					  "level": 2,
-					  "parentId": 1,
-					  "funCode": "customer_order_list",
-					  "isDisplay": 0
-				  },
-				  {
-					  "id": 5,
-					  "menuName": "车辆结算管理",
-					  "menuPath": mainURL+"/view/driver_order_list.html",
-					  "menulink": "/view/driver_order_list.html",
-					  "level": 2,
-					  "parentId": 1,
-					  "funCode": "driver_order_list",
-					  "isDisplay": 0
-				  },
-				  {
-					  "id": 8,
-					  "menuName": "订单杂费管理",
-					  "menuPath": mainURL+"/view/order_other_amt_list.html",
-					  "menulink": "/view/order_other_amt_list.html",
-					  "level": 2,
-					  "parentId": 1,
-					  "funCode": "order_other_amt_list",
-					  "isDisplay": 0
-				  },
-				  {
-					  "id": 100,
-					  "menuName": "系统信息",
-					  "menuPath": "/",
-					  "menulink": "/",
-					  "level": 1,
-					  "parentId": -1,
-					  "funCode": "hy_dic",
-					  "isDisplay": 0
-				  },
-				  {
-					  "id": 101,
-					  "menuName": "数据字典管理",
-					  "menuPath": mainURL+"/view/dictionary_list.html",
-					  "menulink": "/view/dictionary_list.html",
-					  "level": 2,
-					  "parentId": 100,
-					  "funCode": "dictionary_list",
-					  "isDisplay": 0
-				  },
-				  {
-					  "id": 102,
-					  "menuName": "用户管理",
-					  "menuPath": mainURL+"/view/user_list.html",
-					  "menulink": "/view/user_list.html",
-					  "level": 2,
-					  "parentId": 100,
-					  "funCode": "user_list",
-					  "isDisplay": 0
-				  }];
-  	menuRender(menuData);
+	 var mainURL = 'http://chenyi.tsh365.cn';
+	  $("#menu").html('<div class="loading"><p class="bg-warning " style="padding:10px;color:#fff ;text-align:center">菜单加载中...</p></div>');
+	$.ajax({
+		url:'/userResources/findUserAuthority.do',
+		type:"post"
+	}).done(function(data){
+		menuRender(data);
+	}).fail(function(data){
+		$.messager.alert('操作提示','获取菜单权限失败');
+	});
 }
 
 function menuRender(data) {
-  $("#menu").html('');
   var content = '';
   var m=1;
   content += '<div class="sysMenu"><ul>';
 	  $.each(data,function(i,v){
-		  if(v.level && v.level == 1 && (v.isDisplay==0||v.isDisplay==''||v.isDisplay==null)){
+		  if(v.level && v.level == 1){
 		    var icon='<i class="i-menu i-menu-'+m+'"></i>';
 		    m++;
 		    content += '<li><div class="link">'+icon+v.menuName+'<i class="i-arrow-down"></i></div>';
@@ -167,6 +63,9 @@ function menuRender(data) {
 	  });
 	  content+= '</ul></div>';
 	  $("#menu").html(content);
+	  menuAnimate();//菜单动画
+	  tabOpenEven();//打开菜单事件
+	  tabCloseEven();//关闭菜单事件
 }
 
 

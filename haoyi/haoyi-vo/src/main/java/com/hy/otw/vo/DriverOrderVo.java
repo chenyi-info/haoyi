@@ -39,6 +39,8 @@ public class DriverOrderVo extends BaseVo{
 	
 	private String address;			//订单地址
 	
+	private BigDecimal driverPrice;	//划价(司机结算价)
+	
 	private BigDecimal settlePrice;	//结算金额(划价)
 	
 	private BigDecimal otherAmt;	//其它金额(运费)

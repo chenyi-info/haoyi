@@ -1,4 +1,61 @@
 ﻿$(function(){
+	
+	//初始化渲染
+	var renderInitAuthority = function (initAuthority){
+		var tpl ="";
+		var length1= initAuthority.length;
+		tpl+='<div class="content">';
+		 for(var i =0;i<length1;i++){
+			 tpl +='<div class="row1">'+
+		 	'<div class="th">'+
+	        '<label for="'+initAuthority[i].id+'">'+
+	        '<input id="'+initAuthority[i].id+'" pid="-1" type="checkbox" value="checkbox"> '+initAuthority[i].menuName+'</label>'+
+	        '</div>';
+		 	if("childNode" in initAuthority[i]){
+		 		var length2 = initAuthority[i].childNode.length;
+			 	for(var j =0;j<length2;j++){
+			 		if(initAuthority[i].childNode[j].sysName){
+			 			tpl +='<div class="row2" ><div class="th" style=" width: 560px;">';
+			 			tpl +='<div class="sysrow" style=" width:160px;"><label for="'+initAuthority[i].childNode[j].id+'">'+initAuthority[i].childNode[j].sysName+'</label></div>';
+			 		}else{
+			 			tpl +='<div class="row2" ><div class="th" style=" width: 220px;"><label for="'+initAuthority[i].childNode[j].id+'">';
+			 		}
+			 			
+			        if(initAuthority[i].childNode[j].aliases){
+			        	tpl+='<label  for="'+initAuthority[i].childNode[j].id+'">';
+			        	tpl +='<input id="'+initAuthority[i].childNode[j].id+'" pid="'+initAuthority[i].id+'" type="checkbox" value="checkbox"> '
+			        	+initAuthority[i].childNode[j].menuName+"("+initAuthority[i].childNode[j].aliases+')</label>';
+			        }else{
+			        	tpl+='<label for="'+initAuthority[i].childNode[j].id+'">';
+			        	tpl +='<input id="'+initAuthority[i].childNode[j].id+'" pid="'+initAuthority[i].id+'" type="checkbox" value="checkbox"> '
+			        	+initAuthority[i].childNode[j].menuName+'</label>';
+			        }
+			 		tpl +='</div>';
+			 		
+			 		
+			 		tpl +='<div class="row3">';
+			 		if("childNode" in initAuthority[i].childNode[j]){
+				 		var length3 = initAuthority[i].childNode[j].childNode.length;
+				 		for(var k =0;k<length3;k++){
+					       tpl +='<label for="'+initAuthority[i].childNode[j].childNode[k].id+'">'+
+					        '<input id="'+initAuthority[i].childNode[j].childNode[k].id+'" pid="'+initAuthority[i].childNode[j].id+'" type="checkbox" value="checkbox"> '
+					        +initAuthority[i].childNode[j].childNode[k].menuName+'</label>';
+					 	}
+			 		}else{
+			 			tpl+="&nbsp";
+			 		}
+			 		tpl +='</div>';
+			 	
+			 		tpl +='</div>';
+			 	}
+		 	}
+		 	
+		 	tpl+='</div>';
+		 }
+		 tpl+='</div>';
+		return tpl;
+	}
+	
 	var columns = [[
 	           	 {field:'userName',title:'用户姓名',width:'20%',align:'center'},    
 	        	 {field:'userAccount',title:'用户账号',width:'15%',align:'center'}, 
@@ -8,7 +65,7 @@
 	        		 return getYMDHMS(row.createDate);
 	        	 }},
 	        	 {field:'opt',title:'操作',width:'15%',align:'center', formatter:function(value,row,index){
-                 	return "<button class='btn btn-edit'>修改</button><button class='btn btn-del'>删除</button>";
+                 	return "<button class='btn btn-edit'>修改</button><button class='btn btn-del'>删除</button><button class='btn btn-auth'>授权</button>";
                  }}
 	            ]];
 	var initDataGrid = function(){
@@ -134,12 +191,103 @@
 		 });
 	}
 	
+	var loadMenu = function(){
+		var maskObj = new mask();
+		$.ajax({
+			url:'/menuResources/findMenuList',
+			type:"GET",
+			dataType:'json',
+			beforeSend : function (){
+			    maskObj.showMask();// 显示遮蔽罩
+		    }
+		}).done(function(data){
+			maskObj.hideMask ();// 隐藏遮蔽罩
+			var tplInitAuthority = renderInitAuthority(data);
+			$("#editUserAuthority").dialog("open");
+			$("#main_dlg .content").html(tplInitAuthority);
+		}).fail(function(data){
+			maskObj.hideMask ();// 隐藏遮蔽罩
+			$.messager.alert('操作提示','操作失败');
+		});
+	}
+	//控制一级全选
+	$(".content").on("change",".row1 > .th input",function(){
+		if($(this).is(':checked')){
+	        $(this).closest(".row1").find("input").prop("checked",true);
+	    }else{
+	    		$("#checkAll").prop("checked",false);
+	         $(this).closest(".row1").find("input").prop("checked",false);
+	    }
+	})
+	//控制二级全选
+	$(".content").on("change",".row2 .th input",function(){
+		if($(this).is(':checked')){
+	        $(this).closest(".row2").find("input").prop("checked",true);
+	        $(this).closest(".row1").find("> .th  input").prop("checked",true);
+	    }else{
+	    	$("#checkAll").prop("checked",false);
+	         $(this).closest(".row2").find("input").prop("checked",false);
+	    }
+	})
+	//控制三级选择
+	$(".content").on("change",".row3 input",function(){
+		if($(this).is(':checked')){
+			$(this).closest(".row1").find("> .th  input").prop("checked",true);
+	        $(this).closest(".row2").find(".th input").prop("checked",true);
+	    }else{
+	    	$("#checkAll").prop("checked",false);
+	    }
+	})
+	
+	//获取权限值
+	var getAuthority = function(selector){
+		var row = $('#dataGrid').datagrid('getSelected');
+		var authority=[];
+		$(selector).find(":input:checked").each(function(i,n){
+			if($(n).attr("disabled")!="disabled"){
+				var id = $(n).attr("id");
+				var pid = $(n).attr("pid");
+				//authority.push({"menuId":id,"userId":row.id});
+				authority[authority.length] = {"menuId":id,"userId":row.id};
+			}
+		});
+		return authority;
+	}
+
+	
+	var saveUserAuthority = function(){
+		var data = {};
+		var authority = getAuthority("#editUserAuthority .content");//获取权限
+		var maskObj = new mask();
+		$.ajax({
+			url:'/userResources/userAuthority.do',
+			type:"post",
+			data:{'userResourcesStrList':JSON.stringify(authority)},
+			beforeSend : function (){
+			    maskObj.showMask();// 显示遮蔽罩
+		    }
+		}).done(function(data){
+			maskObj.hideMask ();// 隐藏遮蔽罩
+			if(data.status == 200){
+				$('#editUserAuthority').dialog('destroy');
+				$("#dataGrid").datagrid('reload');
+			}
+			$.messager.alert('操作提示',data.msg);
+		}).fail(function(data){
+			maskObj.hideMask ();// 隐藏遮蔽罩
+			$.messager.alert('操作提示','操作失败');
+		});
+		
+	}
 	var initializeUI = function(){
 		initDataGrid();
 		$('.dataTable-toolbar').delegate('button.btn-add','click',showAddDialog);
 		$('.main-query-content').delegate('button.btn-search','click',initDataGrid);
 		$('.main-dataTable-content').delegate('button.btn-edit','click',showUpdateDialog);
 		$('.main-dataTable-content').delegate('button.btn-del','click',showDeleteDialog);
+		$('.main-dataTable-content').delegate('button.btn-auth','click',loadMenu);
+		$('#main_dlg').delegate('#submit','click', saveUserAuthority);
+		
 	}
 	initializeUI();
 	

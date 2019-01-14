@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 
 import com.hy.otw.common.enums.DelStatusEnum;
 import com.hy.otw.dao.sys.MenuResourcesDao;
-import com.hy.otw.hibernate.utils.Pagination;
 import com.hy.otw.po.sys.MenuResourcesPo;
 import com.hy.otw.vo.query.sys.MenuResourcesQueryVo;
 import com.hy.otw.vo.sys.MenuResourcesVo;
@@ -24,7 +23,7 @@ public class MenuResourcesService {
 	@Resource private MenuResourcesDao menuResourcesDao;
 
 	public void addMenuResources(MenuResourcesVo menuResourcesVo) throws Exception {
-		MenuResourcesPo menuResourcesPo = menuResourcesDao.getMenuResourcesByFunCode(menuResourcesVo.getFuncode());
+		MenuResourcesPo menuResourcesPo = menuResourcesDao.getMenuResourcesByFunCode(menuResourcesVo.getFunCode());
 		if(menuResourcesPo != null){
 			throw new Exception("菜单编码不能重复");
 		}
@@ -39,23 +38,21 @@ public class MenuResourcesService {
 		this.menuResourcesDao.addMenuResources(menuResourcesPo);
 	}
 
-	public Pagination findMenuResourcesList(MenuResourcesQueryVo menuResourcesQueryVo) throws IllegalAccessException, InvocationTargetException, NoSuchMethodException {
-		Pagination pagination = this.menuResourcesDao.findMenuResourcesList(menuResourcesQueryVo);
-		List<MenuResourcesPo> vehicelPoList = (List<MenuResourcesPo>) pagination.getRows();
-		List<MenuResourcesVo> vehicelVoList = new ArrayList<MenuResourcesVo>();
-		if(CollectionUtils.isNotEmpty(vehicelPoList)){
-			for (MenuResourcesPo menuResourcesPo : vehicelPoList) {
+	public List<MenuResourcesVo> findMenuResourcesList(MenuResourcesQueryVo menuResourcesQueryVo) throws IllegalAccessException, InvocationTargetException, NoSuchMethodException {
+		List<MenuResourcesPo> menuResourcePoList =  this.menuResourcesDao.findMenuResourcesList(menuResourcesQueryVo);
+		List<MenuResourcesVo> menuResourceVoList = new ArrayList<MenuResourcesVo>();
+		if(CollectionUtils.isNotEmpty(menuResourcePoList)){
+			for (MenuResourcesPo menuResourcesPo : menuResourcePoList) {
 				MenuResourcesVo menuResourcesVo = new MenuResourcesVo();
 				PropertyUtils.copyProperties(menuResourcesVo, menuResourcesPo);
-				vehicelVoList.add(menuResourcesVo);
+				menuResourceVoList.add(menuResourcesVo);
 			}
 		}
-		pagination.setRows(vehicelVoList);
-		return pagination;
+		return menuResourceVoList;
 	}
 
 	public void editMenuResources(MenuResourcesVo menuResourcesVo) throws Exception {
-		MenuResourcesPo menuResourcesPo = menuResourcesDao.getMenuResourcesByFunCode(menuResourcesVo.getFuncode());
+		MenuResourcesPo menuResourcesPo = menuResourcesDao.getMenuResourcesByFunCode(menuResourcesVo.getFunCode());
 		if(menuResourcesPo != null && menuResourcesPo.getId() != menuResourcesVo.getId()){
 			throw new Exception("菜单编码不能重复");
 		}
@@ -85,6 +82,19 @@ public class MenuResourcesService {
 		menuResourcesPo.setUpdateBy(1l);
 		menuResourcesPo.setUpdateDate(date);
 		this.menuResourcesDao.editMenuResources(menuResourcesPo);
+	}
+
+	public List<MenuResourcesVo> findMenuResourcesListByIds(List<Long> userResourcesIdList) throws IllegalAccessException, InvocationTargetException, NoSuchMethodException {
+		List<MenuResourcesPo> menuResourcePoList = menuResourcesDao.findMenuResourcesListByIds(userResourcesIdList);
+		List<MenuResourcesVo> menuResourceVoList = new ArrayList<MenuResourcesVo>();
+		if(CollectionUtils.isNotEmpty(menuResourcePoList)){
+			for (MenuResourcesPo menuResourcesPo : menuResourcePoList) {
+				MenuResourcesVo menuResourcesVo = new MenuResourcesVo();
+				PropertyUtils.copyProperties(menuResourcesVo, menuResourcesPo);
+				menuResourceVoList.add(menuResourcesVo);
+			}
+		}
+		return menuResourceVoList;
 	}
 
 }

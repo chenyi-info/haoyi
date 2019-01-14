@@ -134,11 +134,15 @@
 		     }
 		 });
 	}
-	
+	var downExcel = function(){
+		var criteria = $(".main-query-content form").serializeObject();
+		buildExportFormSubmit("/vehicle/loadExcel.do", criteria);
+	}
 	var initializeUI = function(){
 		initQueryDataDic();
 		initDataGrid();
 		$('.dataTable-toolbar').delegate('button.btn-add','click',showAddDialog);
+		$('.dataTable-toolbar').delegate('button.btn-excel','click',downExcel);
 		$('.main-query-content').delegate('button.btn-search','click',initDataGrid);
 		$('.main-dataTable-content').delegate('button.btn-edit','click',showUpdateDialog);
 		$('.main-dataTable-content').delegate('button.btn-del','click',showDeleteDialog);

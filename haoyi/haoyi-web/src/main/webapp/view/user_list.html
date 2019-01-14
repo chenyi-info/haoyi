@@ -12,6 +12,22 @@
 	<script type='text/javascript' src='/static/js/mustache.min.js' ></script>
 	<script type='text/javascript' src='/static/js/project/common.js' ></script>
 	<script type='text/javascript' src='/static/js/project/user_list.js' ></script>
+	<style type="text/css">
+		    .editUserAuthorityForm label{vertical-align: middle; padding:0 10px; height: 40px; line-height: 40px;margin: 0;cursor: pointer;}
+		    .editUserAuthorityForm label input[type=checkbox]{display: inline-block; margin: 0}
+			.editUserAuthorityForm .authority{border: 1px #ccc solid}
+			.editUserAuthorityForm .checkAll{height: 40px; display: inline-block;}
+			.editUserAuthorityForm .sysrow{font-weight:bold,height: 40px;width:200px;display: inline-block;border-right: 1px solid #ccc;}
+			.editUserAuthorityForm .row1{border-top:1px solid #ccc;}
+			.editUserAuthorityForm .th,.row1 th{height: 40px;display: inline-block; vertical-align: middle;}
+			.editUserAuthorityForm .th{font-weight:bold }
+		    .editUserAuthorityForm .row2 {border-top:1px solid #ccc; vertical-align: middle;}
+		    .editUserAuthorityForm .row2 label{font-weight: normal;}
+		    .editUserAuthorityForm .row2 .th{display: inline-block; border-right: 1px solid #ccc;}
+		    .editUserAuthorityForm .row3{display: inline-block;height: 40px;vertical-align: middle;}
+		    .editUserAuthorityForm .text-danger{display: inline-block;}
+		    .editUserAuthorityForm  .btn{margin: 5px 5px 5px 15px;padding: 7px 15px;display: inline-block;color: #333;cursor: pointer;font-size: 12px;line-height: 16px;border-radius: 5px;text-decoration: none;font-family: "宋体";border-style: solid;border-width: 1px;border-color: #dee3e6;background-color: #f2f2f2;}
+		</style>
 </head>
 <body>
 	<div class='main-view-content'>
@@ -29,6 +45,21 @@
 		<div class='main-dataTable-content'>
 			<table id="dataGrid" class="easyui-datagrid"></table>
 		</div>
+	</div>
+	<div id="editUserAuthority" class="easyui-dialog"  title="用户权限配置"  data-options="buttons: '#dlg-buttons',fit:true,closed:true,draggable:false" >
+		<form id='main_dlg' class="editUserAuthorityForm"  style="padding:10px;margin:0px auto;">
+			<label><span>提示：不可编辑部分为用户角色权限</span></label>
+			<div class="authority">
+				<input type="hidden" name="id" id="autUserId" />
+				<!-- <div class="checkAll"><label><input id="checkAll" type="checkbox" value="checkbox"> 全选</label></div> -->
+				<div class="content"></div>
+			</div>
+			<div style="text-align: center;padding-top: 10px;">
+				<button type='button' class="btn btn-1" id="submit">保存</button>
+				&emsp;&emsp;
+				<button type='button' onclick="$('#main_dlg').dialog('close')" class="btn">取消</button>
+			</div>
+		</form>
 	</div>
 </body>
 </html>

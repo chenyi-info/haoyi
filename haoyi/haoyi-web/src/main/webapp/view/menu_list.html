@@ -6,8 +6,9 @@
 	<link rel="stylesheet" type="text/css" href="/static/js/jquery-easyui-1.6.11/themes/ui-cupertino/easyui.css"></link>
 	<link rel="stylesheet" type="text/css" href='/static/css/main.css'></link>
 	<script type='text/javascript' src='/static/js/jquery-1.7.1.min.js' ></script>
-	<script src="/static/js/jquery-easyui-1.6.11/jquery.easyui.min.js"></script>
-	<script src="/static/js/jquery-easyui-1.6.11/jquery.easyui.extend.min.js"></script>
+	<script type='text/javascript' src="/static/js/jquery-easyui-1.6.11/jquery.easyui.min.js"></script>
+	<script type='text/javascript' src="/static/js/jquery-easyui-1.6.11/jquery.easyui.extend.min.js"></script>
+	<script type='text/javascript' src="/static/js/easyuiExt.js"></script>
 	<script type='text/javascript' src='/static/js/common.js' ></script>
 	<script type='text/javascript' src='/static/js/mustache.min.js' ></script>
 	<script type='text/javascript' src='/static/js/project/common.js' ></script>
@@ -29,10 +30,16 @@
 <script type='text/html' id='dialog_content_template'>
 	<form class='main-form-content dialog-content'>
 		<input name='id' type='hidden' value='{{id}}' />
-		<p class='item'><label for='plateNumber_view'>车牌号:</label><input type='text' name='plateNumber' id='plateNumber_view' class="easyui-textbox" data-options="required:true" prompt="请输入车牌号" value='{{plateNumber}}' /></p>
-		<p class='item'><label for='ownerName_view'>司机姓名:</label><input type='text' name='ownerName' id='ownerName_view' class="easyui-textbox" data-options="required:true" prompt="请输入司机姓名" value='{{ownerName}}' /></p>
-		<p class='item'><label for='contactNumber_view'>联系电话:</label><input type='text' name='contactNumber' id='contactNumber_view' class="easyui-textbox" prompt="请输入联系电话" value='{{contactNumber}}' /></p>
-		<p class='item'><label for='vehicleType_view'>车辆类型:</label><input type='text' name='vehicleType' id='vehicleType_view' class="easyui-combobox" dataDic = 'vehicle_type' prompt="请输入车辆类型" value='{{vehicleType}}' /></p>
+		<input name='parentId' type='hidden' value='{{parentId}}' />
+		<input name='level' type='hidden' value='{{level}}' />
+		{{#parentMenuName}}
+			<p class='item'><label for='parentMenuName_view'>上级名称:</label><input type='text' name='parentMenuName' id='parentMenuName_view' class="easyui-textbox" value='{{parentMenuName}}' /></p>
+		{{/parentMenuName}}
+		<p class='item'><label for='menuName_view'>菜单名称:</label><input type='text' name='menuName' id='menuName_view' class="easyui-textbox" data-options="required:true" prompt="请输入菜单名称" value='{{menuName}}' /></p>
+		<p class='item'><label for='menuPath_view'>菜单路径:</label><input type='text' name='menuPath' id='menuPath_view' class="easyui-textbox" data-options="required:true" prompt="请输入菜单路径" value='{{menuPath}}' /></p>
+		<p class='item'><label for='funCode_view'>菜单编码:</label><input type='text' name='funCode' id='funCode_view' class="easyui-textbox" data-options="required:true" prompt="请输入菜单编码" value='{{funCode}}' /></p>
+		<p class='item'><label for='sort_view'>菜单排序:</label><input type='text' name='sort' id='sort_view' class="easyui-numberbox" data-options="required:true" prompt="请输入菜单排序" value='0' /></p>
+		<p class='item'><label for='status_true_view'>菜单状态:</label><input type='radio' name='status' id='status_true_view' class="valign_m radio" checked="checked"  value='1' /><label for='status_true_view' class='radio'>正常</label><input type='radio' name='status' id='status_false_view' class="valign_m radio"  value='0' /><label for='status_false_view' class='radio'>关闭</label></p>
 		<p class='item'><label for='remarks_view'>备注:</label><input type='text' name='remarks' id='remarks_view' class="easyui-textbox" prompt="请输入备注" value='{{remarks}}' /></p>
 	</form>
 </script>

@@ -38,6 +38,7 @@ public class CustomerOrderService {
 		customerOrderVo.setOrderDate(orderPo.getOrderDate());
 		customerOrderVo.setOrderNO(orderPo.getOrderNO());
 		customerOrderVo.setSealNumber(orderPo.getSealNumber());
+		customerOrderVo.setCustomerPrice(orderPo.getCustomerPrice());
 		customerOrderVo.setSettleStatus(SettleStatusEnum.UNDONE.getValue());
 		customerOrderVo.setCreateBy(orderPo.getCreateBy());
 		customerOrderVo.setCreateDate(orderPo.getCreateDate());
@@ -71,6 +72,7 @@ public class CustomerOrderService {
 		}
 		customerOrderPo.setOrderId(orderPo.getId());
 		customerOrderPo.setAddress(orderPo.getAddress());
+		customerOrderPo.setCustomerPrice(orderPo.getCustomerPrice());
 		customerOrderPo.setCabinetModel(orderPo.getCabinetModel());
 		customerOrderPo.setCabinetNumber(orderPo.getCabinetNumber());
 		customerOrderPo.setCompanyName(orderPo.getCompanyName());
@@ -90,7 +92,7 @@ public class CustomerOrderService {
 			throw new Exception("未找到该条信息");
 		}
 		Date date = new Date();
-		customerOrderPo.setSettlePrice(customerOrderVo.getSettlePrice());
+		customerOrderPo.setRemarks(customerOrderVo.getRemarks());
 		customerOrderPo.setSettleStatus(customerOrderVo.getSettleStatus());
 		customerOrderPo.setUpdateBy(1l);
 		customerOrderPo.setUpdateDate(date);
@@ -99,14 +101,13 @@ public class CustomerOrderService {
 	
 	public void deleteCustomerOrder(Long orderId) throws Exception {
 		CustomerOrderPo customerOrderPo = customerOrderDao.getCustomerOrderByOrderId(orderId);
-		if(customerOrderPo == null){
-			throw new Exception("未找到该条信息");
+		if(customerOrderPo != null){
+			Date date = new Date();
+			customerOrderPo.setDelStatus(DelStatusEnum.HIDE.getValue());
+			customerOrderPo.setUpdateBy(1l);
+			customerOrderPo.setUpdateDate(date);
+			this.customerOrderDao.editCustomerOrder(customerOrderPo);
 		}
-		Date date = new Date();
-		customerOrderPo.setDelStatus(DelStatusEnum.HIDE.getValue());
-		customerOrderPo.setUpdateBy(1l);
-		customerOrderPo.setUpdateDate(date);
-		this.customerOrderDao.editCustomerOrder(customerOrderPo);
 	}
 
 	public BigDecimal findCustomerOrderTotalAmt(CustomerOrderQueryVo customerOrderQueryVo) {

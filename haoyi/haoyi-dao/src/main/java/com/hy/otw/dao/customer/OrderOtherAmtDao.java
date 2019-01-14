@@ -54,6 +54,15 @@ public class OrderOtherAmtDao extends HibernateDao<OrderOtherAmtPo, Long>{
 			hql.append(" and targetName like '%").append(orderOtherAmtQueryVo.getTargetName()).append("%'");
 		}
 		
+		if(orderOtherAmtQueryVo.getIsSettle() != null){
+			hql.append(" and isSettle = ?");
+			param.add(orderOtherAmtQueryVo.getIsSettle());
+		}
+		
+		if(orderOtherAmtQueryVo.getPropertyType() != null){
+			hql.append(" and propertyType = ?");
+			param.add(orderOtherAmtQueryVo.getPropertyType());
+		}
 		if(orderOtherAmtQueryVo.getExpenditureDateBegin() != null){
 			hql.append(" and expenditureDate > ?");
 			param.add(orderOtherAmtQueryVo.getExpenditureDateBegin());
@@ -84,6 +93,11 @@ public class OrderOtherAmtDao extends HibernateDao<OrderOtherAmtPo, Long>{
 		sql = "update customer_order as oi set oi.other_amt = IFNULL((SELECT sum(oa.price) from order_other_amt as oa where oa.del_status = ? and oa.order_id=? and property_type = 2),0) where  oi.del_status = ? and oi.order_id = ?";
 		this.updateSql(sql, DelStatusEnum.NORMAL.getValue(), orderId, DelStatusEnum.NORMAL.getValue(), orderId);
 		sql = "update driver_order as oi set oi.other_amt = IFNULL((SELECT sum(oa.price) from order_other_amt as oa where oa.del_status = ? and oa.order_id=? and property_type = 1),0) where  oi.del_status = ? and oi.order_id = ?";
+		this.updateSql(sql, DelStatusEnum.NORMAL.getValue(), orderId, DelStatusEnum.NORMAL.getValue(), orderId);
+		//实际结算金额
+		sql = "update customer_order as oi set oi.settle_price = IFNULL((SELECT sum(oa.price) from order_other_amt as oa where oa.del_status = ? and is_settle = 0 and oa.order_id=? and property_type = 2),0) where  oi.del_status = ? and oi.order_id = ?";
+		this.updateSql(sql, DelStatusEnum.NORMAL.getValue(), orderId, DelStatusEnum.NORMAL.getValue(), orderId);
+		sql = "update driver_order as oi set oi.settle_price = IFNULL((SELECT sum(oa.price) from order_other_amt as oa where oa.del_status = ? and is_settle = 0 and oa.order_id=? and property_type = 1),0) where  oi.del_status = ? and oi.order_id = ?";
 		this.updateSql(sql, DelStatusEnum.NORMAL.getValue(), orderId, DelStatusEnum.NORMAL.getValue(), orderId);
 	}
 

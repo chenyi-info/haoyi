@@ -43,13 +43,16 @@ public class MenuResourcesPo extends BasePo{
 	private Integer level;			//菜单级别1:一级，2：二级，3：三级（功能菜单）
 
 	@Column(name = "fun_code")
-	private String funcode;			//菜单编码
+	private String funCode;			//菜单编码
 	
 	@Column(name = "parent_id")
 	private Long parentId;			//父级菜单id
 	
 	@Column(name = "status")
 	private Integer status;			//状态1：正常 0：关闭
+	
+	@Column(name = "sort")
+	private Integer sort;			//排序
 	
 	@Column(name = "remarks")
 	private String remarks;			//备注

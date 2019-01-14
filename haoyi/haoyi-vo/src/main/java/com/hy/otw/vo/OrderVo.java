@@ -49,7 +49,9 @@ public class OrderVo extends BaseVo{
 	
 	private String sealNumber;		//封号
 	
-	private BigDecimal orderPrice;	//订单金额
+	private BigDecimal customerPrice;	//订单金额(客单价)
+	
+	private BigDecimal driverPrice;	//划价(司机结算价)
 	
 	private BigDecimal otherAmt;	//其它金额(杂费)
 	

@@ -3,12 +3,11 @@ package com.hy.otw.dao.sys;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hibernate.Query;
 import org.springframework.stereotype.Repository;
 
 import com.hy.otw.common.enums.DelStatusEnum;
 import com.hy.otw.hibernate.utils.HibernateDao;
-import com.hy.otw.hibernate.utils.Page;
-import com.hy.otw.hibernate.utils.Pagination;
 import com.hy.otw.po.sys.MenuResourcesPo;
 import com.hy.otw.vo.query.sys.MenuResourcesQueryVo;
 
@@ -19,16 +18,12 @@ public class MenuResourcesDao extends HibernateDao<MenuResourcesPo, Long>{
 		this.save(MenuResourcesPo);
 	}
 
-	public Pagination findMenuResourcesList(MenuResourcesQueryVo MenuResourcesQueryVo) {
+	public List<MenuResourcesPo> findMenuResourcesList(MenuResourcesQueryVo MenuResourcesQueryVo) {
 		StringBuffer hql = new StringBuffer("from MenuResourcesPo where delStatus=?");
 		List<Object> param = new ArrayList<Object>();
 		param.add(DelStatusEnum.NORMAL.getValue());
-		Page<MenuResourcesPo> page = new Page<MenuResourcesPo>();
-		page.setPageNo(MenuResourcesQueryVo.getPage());
-		page.setPageSize(MenuResourcesQueryVo.getRows());
-		hql.append(" order by updateDate desc");
-		Pagination pagination = this.findPagination(page, hql.toString(), param.toArray());
-		return pagination;
+		hql.append(" order by sort asc");
+		return this.find(hql.toString(), param);
 	}
 
 	public MenuResourcesPo getMenuResources(Long MenuResourcesId) {
@@ -45,5 +40,13 @@ public class MenuResourcesDao extends HibernateDao<MenuResourcesPo, Long>{
 		String hql = "from MenuResourcesPo where delStatus=? and funCode=?";
 		MenuResourcesPo MenuResourcesPo = this.findUnique(hql, DelStatusEnum.NORMAL.getValue(), funCode);
 		return MenuResourcesPo;
+	}
+
+	public List<MenuResourcesPo> findMenuResourcesListByIds(List<Long> userResourcesIdList) {
+		String hql = "from MenuResourcesPo where delStatus=:delStatus and status = 1 and id in (:userResourcesIdList)";
+		Query query = this.createQuery(hql);
+		query.setParameter("delStatus", DelStatusEnum.NORMAL.getValue());
+		query.setParameterList("userResourcesIdList", userResourcesIdList);
+		return query.list();
 	}
 }

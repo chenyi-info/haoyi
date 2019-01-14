@@ -34,6 +34,10 @@ public class OrderOtherAmtQueryVo {
 	
 	private String targetName;		//支付方名称
 	
+	private Integer propertyType;	//归属类型 1-司机 2-客户 3-自己
+	
+	private Integer isSettle;		//是否结算：0-已结算,1-未结算
+	
 	private int page = 1;
 	
 	private int rows = 10;

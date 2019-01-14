@@ -13,6 +13,11 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 @Setter
 @Getter
 public class UserInfoVo extends BaseVo{
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -9192341493835705516L;
 
 	private Long id;				//主键
 	

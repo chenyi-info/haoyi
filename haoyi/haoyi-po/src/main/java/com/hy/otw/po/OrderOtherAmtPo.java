@@ -70,6 +70,9 @@ public class OrderOtherAmtPo extends BasePo{
 	@Column(name = "price")
 	private BigDecimal price;		//支付金额
 	
+	@Column(name = "is_settle")
+	private Integer isSettle;		//是否结算：0-已结算,1-未结算
+	
 	@Column(name = "remarks")
 	private String remarks;			//备注
 	

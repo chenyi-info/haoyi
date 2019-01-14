@@ -1,20 +1,18 @@
 ﻿$(function(){
-	var hiddenLabel = function(){
-		$(this).parents('.form_item').find('label').css('display','none');
-	}
-	var showLabel = function(){
-		if($.trim($(this).val()) === '')
-			$(this).parents('.form_item').find('label').css('display','');
-	}
-	var resizeBG = function(){
-		$('div.otw_background').css({'width':$(window).width(),'height':$(window).height()});
-		$('.otw_background_img').css({'width':$(window).width(),'height':$(window).height()});
-	}
+
 	var loginAuth = function(){
 		var maskObj = new mask();
 		var dataModel = {};
 		dataModel.userAccount = $('input[name=userAccount]').val();
 		dataModel.userPassWord = $('input[name=userPassWord]').val();
+		if(dataModel.userAccount == ''){
+			$('input[name=userAccount]').css('border-bottom','1px solid red');
+			return false;
+		}
+		if(dataModel.userPassWord == ''){
+			$('input[name=userPassWord]').css('border-bottom','1px solid red');
+			return false;
+		}
 		$.ajax({
 			url:'/auth/login',
 			type:"post",
@@ -35,14 +33,22 @@
 			$.messager.alert('操作提示','操作失败');
 		});
 	}
-	var initializeUi = function(){
-		$('div.main_container').delegate('input.ui_textinput','focus',hiddenLabel);
-		$('div.main_container').delegate('input.ui_textinput','blur',showLabel);
-		$('div.main_container').delegate('button.ui_login','click',loginAuth);
+	
+	var setInfo = function(){
+		$(this).css('border-bottom','1px solid #484856');
 	}
-	resizeBG();
+	var chekLoginAuth = function(event){
+		if(event.keyCode == "13") {
+			loginAuth();
+	    }
+	}
+	var initializeUi = function(){
+		$('div.login-form').delegate('input[name=userAccount]', 'focus', setInfo);
+		$('div.login-form').delegate('input[name=userPassWord]', 'focus', setInfo);
+		$('input[name=userPassWord]')
+		$('div.login-form').delegate('input[name=userAccount]', 'keydown', chekLoginAuth);
+		$('div.login-form').delegate('input[name=userPassWord]', 'keydown', chekLoginAuth);
+		$('div.signin').delegate('#login','click', loginAuth);
+	}
 	initializeUi();
-	$(window).resize(function() {
-		resizeBG();
-	});
 })

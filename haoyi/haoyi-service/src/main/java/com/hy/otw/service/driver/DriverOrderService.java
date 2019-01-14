@@ -40,6 +40,7 @@ public class DriverOrderService {
 			driverOrderVo.setOwnerName(orderPo.getOwnerName());
 			driverOrderVo.setPlateNumber(orderPo.getPlateNumber());
 			driverOrderVo.setSealNumber(orderPo.getSealNumber());
+			driverOrderVo.setDriverPrice(orderPo.getDriverPrice());
 			driverOrderVo.setSettleStatus(SettleStatusEnum.UNDONE.getValue());
 			driverOrderVo.setCreateBy(orderPo.getCreateBy());
 			driverOrderVo.setCreateDate(orderPo.getCreateDate());
@@ -79,6 +80,7 @@ public class DriverOrderService {
 			driverOrderPo.setAddress(orderPo.getAddress());
 			driverOrderPo.setCabinetModel(orderPo.getCabinetModel());
 			driverOrderPo.setCabinetNumber(orderPo.getCabinetNumber());
+			driverOrderPo.setDriverPrice(orderPo.getDriverPrice());
 			driverOrderPo.setDelStatus(orderPo.getDelStatus());
 			driverOrderPo.setOrderDate(orderPo.getOrderDate());
 			driverOrderPo.setOrderNO(orderPo.getOrderNO());
@@ -98,7 +100,7 @@ public class DriverOrderService {
 			throw new Exception("未找到该条信息");
 		}
 		Date date = new Date();
-		driverOrderPo.setSettlePrice(driverOrderVo.getSettlePrice());
+		driverOrderPo.setRemarks(driverOrderVo.getRemarks());
 		driverOrderPo.setSettleStatus(driverOrderVo.getSettleStatus());
 		driverOrderPo.setUpdateBy(1l);
 		driverOrderPo.setUpdateDate(date);
@@ -107,14 +109,13 @@ public class DriverOrderService {
 
 	public void deleteDriverOrder(Long driverOrderId) throws Exception {
 		DriverOrderPo driverOrderPo = driverOrderDao.getDriverOrder(driverOrderId);
-		if(driverOrderPo == null){
-			throw new Exception("未找到该条信息");
+		if(driverOrderPo != null){
+			Date date = new Date();
+			driverOrderPo.setDelStatus(DelStatusEnum.HIDE.getValue());
+			driverOrderPo.setUpdateBy(1l);
+			driverOrderPo.setUpdateDate(date);
+			this.driverOrderDao.editDriverOrder(driverOrderPo);
 		}
-		Date date = new Date();
-		driverOrderPo.setDelStatus(DelStatusEnum.HIDE.getValue());
-		driverOrderPo.setUpdateBy(1l);
-		driverOrderPo.setUpdateDate(date);
-		this.driverOrderDao.editDriverOrder(driverOrderPo);
 	}
 
 	public BigDecimal findDriverOrderTotalAmt(DriverOrderQueryVo driverOrderQueryVo) {

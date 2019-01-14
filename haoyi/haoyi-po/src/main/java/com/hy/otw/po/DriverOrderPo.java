@@ -64,6 +64,9 @@ public class DriverOrderPo extends BasePo{
 	@Column(name = "address")
 	private String address;			//订单地址
 	
+	@Column(name = "driver_price")
+	private BigDecimal driverPrice;	//划价(司机结算价)
+	
 	@Column(name = "settle_price")
 	private BigDecimal settlePrice;	//订单金额
 	

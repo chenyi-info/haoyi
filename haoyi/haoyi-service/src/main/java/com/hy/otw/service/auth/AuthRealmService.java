@@ -1,13 +1,8 @@
 package com.hy.otw.service.auth;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.annotation.Resource;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang3.ObjectUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
@@ -19,9 +14,7 @@ import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.util.ByteSource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
-import com.hy.otw.service.auth.UserInfoService;
 import com.hy.otw.vo.UserInfoVo;
 
 public class AuthRealmService extends AuthorizingRealm {
@@ -35,16 +28,7 @@ public class AuthRealmService extends AuthorizingRealm {
      */
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
-        String userName = (String) principalCollection.getPrimaryPrincipal();
-        List<String> permissionList=new ArrayList<String>();
-        permissionList.add("user:add");
-        permissionList.add("user:delete");
-        if (userName.equals("zhou")) {
-            permissionList.add("user:query");
-        }
         SimpleAuthorizationInfo authorizationInfo = new SimpleAuthorizationInfo();
-        authorizationInfo.addStringPermissions(permissionList);
-        authorizationInfo.addRole("list");
         return authorizationInfo;
     }
     
@@ -81,7 +65,7 @@ public class AuthRealmService extends AuthorizingRealm {
 			if(userInfo.getUserAccount().equals(accountName)){
 				//取出盐并编码
 	            ByteSource salt = ByteSource.Util.bytes(userInfo.getSalt());
-	            return new SimpleAuthenticationInfo(accountName, userInfo.getPassword(),salt, getName());
+	            return new SimpleAuthenticationInfo(userInfo, userInfo.getPassword(),salt, getName());
 			}else{
 				throw new AuthenticationException();
 			}

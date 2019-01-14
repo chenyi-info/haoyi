@@ -484,3 +484,39 @@ function removeNullParams(dataModel){
 	}
 	return dataModel;
 }
+
+
+/**
+ * 模拟提交表单
+ * 
+ * @param url
+ * @param parName
+ * @param criteria
+ */
+function buildExportFormSubmit (url, dataModel){
+	$form = $ ("<form id='exportExcelTmpFormId' style='display:none' target='exportIframe' method='POST'></form>");
+	$ (document.body).append ($form);
+	$ (document.body).append ('<iframe name="exportIframe" style="display: none;"></iframe>');
+	// 显示进度条
+	$.messager.progress ({
+	    title : "友情提示",
+	    text : "正在下载中,请稍后..."
+	});
+	$.each(dataModel,function(n,v){
+		if(v && v != null && v != ''){
+			$form.append ("<input type='hidden' value=''  name='" + n + "' /> ");
+		}
+	});
+	$form.form ('clear')
+	$.each(dataModel,function(n,v){
+		if(v && v != null && v != ''){
+			$form.find ("[name='" + n + "']").val (v);
+		}
+	});
+	$form.attr ("action", url);
+	$form.submit ();
+	// 关闭进度条
+	window.setTimeout (function (){
+		$.messager.progress ('close');
+	}, 2000);
+}

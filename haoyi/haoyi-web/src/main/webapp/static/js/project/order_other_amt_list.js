@@ -12,7 +12,10 @@
 	        	 {field:'propertyType',title:'归属类型',width:'5%',align:'center', formatter:function(value,row,index){
                  	return value == 1 ? '司机' : value == 2 ? '客户' : '自己';
                  }},
-	        	 {field:'remarks',title:'备注',width:'10%',align:'center'},
+                 {field:'isSettle',title:'结算状态',width:'5%',align:'center', formatter:function(value,row,index){
+                 	return value == 0 ? '已结算' :'未结算';
+                 }},
+	        	 {field:'remarks',title:'备注',width:'5%',align:'center'},
 	        	 {field:'opt',title:'操作',width:'10%',align:'center', formatter:function(value,row,index){
                  	return "<button class='btn btn-edit'>修改</button><button class='btn btn-del'>删除</button>";
                  }}
@@ -90,7 +93,6 @@
 	 	    	$.parser.parse('#main_dlg');
 	 	    	initDataDic();
 	 	    	loadOrderGrid();
-	 	    	$('.main-form-content').delegate('input[name=isProfit]','click',chooseAddViewRadio);
 	 	    	$('.main-form-content').delegate('input[name=propertyType]','click',chooseAddViewRadio);
 	 	    	$('#itemName_view').combobox({
 	 	    		onChange:function(n,o){
@@ -131,11 +133,8 @@
 	 	    	$.parser.parse('#main_dlg');
 	 	    	initDataDic();
 	 	    	loadOrderGrid();
-	 	    	$('.main-form-content input[name=isProfit][value='+row.isProfit+']').attr("checked",true);
 	 	    	$('.main-form-content input[name=propertyType][value='+row.propertyType+']').attr("checked",true);
-	 	    	$('.main-form-content input[name=isAdd][value='+row.isAdd+']').attr("checked",true);
-	 	    	
-	 	    	$('.main-form-content').delegate('input[name=isProfit]','click',chooseAddViewRadio);
+	 	    	$('.main-form-content input[name=isSettle][value='+row.isSettle+']').attr("checked",true);
 	 	    	$('.main-form-content').delegate('input[name=propertyType]','click',chooseAddViewRadio);
 	 	    	$('#itemName_view').combobox({
 	 	    		onChange:function(n,o){
@@ -171,10 +170,16 @@
 		 });
 	}
 	
+	var downExcel = function(){
+		var criteria = $(".main-query-content form").serializeObject();
+		buildExportFormSubmit("/orderOtherAmt/loadExcel.do", criteria);
+	}
+	
 	var initializeUI = function(){
 		initDataGrid();
 		initQueryDataDic();
 		$('.dataTable-toolbar').delegate('button.btn-add','click',showAddDialog);
+		$('.dataTable-toolbar').delegate('button.btn-excel','click',downExcel);
 		$('.main-query-content').delegate('button.btn-search','click',initDataGrid);
 		$('.main-dataTable-content').delegate('button.btn-edit','click',showUpdateDialog);
 		$('.main-dataTable-content').delegate('button.btn-del','click',showDeleteDialog);

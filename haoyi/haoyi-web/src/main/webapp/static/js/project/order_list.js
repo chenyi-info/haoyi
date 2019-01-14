@@ -8,17 +8,11 @@
 	           	 
 	        	 {field:'orderNO',title:'订单编号',width:'10%',align:'center'},
 	        	 {field:'demand',title:'订单要求',width:'5%',align:'center'},
-	        	 {field:'cabinetModel',title:'柜型',width:'10%',align:'center'},
+	        	 {field:'cabinetModel',title:'柜型',width:'5%',align:'center'},
 	        	 {field:'cabinetNumber',title:'柜号',width:'5%',align:'center'},
 	        	 {field:'sealNumber',title:'封号',width:'5%',align:'center'},
 	        	 {field:'address',title:'订单简址',width:'5%',align:'center'},
 	        	 {field:'weighed',title:'重量(T)',width:'5%',align:'center'},
-	        	 {field:'orderPrice',title:'订单金额',width:'5%',align:'center',editor: {
-                     type: 'numberbox', // 指明控件类型
-                     options:{
-                 		precision:2
-                 	}
-                 }},
                  {field:'plateNumber',title:'车牌号',width:'5%',align:'center',editor: {
                      type: 'combogrid', // 指明控件类型
                      options:{
@@ -149,11 +143,14 @@
 			view:dataTableView,
 			emptyMsg:'未查询到内容',
             columns:columns,
-            onDblClickRow: function(index, row){
-        		if (editIndex != index && endEditing()) {  
-        			$(this).datagrid('beginEdit', index);       
-        	        editIndex = index;  
-        	    }
+            onDblClickCell: function(index,field,value){
+            	var fields = ['plateNumber','orderStatus'];
+            	if(fields.indexOf(field) > -1){
+            		if (editIndex != index && endEditing()) {  
+            			$(this).datagrid('beginEdit', index);       
+            	        editIndex = index;  
+            	    }
+            	}
         	},
         	onClickRow:function(index,row){
         		if (editIndex != index) {  
@@ -235,7 +232,7 @@
 		$(diaHtml).dialog({    
 	 	    title: '订单管理',    
 	 	    width: 400,    
-	 	    height: 750,    
+	 	    height: 760,    
 	 	    closed: false,    
 	 	    modal: true,
 	 	    onOpen:function(){
@@ -270,7 +267,7 @@
 		$(diaHtml).dialog({    
 	 	    title: '订单管理('+row.orderNO+')',    
 	 	    width: 400,    
-	 	    height: 750,    
+	 	    height: 760,    
 	 	    closed: false,    
 	 	    modal: true,
 	 	    onOpen:function(){
@@ -379,16 +376,16 @@
 	   	             {field:'expenditureDate',title:'支出日期',width:'20%',align:'center',formatter:function(value,row,index){
 		        		 return getYMDHMS(row.expenditureDate);
 		        	 }}, 
-		        	 {field:'orderNO',title:'订单编号',width:'10%',align:'center'},
-		        	 {field:'price',title:'支付金额',width:'10%',align:'center'},
-		        	 {field:'targetName',title:'支出对象',width:'10%',align:'center'},
+		        	 {field:'orderNO',title:'订单编号',width:'15%',align:'center'},
 		        	 {field:'cabinetNumber',title:'柜号',width:'10%',align:'center'},
 		        	 {field:'address',title:'订单简址',width:'10%',align:'center'},
 		        	 {field:'itemName',title:'支付项目类型',width:'10%',align:'center'},
+		        	 {field:'price',title:'支付金额',width:'10%',align:'center'},
+		        	 {field:'targetName',title:'支出对象',width:'10%',align:'center'},
 		        	 {field:'propertyType',title:'归属类型',width:'10%',align:'center', formatter:function(value,row,index){
 		        		 return value == 1 ? '司机' : value == 2 ? '客户' : '自己';
 	                 }},
-		        	 {field:'remarks',title:'备注',width:'10%',align:'center'}
+		        	 {field:'remarks',title:'备注',width:'5%',align:'center'}
 		            ]];
 	var initDialogDataGrid = function(dataModel){
 		$("#dialogDataGrid").datagrid({
@@ -422,7 +419,7 @@
 		var diaHtml = "<div id='main_dlg' class='main-dialog-view-content'><table id='dialogDataGrid' class='easyui-datagrid'></table></div>";
 		$(diaHtml).dialog({    
 	 	    title: '杂费项('+row.orderNO+')',    
-	 	    width: 800,    
+	 	    width: 850,    
 	 	    height: 500,    
 	 	    closed: false,   
 	 	    resizable:true,
@@ -439,6 +436,11 @@
 	     }); 
 	}
 	
+	var downExcel = function(){
+		var criteria = $(".main-query-content form").serializeObject();
+		buildExportFormSubmit("/order/loadExcel.do", criteria);
+	}
+	
 	var initializeUI = function(){
 		var nowDate = new Date();
 		var toDay = nowDate.getFullYear() + '-'+ (nowDate.getMonth()+1) + '-' + nowDate.getDate();
@@ -447,6 +449,7 @@
 		initOrderStatus();
 		initDataGrid();
 		$('.dataTable-toolbar').delegate('button.btn-add','click',showAddDialog);
+		$('.dataTable-toolbar').delegate('button.btn-excel','click',downExcel);
 		$('.main-query-content').delegate('button.btn-search','click',initDataGrid);
 		$('.main-dataTable-content').delegate('button.btn-edit','click',showUpdateDialog);
 		$('.main-dataTable-content').delegate('button.btn-del','click',showDeleteDialog);

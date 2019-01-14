@@ -43,6 +43,8 @@ public class OrderOtherAmtVo extends BaseVo{
 	
 	private BigDecimal price;		//支付金额
 	
+	private Integer isSettle;		//是否结算：0-已结算,1-未结算
+	
 	private String remarks;			//备注
 	
 	@Override

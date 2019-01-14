@@ -61,6 +61,9 @@ public class CustomerOrderPo extends BasePo{
 	@Column(name = "address")
 	private String address;			//订单地址
 	
+	@Column(name = "customer_price")
+	private BigDecimal customerPrice;	//订单金额(客单价)
+	
 	@Column(name = "settle_price")
 	private BigDecimal settlePrice;	//结算金额
 	

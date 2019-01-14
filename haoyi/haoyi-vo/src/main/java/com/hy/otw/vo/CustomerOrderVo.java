@@ -37,6 +37,8 @@ public class CustomerOrderVo extends BaseVo{
 	
 	private String address;			//订单地址
 	
+	private BigDecimal customerPrice;	//订单金额(客单价)
+	
 	private BigDecimal settlePrice;	//结算金额
 	
 	private BigDecimal otherAmt;	//其它金额(运费)
