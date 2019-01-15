@@ -25,6 +25,7 @@
                  }}
 	            ]];
 	var initDataGrid = function(){
+		loadDriverTotalAmt();
 		$("#dataGrid").datagrid({
 			url : '/driverOrder/list',
 			queryParams : $(".main-query-content form").serializeObject(),
@@ -155,7 +156,7 @@
 		$.ajax({
 			url:'/driverOrder/totalAmt',
 			type:"get",
-			data:$(".main-form-content").serializeObject(),
+			data:$(".main-query-content form").serializeObject(),
 			dataType:'json'
 		}).done(function(data){
 			$('.dataTable-toolbar .totalAmt').html(data);
@@ -298,7 +299,6 @@
 	
 	var initializeUI = function(){
 		initDataGrid();
-		loadDriverTotalAmt();
 		initSettleStatus();
 		$('.dataTable-toolbar').delegate('button.btn-add','click',showAddDialog);
 		$('.dataTable-toolbar').delegate('button.btn-excel','click',downExcel);

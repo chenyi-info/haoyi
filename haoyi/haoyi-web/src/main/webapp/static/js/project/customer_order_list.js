@@ -154,7 +154,7 @@
 		$.ajax({
 			url:'/customerOrder/totalAmt',
 			type:"get",
-			data:$(".main-form-content").serializeObject(),
+			data:$(".main-query-content form").serializeObject(),
 			dataType:'json'
 		}).done(function(data){
 			$('.dataTable-toolbar .totalAmt').html(data);

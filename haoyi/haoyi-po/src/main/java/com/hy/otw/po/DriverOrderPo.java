@@ -68,7 +68,7 @@ public class DriverOrderPo extends BasePo{
 	private BigDecimal driverPrice;	//划价(司机结算价)
 	
 	@Column(name = "settle_price")
-	private BigDecimal settlePrice;	//订单金额
+	private BigDecimal settlePrice;	//实际结算金额
 	
 	@Column(name = "other_amt")
 	private BigDecimal otherAmt;	//其它金额(运费)

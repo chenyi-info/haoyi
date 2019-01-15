@@ -34,8 +34,9 @@
 
 	<task:annotation-driven />
 	<import resource="applicationContext-dao.xml" />
+	<!-- 
 	<import resource="applicationContext-redis.xml" />
-	
+	 -->
 	<!-- Spring 异步 
 	<task:annotation-driven executor="gms-solr-executor" />  
 	-->

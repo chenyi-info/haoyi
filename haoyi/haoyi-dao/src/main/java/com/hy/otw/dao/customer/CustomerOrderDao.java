@@ -74,7 +74,7 @@ public class CustomerOrderDao extends HibernateDao<CustomerOrderPo, Long>{
 	}
 
 	public BigDecimal findCustomerOrderTotalAmt(CustomerOrderQueryVo customerOrderQueryVo) {
-		StringBuffer hql = new StringBuffer("select sum(IFNULL(settlePrice,0)+IFNULL(otherAmt,0)) from CustomerOrderPo where delStatus=?");
+		StringBuffer hql = new StringBuffer("select sum(IFNULL(customerPrice,0) + IFNULL(otherAmt,0) - IFNULL(settlePrice,0)) from CustomerOrderPo where delStatus=?");
 		List<Object> param = new ArrayList<Object>();
 		param.add(DelStatusEnum.NORMAL.getValue());
 		if(StringUtils.isNotBlank(customerOrderQueryVo.getCompanyName())){

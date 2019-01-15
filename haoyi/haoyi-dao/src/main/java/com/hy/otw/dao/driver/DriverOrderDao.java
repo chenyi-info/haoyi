@@ -76,7 +76,7 @@ public class DriverOrderDao extends HibernateDao<DriverOrderPo, Long>{
 	}
 
 	public BigDecimal findDriverOrderTotalAmt(DriverOrderQueryVo driverOrderQueryVo) {
-		StringBuffer hql = new StringBuffer("select sum(IFNULL(settlePrice,0) + IFNULL(otherAmt,0))  from DriverOrderPo where delStatus=?");
+		StringBuffer hql = new StringBuffer("select sum(IFNULL(driverPrice,0) + IFNULL(otherAmt,0) - IFNULL(settlePrice,0))  from DriverOrderPo where delStatus=?");
 		List<Object> param = new ArrayList<Object>();
 		param.add(DelStatusEnum.NORMAL.getValue());
 		if(StringUtils.isNotBlank(driverOrderQueryVo.getContactNumber())){
