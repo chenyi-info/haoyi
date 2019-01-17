@@ -34,14 +34,26 @@
         <property name="successUrl" value="/view/home.html"/>
         <!-- 非法访问时，跳转的地址 -->
 		<property name="unauthorizedUrl" value="/view/login.html" />
+		<property name="filters">
+            <map>
+                <!--退出过滤器-->
+                <entry key="logout" value-ref="logoutFilter" />
+            </map>
+        </property>
         <!--URL的拦截-->
         <property name="filterChainDefinitions" >
             <value>
             	/auth/login = anon
+            	/auth/logout = logout
                 /static/** = anon
                 /** = authc
             </value>
         </property>
+    </bean>
+    
+    <!--自定义退出LogoutFilter -->
+    <bean id="logoutFilter" class="com.hy.otw.service.auth.SystemLogoutFilterService">
+        <property name="redirectUrl" value="/view/login.html"/>
     </bean>
     
 </beans>

@@ -10,6 +10,7 @@ import javax.annotation.Resource;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.BooleanUtils;
+import org.apache.shiro.SecurityUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.web.portlet.bind.annotation.ResourceMapping;
 
@@ -21,6 +22,7 @@ import com.hy.otw.service.customer.CustomerOrderService;
 import com.hy.otw.service.customer.OrderOtherAmtService;
 import com.hy.otw.service.driver.DriverOrderService;
 import com.hy.otw.vo.OrderVo;
+import com.hy.otw.vo.UserInfoVo;
 import com.hy.otw.vo.http.ResponseMsgVo;
 import com.hy.otw.vo.query.OrderQueryVo;
 
@@ -43,11 +45,12 @@ public class OrderService {
 			msgVo.setStatusCode("hasOrder");
 			return msgVo;
 		}
+		UserInfoVo loginUser = (UserInfoVo) SecurityUtils.getSubject().getPrincipal();
 		Date date = new Date();
 		OrderPo orderPo = new OrderPo();
-		orderVo.setCreateBy(1l);
+		orderVo.setCreateBy(loginUser.getId());
 		orderVo.setCreateDate(date);
-		orderVo.setUpdateBy(1l);
+		orderVo.setUpdateBy(loginUser.getId());
 		orderVo.setUpdateDate(date);
 		orderVo.setDelStatus(DelStatusEnum.NORMAL.getValue());
 		PropertyUtils.copyProperties(orderPo, orderVo);
@@ -88,11 +91,12 @@ public class OrderService {
 		if(orderPo == null){
 			throw new Exception("未找到该条信息");
 		}
+		UserInfoVo loginUser = (UserInfoVo) SecurityUtils.getSubject().getPrincipal();
 		Date date = new Date();
 		orderVo.setOtherAmt(orderPo.getOtherAmt());
 		orderVo.setCreateBy(orderPo.getCreateBy());
 		orderVo.setCreateDate(orderPo.getCreateDate());
-		orderVo.setUpdateBy(1l);
+		orderVo.setUpdateBy(loginUser.getId());
 		orderVo.setUpdateDate(date);
 		orderVo.setDelStatus(orderPo.getDelStatus());
 		PropertyUtils.copyProperties(orderPo, orderVo);
@@ -108,9 +112,10 @@ public class OrderService {
 		if(orderPo == null){
 			throw new Exception("未找到该条信息");
 		}
+		UserInfoVo loginUser = (UserInfoVo) SecurityUtils.getSubject().getPrincipal();
 		Date date = new Date();
 		orderPo.setDelStatus(DelStatusEnum.HIDE.getValue());
-		orderPo.setUpdateBy(1l);
+		orderPo.setUpdateBy(loginUser.getId());
 		orderPo.setUpdateDate(date);
 		this.orderDao.editOrder(orderPo);
 		this.customerOrderService.deleteCustomerOrder(orderId);

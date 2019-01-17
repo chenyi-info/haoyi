@@ -11,6 +11,7 @@ import javax.annotation.Resource;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.shiro.SecurityUtils;
 import org.springframework.stereotype.Service;
 
 import com.hy.otw.common.enums.DelStatusEnum;
@@ -20,6 +21,7 @@ import com.hy.otw.hibernate.utils.Pagination;
 import com.hy.otw.po.DriverOrderPo;
 import com.hy.otw.po.OrderPo;
 import com.hy.otw.vo.DriverOrderVo;
+import com.hy.otw.vo.UserInfoVo;
 import com.hy.otw.vo.query.DriverOrderQueryVo;
 
 @Service
@@ -99,10 +101,11 @@ public class DriverOrderService {
 		if(driverOrderPo == null){
 			throw new Exception("未找到该条信息");
 		}
+		UserInfoVo loginUser = (UserInfoVo) SecurityUtils.getSubject().getPrincipal();
 		Date date = new Date();
 		driverOrderPo.setRemarks(driverOrderVo.getRemarks());
 		driverOrderPo.setSettleStatus(driverOrderVo.getSettleStatus());
-		driverOrderPo.setUpdateBy(1l);
+		driverOrderPo.setUpdateBy(loginUser.getId());
 		driverOrderPo.setUpdateDate(date);
 		this.driverOrderDao.editDriverOrder(driverOrderPo);
 	}
@@ -110,9 +113,10 @@ public class DriverOrderService {
 	public void deleteDriverOrder(Long driverOrderId) throws Exception {
 		DriverOrderPo driverOrderPo = driverOrderDao.getDriverOrder(driverOrderId);
 		if(driverOrderPo != null){
+			UserInfoVo loginUser = (UserInfoVo) SecurityUtils.getSubject().getPrincipal();
 			Date date = new Date();
 			driverOrderPo.setDelStatus(DelStatusEnum.HIDE.getValue());
-			driverOrderPo.setUpdateBy(1l);
+			driverOrderPo.setUpdateBy(loginUser.getId());
 			driverOrderPo.setUpdateDate(date);
 			this.driverOrderDao.editDriverOrder(driverOrderPo);
 		}

@@ -9,12 +9,14 @@ import javax.annotation.Resource;
 
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.shiro.SecurityUtils;
 import org.springframework.stereotype.Service;
 
 import com.hy.otw.common.enums.DelStatusEnum;
 import com.hy.otw.dao.vehicle.VehicleDao;
 import com.hy.otw.hibernate.utils.Pagination;
 import com.hy.otw.po.VehiclePo;
+import com.hy.otw.vo.UserInfoVo;
 import com.hy.otw.vo.VehicleVo;
 import com.hy.otw.vo.query.VehicleQueryVo;
 
@@ -28,11 +30,12 @@ public class VehicleService {
 		if(vehiclePo != null){
 			throw new Exception("车牌号不能重复");
 		}
+		UserInfoVo loginUser = (UserInfoVo) SecurityUtils.getSubject().getPrincipal();
 		Date date = new Date();
 		vehiclePo = new VehiclePo();
-		vehicleVo.setCreateBy(1l);
+		vehicleVo.setCreateBy(loginUser.getId());
 		vehicleVo.setCreateDate(date);
-		vehicleVo.setUpdateBy(1l);
+		vehicleVo.setUpdateBy(loginUser.getId());
 		vehicleVo.setUpdateDate(date);
 		vehicleVo.setDelStatus(DelStatusEnum.NORMAL.getValue());
 		PropertyUtils.copyProperties(vehiclePo, vehicleVo);
@@ -66,9 +69,10 @@ public class VehicleService {
 			throw new Exception("未找到司机信息");
 		}
 		Date date = new Date();
+		UserInfoVo loginUser = (UserInfoVo) SecurityUtils.getSubject().getPrincipal();
 		vehicleVo.setCreateBy(vehiclePo.getCreateBy());
 		vehicleVo.setCreateDate(vehiclePo.getCreateDate());
-		vehicleVo.setUpdateBy(1l);
+		vehicleVo.setUpdateBy(loginUser.getId());
 		vehicleVo.setUpdateDate(date);
 		vehicleVo.setDelStatus(vehiclePo.getDelStatus());
 		PropertyUtils.copyProperties(vehiclePo, vehicleVo);
@@ -81,8 +85,9 @@ public class VehicleService {
 			throw new Exception("未找到司机信息");
 		}
 		Date date = new Date();
+		UserInfoVo loginUser = (UserInfoVo) SecurityUtils.getSubject().getPrincipal();
 		vehiclePo.setDelStatus(DelStatusEnum.HIDE.getValue());
-		vehiclePo.setUpdateBy(1l);
+		vehiclePo.setUpdateBy(loginUser.getId());
 		vehiclePo.setUpdateDate(date);
 		this.vehicleDao.editVehicle(vehiclePo);
 	}

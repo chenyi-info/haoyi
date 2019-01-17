@@ -112,7 +112,8 @@ public class DriverOrderDao extends HibernateDao<DriverOrderPo, Long>{
 		hql.append(" order by orderDate desc");
 		
 		Query query = this.createQuery(hql.toString(), param.toArray());
-		BigDecimal totalAmt = new BigDecimal(query.uniqueResult().toString()) ;
+		Object amt = query.uniqueResult();
+		BigDecimal totalAmt = new BigDecimal( amt == null ? "0" : amt.toString());
 		return totalAmt;
 	}
 

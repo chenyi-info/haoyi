@@ -9,6 +9,7 @@ import javax.annotation.Resource;
 
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.shiro.SecurityUtils;
 import org.springframework.stereotype.Service;
 
 import com.hy.otw.common.enums.DelStatusEnum;
@@ -19,6 +20,7 @@ import com.hy.otw.po.DictionaryItemPo;
 import com.hy.otw.po.DictionaryPo;
 import com.hy.otw.vo.DictionaryItemVo;
 import com.hy.otw.vo.DictionaryVo;
+import com.hy.otw.vo.UserInfoVo;
 import com.hy.otw.vo.query.DictionaryQueryVo;
 
 @Service
@@ -32,11 +34,12 @@ public class DictionaryService {
 		if(dictionaryPo != null){
 			throw new Exception("字典编码不能重复");
 		}
+		UserInfoVo loginUser = (UserInfoVo) SecurityUtils.getSubject().getPrincipal();
 		Date date = new Date();
 		dictionaryPo = new DictionaryPo();
-		dictionaryVo.setCreateBy(1l);
+		dictionaryVo.setCreateBy(loginUser.getId());
 		dictionaryVo.setCreateDate(date);
-		dictionaryVo.setUpdateBy(1l);
+		dictionaryVo.setUpdateBy(loginUser.getId());
 		dictionaryVo.setUpdateDate(date);
 		dictionaryVo.setDelStatus(DelStatusEnum.NORMAL.getValue());
 		PropertyUtils.copyProperties(dictionaryPo, dictionaryVo);
@@ -71,9 +74,10 @@ public class DictionaryService {
 			throw new Exception("未找到该条信息");
 		}
 		Date date = new Date();
+		UserInfoVo loginUser = (UserInfoVo) SecurityUtils.getSubject().getPrincipal();
 		dictionaryVo.setCreateBy(dictionaryPo.getCreateBy());
 		dictionaryVo.setCreateDate(dictionaryPo.getCreateDate());
-		dictionaryVo.setUpdateBy(1l);
+		dictionaryVo.setUpdateBy(loginUser.getId());
 		dictionaryVo.setUpdateDate(date);
 		dictionaryVo.setDelStatus(dictionaryPo.getDelStatus());
 		PropertyUtils.copyProperties(dictionaryPo, dictionaryVo);
@@ -86,8 +90,9 @@ public class DictionaryService {
 			throw new Exception("未找到该条信息");
 		}
 		Date date = new Date();
+		UserInfoVo loginUser = (UserInfoVo) SecurityUtils.getSubject().getPrincipal();
 		dictionaryPo.setDelStatus(DelStatusEnum.HIDE.getValue());
-		dictionaryPo.setUpdateBy(1l);
+		dictionaryPo.setUpdateBy(loginUser.getId());
 		dictionaryPo.setUpdateDate(date);
 		this.dictionaryDao.editDictionary(dictionaryPo);
 	}
@@ -109,10 +114,11 @@ public class DictionaryService {
 
 	public void addDictionaryItem(DictionaryItemVo dictionaryItemVo) throws IllegalAccessException, InvocationTargetException, NoSuchMethodException {
 		Date date = new Date();
+		UserInfoVo loginUser = (UserInfoVo) SecurityUtils.getSubject().getPrincipal();
 		DictionaryItemPo dictionaryItemPo = new DictionaryItemPo();
-		dictionaryItemVo.setCreateBy(1l);
+		dictionaryItemVo.setCreateBy(loginUser.getId());
 		dictionaryItemVo.setCreateDate(date);
-		dictionaryItemVo.setUpdateBy(1l);
+		dictionaryItemVo.setUpdateBy(loginUser.getId());
 		dictionaryItemVo.setUpdateDate(date);
 		dictionaryItemVo.setDelStatus(DelStatusEnum.NORMAL.getValue());
 		PropertyUtils.copyProperties(dictionaryItemPo, dictionaryItemVo);
@@ -125,9 +131,10 @@ public class DictionaryService {
 			throw new Exception("未找到该条信息");
 		}
 		Date date = new Date();
+		UserInfoVo loginUser = (UserInfoVo) SecurityUtils.getSubject().getPrincipal();
 		dictionaryItemVo.setCreateBy(dictionaryItemPo.getCreateBy());
 		dictionaryItemVo.setCreateDate(dictionaryItemPo.getCreateDate());
-		dictionaryItemVo.setUpdateBy(1l);
+		dictionaryItemVo.setUpdateBy(loginUser.getId());
 		dictionaryItemVo.setUpdateDate(date);
 		dictionaryItemVo.setDelStatus(dictionaryItemPo.getDelStatus());
 		PropertyUtils.copyProperties(dictionaryItemPo, dictionaryItemVo);
@@ -140,8 +147,9 @@ public class DictionaryService {
 			throw new Exception("未找到该条信息");
 		}
 		Date date = new Date();
+		UserInfoVo loginUser = (UserInfoVo) SecurityUtils.getSubject().getPrincipal();
 		dictionaryItemPo.setDelStatus(DelStatusEnum.HIDE.getValue());
-		dictionaryItemPo.setUpdateBy(1l);
+		dictionaryItemPo.setUpdateBy(loginUser.getId());
 		dictionaryItemPo.setUpdateDate(date);
 		this.dictionaryItemDao.editDictionaryItem(dictionaryItemPo);
 	}

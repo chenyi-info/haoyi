@@ -9,11 +9,13 @@ import javax.annotation.Resource;
 
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.shiro.SecurityUtils;
 import org.springframework.stereotype.Service;
 
 import com.hy.otw.common.enums.DelStatusEnum;
 import com.hy.otw.dao.sys.MenuResourcesDao;
 import com.hy.otw.po.sys.MenuResourcesPo;
+import com.hy.otw.vo.UserInfoVo;
 import com.hy.otw.vo.query.sys.MenuResourcesQueryVo;
 import com.hy.otw.vo.sys.MenuResourcesVo;
 
@@ -27,11 +29,12 @@ public class MenuResourcesService {
 		if(menuResourcesPo != null){
 			throw new Exception("菜单编码不能重复");
 		}
+		UserInfoVo loginUser = (UserInfoVo) SecurityUtils.getSubject().getPrincipal();
 		Date date = new Date();
 		menuResourcesPo = new MenuResourcesPo();
-		menuResourcesVo.setCreateBy(1l);
+		menuResourcesVo.setCreateBy(loginUser.getId());
 		menuResourcesVo.setCreateDate(date);
-		menuResourcesVo.setUpdateBy(1l);
+		menuResourcesVo.setUpdateBy(loginUser.getId());
 		menuResourcesVo.setUpdateDate(date);
 		menuResourcesVo.setDelStatus(DelStatusEnum.NORMAL.getValue());
 		PropertyUtils.copyProperties(menuResourcesPo, menuResourcesVo);
@@ -63,9 +66,10 @@ public class MenuResourcesService {
 			throw new Exception("未找到该项信息");
 		}
 		Date date = new Date();
+		UserInfoVo loginUser = (UserInfoVo) SecurityUtils.getSubject().getPrincipal();
 		menuResourcesVo.setCreateBy(menuResourcesPo.getCreateBy());
 		menuResourcesVo.setCreateDate(menuResourcesPo.getCreateDate());
-		menuResourcesVo.setUpdateBy(1l);
+		menuResourcesVo.setUpdateBy(loginUser.getId());
 		menuResourcesVo.setUpdateDate(date);
 		menuResourcesVo.setDelStatus(menuResourcesPo.getDelStatus());
 		PropertyUtils.copyProperties(menuResourcesPo, menuResourcesVo);
@@ -75,11 +79,12 @@ public class MenuResourcesService {
 	public void deleteMenuResources(Long menuResourcesId) throws Exception {
 		MenuResourcesPo menuResourcesPo = menuResourcesDao.getMenuResources(menuResourcesId);
 		if(menuResourcesPo == null){
-			throw new Exception("未找到司机信息");
+			throw new Exception("未找到该项信息");
 		}
 		Date date = new Date();
+		UserInfoVo loginUser = (UserInfoVo) SecurityUtils.getSubject().getPrincipal();
 		menuResourcesPo.setDelStatus(DelStatusEnum.HIDE.getValue());
-		menuResourcesPo.setUpdateBy(1l);
+		menuResourcesPo.setUpdateBy(loginUser.getId());
 		menuResourcesPo.setUpdateDate(date);
 		this.menuResourcesDao.editMenuResources(menuResourcesPo);
 	}

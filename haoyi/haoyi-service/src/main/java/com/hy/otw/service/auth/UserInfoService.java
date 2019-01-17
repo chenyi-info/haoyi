@@ -10,6 +10,7 @@ import javax.annotation.Resource;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.RandomStringUtils;
+import org.apache.shiro.SecurityUtils;
 import org.springframework.stereotype.Service;
 
 import com.hy.otw.common.enums.DelStatusEnum;
@@ -28,6 +29,7 @@ public class UserInfoService {
 	private final char[] randomChars = {'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'};
 
 	public void addUserInfo(UserInfoVo userInfoVo) throws Exception {
+		UserInfoVo loginUser = (UserInfoVo) SecurityUtils.getSubject().getPrincipal();
 		UserInfoPo userInfoPo = userInfoDao.getUserInfoByAccount(userInfoVo.getUserAccount());
 		if(userInfoPo != null) {
 			throw new Exception("账号不能重复");
@@ -37,9 +39,9 @@ public class UserInfoService {
 		userInfoPo = new UserInfoPo();
 		userInfoVo.setPassword(MD5Util.md5(userInfoVo.getPassword(), salt));
 		userInfoVo.setSalt(salt);
-		userInfoVo.setCreateBy(1l);
+		userInfoVo.setCreateBy(loginUser.getId());
 		userInfoVo.setCreateDate(date);
-		userInfoVo.setUpdateBy(1l);
+		userInfoVo.setUpdateBy(loginUser.getId());
 		userInfoVo.setUpdateDate(date);
 		userInfoVo.setDelStatus(DelStatusEnum.NORMAL.getValue());
 		PropertyUtils.copyProperties(userInfoPo, userInfoVo);
@@ -73,13 +75,13 @@ public class UserInfoService {
 		if(userInfoPo == null){
 			throw new Exception("未找到该条信息");
 		}
-		
+		UserInfoVo loginUser = (UserInfoVo) SecurityUtils.getSubject().getPrincipal();
 		Date date = new Date();
 		userInfoVo.setPassword(userInfoPo.getPassword());
 		userInfoVo.setSalt(userInfoPo.getSalt());
 		userInfoVo.setCreateBy(userInfoPo.getCreateBy());
 		userInfoVo.setCreateDate(userInfoPo.getCreateDate());
-		userInfoVo.setUpdateBy(1l);
+		userInfoVo.setUpdateBy(loginUser.getId());
 		userInfoVo.setUpdateDate(date);
 		userInfoVo.setDelStatus(userInfoPo.getDelStatus());
 		PropertyUtils.copyProperties(userInfoPo, userInfoVo);
@@ -87,13 +89,14 @@ public class UserInfoService {
 	}
 	
 	public void deleteUserInfo(Long userId) throws Exception {
+		UserInfoVo loginUser = (UserInfoVo) SecurityUtils.getSubject().getPrincipal();
 		UserInfoPo userInfoPo = userInfoDao.getUserInfo(userId);
 		if(userInfoPo == null){
 			throw new Exception("未找到该条信息");
 		}
 		Date date = new Date();
 		userInfoPo.setDelStatus(DelStatusEnum.HIDE.getValue());
-		userInfoPo.setUpdateBy(1l);
+		userInfoPo.setUpdateBy(loginUser.getId());
 		userInfoPo.setUpdateDate(date);
 		this.userInfoDao.editUserInfo(userInfoPo);
 	}

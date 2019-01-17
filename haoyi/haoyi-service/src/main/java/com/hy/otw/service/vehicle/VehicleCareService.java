@@ -10,12 +10,14 @@ import javax.annotation.Resource;
 
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.shiro.SecurityUtils;
 import org.springframework.stereotype.Service;
 
 import com.hy.otw.common.enums.DelStatusEnum;
 import com.hy.otw.dao.vehicle.VehicleCareDao;
 import com.hy.otw.hibernate.utils.Pagination;
 import com.hy.otw.po.VehicleCarePo;
+import com.hy.otw.vo.UserInfoVo;
 import com.hy.otw.vo.VehicleCareVo;
 import com.hy.otw.vo.query.VehicleCareQueryVo;
 
@@ -26,10 +28,11 @@ public class VehicleCareService {
 
 	public void addVehicleCare(VehicleCareVo vehicleCareVo) throws IllegalAccessException, InvocationTargetException, NoSuchMethodException {
 		Date date = new Date();
+		UserInfoVo loginUser = (UserInfoVo) SecurityUtils.getSubject().getPrincipal();
 		VehicleCarePo vehicleCarePo = new VehicleCarePo();
-		vehicleCareVo.setCreateBy(1l);
+		vehicleCareVo.setCreateBy(loginUser.getId());
 		vehicleCareVo.setCreateDate(date);
-		vehicleCareVo.setUpdateBy(1l);
+		vehicleCareVo.setUpdateBy(loginUser.getId());
 		vehicleCareVo.setUpdateDate(date);
 		vehicleCareVo.setDelStatus(DelStatusEnum.NORMAL.getValue());
 		PropertyUtils.copyProperties(vehicleCarePo, vehicleCareVo);
@@ -65,11 +68,11 @@ public class VehicleCareService {
 		
 		VehicleCarePo prevVehicleCarePo = vehicleCareDao.findLastPrevVehicleCarePo(vehicleCareVo.getPlateNumber(), vehicleCareVo.getCareDate());
 		VehicleCarePo nextVehicleCarePo = vehicleCareDao.findLastNextVehicleCarePo(vehicleCareVo.getPlateNumber(), vehicleCareVo.getCareDate());
-		
+		UserInfoVo loginUser = (UserInfoVo) SecurityUtils.getSubject().getPrincipal();
 		Date date = new Date();
 		vehicleCareVo.setCreateBy(vehicleCarePo.getCreateBy());
 		vehicleCareVo.setCreateDate(vehicleCarePo.getCreateDate());
-		vehicleCareVo.setUpdateBy(1l);
+		vehicleCareVo.setUpdateBy(loginUser.getId());
 		vehicleCareVo.setUpdateDate(date);
 		vehicleCareVo.setDelStatus(vehicleCarePo.getDelStatus());
 		PropertyUtils.copyProperties(vehicleCarePo, vehicleCareVo);
@@ -97,8 +100,9 @@ public class VehicleCareService {
 			throw new Exception("未找到该条信息");
 		}
 		Date date = new Date();
+		UserInfoVo loginUser = (UserInfoVo) SecurityUtils.getSubject().getPrincipal();
 		vehicleCarePo.setDelStatus(DelStatusEnum.HIDE.getValue());
-		vehicleCarePo.setUpdateBy(1l);
+		vehicleCarePo.setUpdateBy(loginUser.getId());
 		vehicleCarePo.setUpdateDate(date);
 		this.vehicleCareDao.editVehicleCare(vehicleCarePo);
 	}

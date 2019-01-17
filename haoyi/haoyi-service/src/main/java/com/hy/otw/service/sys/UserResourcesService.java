@@ -30,16 +30,16 @@ public class UserResourcesService {
 		if(CollectionUtils.isEmpty(userResourcesVoList)){
 			throw new Exception("权限菜单不能为空");
 		}
-		UserInfoVo userInfo = (UserInfoVo) SecurityUtils.getSubject().getPrincipal();
-		userResourcesDao.deleteUserAuthority(userInfo.getId());
+		UserInfoVo loginUser = (UserInfoVo) SecurityUtils.getSubject().getPrincipal();
+		userResourcesDao.deleteUserAuthority(loginUser.getId());
 		Date date = new Date();
 		List<UserResourcesPo> userResourcesPoList = new ArrayList<UserResourcesPo>();
 		for (UserResourcesVo userResourcesVo : userResourcesVoList) {
 			UserResourcesPo userResourcesPo = new UserResourcesPo();
 			PropertyUtils.copyProperties(userResourcesPo, userResourcesVo);
-			userResourcesPo.setCreateBy(userInfo.getId());
+			userResourcesPo.setCreateBy(loginUser.getId());
 			userResourcesPo.setCreateDate(date);
-			userResourcesPo.setUpdateBy(userInfo.getId());
+			userResourcesPo.setUpdateBy(loginUser.getId());
 			userResourcesPo.setUpdateDate(date);
 			userResourcesPo.setDelStatus(DelStatusEnum.NORMAL.getValue());
 			userResourcesPoList.add(userResourcesPo);
@@ -49,8 +49,8 @@ public class UserResourcesService {
 
 
 	public List<MenuResourcesVo> findUserAuthority() throws IllegalAccessException, InvocationTargetException, NoSuchMethodException {
-		UserInfoVo userInfo = (UserInfoVo) SecurityUtils.getSubject().getPrincipal();
-		List<Long> userResourcesIdList =  this.userResourcesDao.findUserResourcesId(userInfo.getId());
+		UserInfoVo loginUser = (UserInfoVo) SecurityUtils.getSubject().getPrincipal();
+		List<Long> userResourcesIdList =  this.userResourcesDao.findUserResourcesId(loginUser.getId());
 		List<MenuResourcesVo> menuResourcesVoList = null;
 		if(CollectionUtils.isNotEmpty(userResourcesIdList)){
 			menuResourcesVoList = menuResourcesService.findMenuResourcesListByIds(userResourcesIdList);

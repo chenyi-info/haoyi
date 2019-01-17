@@ -10,6 +10,7 @@ import javax.annotation.Resource;
 
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.shiro.SecurityUtils;
 import org.springframework.stereotype.Service;
 
 import com.hy.otw.common.enums.DelStatusEnum;
@@ -19,6 +20,7 @@ import com.hy.otw.hibernate.utils.Pagination;
 import com.hy.otw.po.CustomerOrderPo;
 import com.hy.otw.po.OrderPo;
 import com.hy.otw.vo.CustomerOrderVo;
+import com.hy.otw.vo.UserInfoVo;
 import com.hy.otw.vo.query.CustomerOrderQueryVo;
 
 @Service
@@ -92,9 +94,10 @@ public class CustomerOrderService {
 			throw new Exception("未找到该条信息");
 		}
 		Date date = new Date();
+		UserInfoVo loginUser = (UserInfoVo) SecurityUtils.getSubject().getPrincipal();
 		customerOrderPo.setRemarks(customerOrderVo.getRemarks());
 		customerOrderPo.setSettleStatus(customerOrderVo.getSettleStatus());
-		customerOrderPo.setUpdateBy(1l);
+		customerOrderPo.setUpdateBy(loginUser.getId());
 		customerOrderPo.setUpdateDate(date);
 		this.customerOrderDao.editCustomerOrder(customerOrderPo);
 	}
@@ -102,9 +105,10 @@ public class CustomerOrderService {
 	public void deleteCustomerOrder(Long orderId) throws Exception {
 		CustomerOrderPo customerOrderPo = customerOrderDao.getCustomerOrderByOrderId(orderId);
 		if(customerOrderPo != null){
+			UserInfoVo loginUser = (UserInfoVo) SecurityUtils.getSubject().getPrincipal();
 			Date date = new Date();
 			customerOrderPo.setDelStatus(DelStatusEnum.HIDE.getValue());
-			customerOrderPo.setUpdateBy(1l);
+			customerOrderPo.setUpdateBy(loginUser.getId());
 			customerOrderPo.setUpdateDate(date);
 			this.customerOrderDao.editCustomerOrder(customerOrderPo);
 		}

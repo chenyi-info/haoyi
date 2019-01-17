@@ -9,6 +9,7 @@ import javax.annotation.Resource;
 
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.shiro.SecurityUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.web.portlet.bind.annotation.ResourceMapping;
 
@@ -21,6 +22,7 @@ import com.hy.otw.po.OrderPo;
 import com.hy.otw.service.order.OrderService;
 import com.hy.otw.vo.OrderOtherAmtVo;
 import com.hy.otw.vo.OrderVo;
+import com.hy.otw.vo.UserInfoVo;
 import com.hy.otw.vo.query.OrderOtherAmtQueryVo;
 
 @Service
@@ -34,20 +36,21 @@ public class OrderOtherAmtService {
 		if(orderVo == null){
 			throw new Exception("未找到订单信息orderId:"+orderOtherAmtVo.getOrderId());
 		}
+		UserInfoVo loginUser = (UserInfoVo) SecurityUtils.getSubject().getPrincipal();
 		if(orderOtherAmtVo.getPropertyType() == 1){//归属类型 1-司机 2-客户 3-自己
 			orderOtherAmtVo.setTargetName(orderVo.getPlateNumber());
 		}else if(orderOtherAmtVo.getPropertyType() == 2){
 			orderOtherAmtVo.setTargetId(orderVo.getCustomerId());
 			orderOtherAmtVo.setTargetName(orderVo.getCompanyName());
 		}else if(orderOtherAmtVo.getPropertyType() == 3){
-			orderOtherAmtVo.setTargetId(1l);
-			orderOtherAmtVo.setTargetName("郝意");
+			orderOtherAmtVo.setTargetId(loginUser.getId());
+			orderOtherAmtVo.setTargetName(loginUser.getUserName());
 		}
 		Date date = new Date();
 		OrderOtherAmtPo orderOtherAmtPo = new OrderOtherAmtPo();
-		orderOtherAmtVo.setCreateBy(1l);
+		orderOtherAmtVo.setCreateBy(loginUser.getId());
 		orderOtherAmtVo.setCreateDate(date);
-		orderOtherAmtVo.setUpdateBy(1l);
+		orderOtherAmtVo.setUpdateBy(loginUser.getId());
 		orderOtherAmtVo.setUpdateDate(date);
 		orderOtherAmtVo.setDelStatus(DelStatusEnum.NORMAL.getValue());
 		PropertyUtils.copyProperties(orderOtherAmtPo, orderOtherAmtVo);
@@ -75,14 +78,15 @@ public class OrderOtherAmtService {
 		if(orderVo == null){
 			throw new Exception("未找到订单信息orderId:"+orderOtherAmtVo.getOrderId());
 		}
+		UserInfoVo loginUser = (UserInfoVo) SecurityUtils.getSubject().getPrincipal();
 		if(orderOtherAmtVo.getPropertyType() == 1){//归属类型 1-司机 2-客户 3-自己
 			orderOtherAmtVo.setTargetName(orderVo.getPlateNumber());
 		}else if(orderOtherAmtVo.getPropertyType() == 2){
 			orderOtherAmtVo.setTargetId(orderVo.getCustomerId());
 			orderOtherAmtVo.setTargetName(orderVo.getCompanyName());
 		}else if(orderOtherAmtVo.getPropertyType() == 3){
-			orderOtherAmtVo.setTargetId(1l);
-			orderOtherAmtVo.setTargetName("郝意");
+			orderOtherAmtVo.setTargetId(loginUser.getId());
+			orderOtherAmtVo.setTargetName(loginUser.getUserName());
 		}
 		OrderOtherAmtPo orderOtherAmtPo = orderOtherAmtDao.getOrderOtherAmt(orderOtherAmtVo.getId());
 		if(orderOtherAmtPo == null){
@@ -91,7 +95,7 @@ public class OrderOtherAmtService {
 		Date date = new Date();
 		orderOtherAmtVo.setCreateBy(orderOtherAmtPo.getCreateBy());
 		orderOtherAmtVo.setCreateDate(orderOtherAmtPo.getCreateDate());
-		orderOtherAmtVo.setUpdateBy(1l);
+		orderOtherAmtVo.setUpdateBy(loginUser.getId());
 		orderOtherAmtVo.setUpdateDate(date);
 		orderOtherAmtVo.setDelStatus(orderOtherAmtPo.getDelStatus());
 		PropertyUtils.copyProperties(orderOtherAmtPo, orderOtherAmtVo);
@@ -103,9 +107,10 @@ public class OrderOtherAmtService {
 		if(orderOtherAmtPo == null){
 			throw new Exception("未找到该条信息");
 		}
+		UserInfoVo loginUser = (UserInfoVo) SecurityUtils.getSubject().getPrincipal();
 		Date date = new Date();
 		orderOtherAmtPo.setDelStatus(DelStatusEnum.HIDE.getValue());
-		orderOtherAmtPo.setUpdateBy(1l);
+		orderOtherAmtPo.setUpdateBy(loginUser.getId());
 		orderOtherAmtPo.setUpdateDate(date);
 		this.orderOtherAmtDao.editOrderOtherAmt(orderOtherAmtPo);
 	}

@@ -9,6 +9,7 @@ import javax.annotation.Resource;
 
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.shiro.SecurityUtils;
 import org.springframework.stereotype.Service;
 
 import com.hy.otw.common.enums.DelStatusEnum;
@@ -19,6 +20,7 @@ import com.hy.otw.po.CustomerOperatorPo;
 import com.hy.otw.po.CustomerPo;
 import com.hy.otw.vo.CustomerOperatorVo;
 import com.hy.otw.vo.CustomerVo;
+import com.hy.otw.vo.UserInfoVo;
 import com.hy.otw.vo.query.CustomerQueryVo;
 
 @Service
@@ -32,11 +34,12 @@ public class CustomerService {
 		if(customerPo != null){
 			throw new Exception("公司不能重复");
 		}
+		UserInfoVo loginUser = (UserInfoVo) SecurityUtils.getSubject().getPrincipal();
 		Date date = new Date();
 		customerPo = new CustomerPo();
-		customerVo.setCreateBy(1l);
+		customerVo.setCreateBy(loginUser.getId());
 		customerVo.setCreateDate(date);
-		customerVo.setUpdateBy(1l);
+		customerVo.setUpdateBy(loginUser.getId());
 		customerVo.setUpdateDate(date);
 		customerVo.setDelStatus(DelStatusEnum.NORMAL.getValue());
 		PropertyUtils.copyProperties(customerPo, customerVo);
@@ -71,9 +74,10 @@ public class CustomerService {
 			throw new Exception("未找到该条信息");
 		}
 		Date date = new Date();
+		UserInfoVo loginUser = (UserInfoVo) SecurityUtils.getSubject().getPrincipal();
 		customerVo.setCreateBy(customerPo.getCreateBy());
 		customerVo.setCreateDate(customerPo.getCreateDate());
-		customerVo.setUpdateBy(1l);
+		customerVo.setUpdateBy(loginUser.getId());
 		customerVo.setUpdateDate(date);
 		customerVo.setDelStatus(customerPo.getDelStatus());
 		PropertyUtils.copyProperties(customerPo, customerVo);
@@ -86,8 +90,9 @@ public class CustomerService {
 			throw new Exception("未找到该条信息");
 		}
 		Date date = new Date();
+		UserInfoVo loginUser = (UserInfoVo) SecurityUtils.getSubject().getPrincipal();
 		customerPo.setDelStatus(DelStatusEnum.HIDE.getValue());
-		customerPo.setUpdateBy(1l);
+		customerPo.setUpdateBy(loginUser.getId());
 		customerPo.setUpdateDate(date);
 		this.customerDao.editCustomer(customerPo);
 	}
@@ -109,10 +114,11 @@ public class CustomerService {
 
 	public void addCustomerOperator(CustomerOperatorVo customerOperatorVo) throws IllegalAccessException, InvocationTargetException, NoSuchMethodException {
 		Date date = new Date();
+		UserInfoVo loginUser = (UserInfoVo) SecurityUtils.getSubject().getPrincipal();
 		CustomerOperatorPo customerOperatorPo = new CustomerOperatorPo();
-		customerOperatorVo.setCreateBy(1l);
+		customerOperatorVo.setCreateBy(loginUser.getId());
 		customerOperatorVo.setCreateDate(date);
-		customerOperatorVo.setUpdateBy(1l);
+		customerOperatorVo.setUpdateBy(loginUser.getId());
 		customerOperatorVo.setUpdateDate(date);
 		customerOperatorVo.setDelStatus(DelStatusEnum.NORMAL.getValue());
 		PropertyUtils.copyProperties(customerOperatorPo, customerOperatorVo);
@@ -125,9 +131,10 @@ public class CustomerService {
 			throw new Exception("未找到该条信息");
 		}
 		Date date = new Date();
+		UserInfoVo loginUser = (UserInfoVo) SecurityUtils.getSubject().getPrincipal();
 		customerOperatorVo.setCreateBy(customerOperatorPo.getCreateBy());
 		customerOperatorVo.setCreateDate(customerOperatorPo.getCreateDate());
-		customerOperatorVo.setUpdateBy(1l);
+		customerOperatorVo.setUpdateBy(loginUser.getId());
 		customerOperatorVo.setUpdateDate(date);
 		customerOperatorVo.setDelStatus(customerOperatorPo.getDelStatus());
 		PropertyUtils.copyProperties(customerOperatorPo, customerOperatorVo);
@@ -140,8 +147,9 @@ public class CustomerService {
 			throw new Exception("未找到该条信息");
 		}
 		Date date = new Date();
+		UserInfoVo loginUser = (UserInfoVo) SecurityUtils.getSubject().getPrincipal();
 		customerOperatorPo.setDelStatus(DelStatusEnum.HIDE.getValue());
-		customerOperatorPo.setUpdateBy(1l);
+		customerOperatorPo.setUpdateBy(loginUser.getId());
 		customerOperatorPo.setUpdateDate(date);
 		this.customerOperatorDao.editCustomerOperator(customerOperatorPo);
 	}
