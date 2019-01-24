@@ -1,9 +1,10 @@
 ﻿$(function(){
 	var columns = [[
 	           	 {field:'plateNumber',title:'车牌号',width:'20%',align:'center'},    
-	        	 {field:'ownerName',title:'司机姓名',width:'15%',align:'center'}, 
-	        	 {field:'contactNumber',title:'联系电话',width:'20%',align:'center'},
+	        	 {field:'ownerName',title:'司机姓名',width:'10%',align:'center'}, 
+	        	 {field:'contactNumber',title:'联系电话',width:'15%',align:'center'},
 	        	 {field:'vehicleType',title:'车辆类型',width:'10%',align:'center'},
+	        	 {field:'vehicleSource',title:'车辆来源',width:'10%',align:'center'},
 	        	 {field:'remarks',title:'备注',width:'10%',align:'center'},
 	        	 {field:'createDate',title:'创建时间',width:'15%',align:'center',formatter:function(value,row,index){
 	        		 return getYMDHMS(row.createDate);
@@ -68,7 +69,7 @@
 		$(diaHtml).dialog({    
 	 	    title: '新增司机',    
 	 	    width: 400,    
-	 	    height: 300,    
+	 	    height: 350,    
 	 	    closed: false,    
 	 	    modal: true,
 	 	    onOpen:function(){
@@ -100,7 +101,7 @@
 		$(diaHtml).dialog({    
 	 	    title: '修改司机('+row.ownerName+')',    
 	 	    width: 400,    
-	 	    height: 300,    
+	 	    height: 350,    
 	 	    closed: false,    
 	 	    modal: true,
 	 	    onOpen:function(){

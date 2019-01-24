@@ -5,14 +5,23 @@
 	             {field:'orderDate',title:'订单日期',width:'5%',align:'center',formatter:function(value,row,index){
 	        		 return getYMDHMS(row.orderDate);
 	        	 }}, 
-	           	 
 	        	 {field:'orderNO',title:'订单编号',width:'10%',align:'center'},
-	        	 {field:'demand',title:'订单要求',width:'5%',align:'center'},
 	        	 {field:'cabinetModel',title:'柜型',width:'5%',align:'center'},
+	        	 {field:'cabinetRecipientAddr',title:'提还柜',width:'5%',align:'center',formatter:function(value,row,index){
+	        		 var addr = '';
+	        		 if(row.cabinetRecipientAddr != null && row.cabinetRecipientAddr != ''){
+	        			 addr = row.cabinetRecipientAddr+"/";
+	        		 }
+	        		 if(row.cabinetReturnAddr != null && row.cabinetReturnAddr != ''){
+	        			 addr += row.cabinetReturnAddr;
+	        		 }
+                 	return  addr;
+                 }},
+                 {field:'address',title:'订单简址',width:'5%',align:'center'},
+                 {field:'weighed',title:'重量(T)',width:'5%',align:'center'},
+                 {field:'demand',title:'订单要求',width:'5%',align:'center'},
 	        	 {field:'cabinetNumber',title:'柜号',width:'5%',align:'center'},
 	        	 {field:'sealNumber',title:'封号',width:'5%',align:'center'},
-	        	 {field:'address',title:'订单简址',width:'5%',align:'center'},
-	        	 {field:'weighed',title:'重量(T)',width:'5%',align:'center'},
                  {field:'plateNumber',title:'车牌号',width:'5%',align:'center',editor: {
                      type: 'combogrid', // 指明控件类型
                      options:{
@@ -59,10 +68,17 @@
 	        			 editable:false
 	        		 }
 	        	 }}, 
-	        	 {field:'contactNumber',title:'联系电话',width:'10%',align:'center',editor:{
+	        	 {field:'contactNumber',title:'联系电话',width:'5%',align:'center',editor:{
 	        		 type:'textbox',
 	        		 options:{
 	        			 editable:false
+	        		 }
+	        	 }},
+	        	 {field:'driverPrice',title:'划价',width:'5%',align:'center',editor:{
+	        		 type:'numberbox',
+	        		 options:{
+	        			 editable:true,
+	        			 precision:2
 	        		 }
 	        	 }},
 	        	 {field:'otherAmt',title:'杂费金额',width:'5%',align:'center'},
@@ -92,7 +108,7 @@
                  }},
 	        	 
 	        	 {field:'opt',title:'操作',width:'200px',align:'center', formatter:function(value,row,index){
-                 	return "<button class='btn btn-add-oa'>添加杂费</button><button class='btn btn-sel-oa'>查看杂费</button><button class='btn btn-edit'>修改</button><button class='btn btn-del'>删除</button>";
+                 	return "<button class='btn btn-add-oa'>添加杂费</button><button class='btn btn-sel-oa'>查看杂费</button><button class='btn btn-edit'>修改</button><button class='btn btn-del'>删除</button><button class='btn btn-print'>派车单</button>";
                  }}
 	            ]];
 	
@@ -232,7 +248,7 @@
 		$(diaHtml).dialog({    
 	 	    title: '订单管理',    
 	 	    width: 400,    
-	 	    height: 760,    
+	 	    height: 800,    
 	 	    closed: false,    
 	 	    modal: true,
 	 	    onOpen:function(){
@@ -267,7 +283,7 @@
 		$(diaHtml).dialog({    
 	 	    title: '订单管理('+row.orderNO+')',    
 	 	    width: 400,    
-	 	    height: 760,    
+	 	    height: 800,    
 	 	    closed: false,    
 	 	    modal: true,
 	 	    onOpen:function(){
@@ -318,6 +334,7 @@
 			type:"post",
 			data:dataModel,
 			dataType:'json',
+			traditional:true,
 			beforeSend : function (){
 			    maskObj.showMask();// 显示遮蔽罩
 		    }
@@ -427,8 +444,6 @@
 	 	    onOpen:function(){
 	 	    	$.parser.parse('#main_dlg');
 	 	    	initDialogDataGrid({'orderId':row.id});
-	 	    	$('.main-dialog-view-content').delegate('button.btn-edit','click',updateItemDialog);
-	 			$('.main-dialog-view-content').delegate('button.btn-del','click',showDeleteItemDialog);
 	 	    },
 	 	    onClose:function(){
 	 	    	$('#main_dlg').dialog('destroy');
@@ -441,11 +456,49 @@
 		buildExportFormSubmit("/order/loadExcel.do", criteria);
 	}
 	
+	var copyText = function(){
+		var text = $(this).val();
+		var name = $(this).attr('name');
+		$('.bottom_area input[name='+name+']').val(text);
+	}
+	
+	var showPrintDialog = function(){
+		var row = $('#dataGrid').datagrid('getSelected');
+		row.orderDate = getYMDHMS(row.orderDate);
+		var html = Mustache.render($('#print_dialog_content_template').html(),row);
+		var diaHtml = "<div id='main_print_dlg'>"+html+"</div>";
+		$(diaHtml).dialog({    
+	 	    title: '派车单('+row.orderNO+')',    
+	 	    width: '90%',    
+	 	    height: '90%',    
+	 	    closed: false,    
+	 	    modal: true,
+	 	    onOpen:function(){
+	 	    	$('#print_area').delegate('.top_area input','change', copyText);
+	 	    },
+	 	    onClose:function(){
+	 	    	$('#main_dlg').dialog('destroy');
+	 	   },
+	 	    buttons:[{
+				text:'打印',
+				handler:function(){
+					$('#print_area').print();
+				}
+			},{
+				text:'关闭',
+				handler:function(){
+					$('#main_print_dlg').dialog('destroy');
+				}
+			}]
+	     }); 
+	}
+	
 	var initializeUI = function(){
 		var nowDate = new Date();
 		var toDay = nowDate.getFullYear() + '-'+ (nowDate.getMonth()+1) + '-' + nowDate.getDate();
-		$('#orderDateBegin_query').datetimebox('setValue', toDay+' 00:00:00')
-		$('#orderDateEnd_query').datetimebox('setValue', toDay+' 23:59:59')
+		$('#orderDateBegin_query').datetimebox('setValue', toDay+' 00:00:00');
+		$('#orderDateEnd_query').datetimebox('setValue', toDay+' 23:59:59');
+		initQueryDataDic();
 		initOrderStatus();
 		initDataGrid();
 		$('.dataTable-toolbar').delegate('button.btn-add','click',showAddDialog);
@@ -455,6 +508,7 @@
 		$('.main-dataTable-content').delegate('button.btn-del','click',showDeleteDialog);
 		$('.main-dataTable-content').delegate('button.btn-add-oa','click',showOtherAmtDialog);
 		$('.main-dataTable-content').delegate('button.btn-sel-oa','click',showOtherAmtItemDialog);
+		$('.main-dataTable-content').delegate('button.btn-print','click',showPrintDialog);
 		$('.main-dataTable-content').delegate('.datagrid-view','click',endEditing);
 	}
 	initializeUI();

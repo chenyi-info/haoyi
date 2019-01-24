@@ -23,6 +23,8 @@ public class OrderOtherAmtVo extends BaseVo{
 	
 	private Integer propertyType; 	//归属类型 1-司机 2-客户 3-自己
 	
+	private String[] propertyTypes; 	//归属类型 1-司机 2-客户 3-自己
+	
 	private Long targetId;			//归属方Id property_type=1则id为vehicle表id,=2则为customer表id,=3则为user表id
 	
 	private String targetName;		//归属方名称 property_type=1则id为vehicle表车牌号,=2则为customer表客户名称,=3则为user表用户名称

@@ -31,7 +31,7 @@ public class DictionaryItemDao extends HibernateDao<DictionaryItemPo, Long>{
 			hql.append(" and dictionaryCode = ?");
 			param.add(dictionaryQueryVo.getDictionaryCode());
 		}
-		hql.append(" order by updateDate desc");
+		hql.append(" order by createDate asc");
 		
 		Pagination pagination = this.findPagination(page, hql.toString(), param.toArray());
 		return pagination;

@@ -32,7 +32,15 @@ public class OrderOtherAmtController {
 	
 	@RequestMapping(value = "/add", method = RequestMethod.POST)
 	public void add(HttpServletRequest request,HttpServletResponse response, OrderOtherAmtVo orderOtherAmtVo) throws Exception {
-		this.orderOtherAmtService.addOrderOtherAmt(orderOtherAmtVo);
+		if(orderOtherAmtVo.getPropertyTypes().length > 0){
+			for (String propertyType : orderOtherAmtVo.getPropertyTypes()) {
+				orderOtherAmtVo.setPropertyType(Integer.valueOf(propertyType));
+				this.orderOtherAmtService.addOrderOtherAmt(orderOtherAmtVo);
+			}
+		}else{
+			this.orderOtherAmtService.addOrderOtherAmt(orderOtherAmtVo);
+		}
+		
 	}
 	
 	@RequestMapping(value = "/edit", method = RequestMethod.POST)

@@ -1,0 +1,29 @@
+﻿#main_print_dlg{background-color: #ffffff;}
+#print_area{height:100%;}
+.top_area{height:50%;width:100%;}
+.print_talbe,.print_talbe tr th, .print_talbe tr td { border:1px solid #000000;min-width: 125px;padding: 3px 0;}
+.print_talbe{text-align: center; border-collapse: collapse;margin: 0 auto;}
+.print_talbe .tit{font-weight: bold;}
+.print_talbe input{border:0px;width:80%;}
+.print_talbe input.num{width:100px;}
+.print_talbe input.companyName{width:220px;font-weight: bold;margin-left: 5px;}
+@media print {
+   .bottom_area{margin-top:10mm;}
+   .print_talbe td.company{height:15mm;}
+   .print_talbe tr th, .print_talbe tr td{height:11mm;}
+   nav, aside {   
+      display: none;   
+   }   
+   body, article {   
+      width: 100%;   
+      margin: 0;   
+      padding: 0;   
+   }  
+	.header,.footer{
+      display:none;
+    } 
+   @page {   
+   	  size: A4 portrait; 
+      margin: 5mm;
+   }   
+} 

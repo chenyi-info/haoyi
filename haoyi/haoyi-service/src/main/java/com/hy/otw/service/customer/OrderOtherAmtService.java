@@ -11,10 +11,8 @@ import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.shiro.SecurityUtils;
 import org.springframework.stereotype.Service;
-import org.springframework.web.portlet.bind.annotation.ResourceMapping;
 
 import com.hy.otw.common.enums.DelStatusEnum;
-import com.hy.otw.dao.customer.OrderDao;
 import com.hy.otw.dao.customer.OrderOtherAmtDao;
 import com.hy.otw.hibernate.utils.Pagination;
 import com.hy.otw.po.OrderOtherAmtPo;
@@ -46,6 +44,7 @@ public class OrderOtherAmtService {
 			orderOtherAmtVo.setTargetId(loginUser.getId());
 			orderOtherAmtVo.setTargetName(loginUser.getUserName());
 		}
+		
 		Date date = new Date();
 		OrderOtherAmtPo orderOtherAmtPo = new OrderOtherAmtPo();
 		orderOtherAmtVo.setCreateBy(loginUser.getId());

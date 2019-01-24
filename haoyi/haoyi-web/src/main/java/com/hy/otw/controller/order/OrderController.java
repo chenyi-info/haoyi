@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -86,14 +87,17 @@ public class OrderController {
 			for (OrderVo orderVo : orderVoList) {
 				JSONObject obj = JSONObject.parseObject(JSONObject.toJSON(orderVo).toString());
 				obj.put("orderStatusStr", orderVo.getOrderStatus() == 0 ? "正常" : "已取消");
+				if(StringUtils.isNotBlank(orderVo.getCabinetRecipientAddr())){
+					obj.put("addStr", orderVo.getCabinetRecipientAddr()+ "/" + (StringUtils.isNotBlank(orderVo.getCabinetReturnAddr()) ? orderVo.getCabinetReturnAddr() : ""));
+				}
 				orderList.add(obj);
 			}
 		}
 		OutputStream outputStream = null;
         try {
 			String fileName = "订单管理";
-			String[] fields = { "orderDate", "orderNO",	"demand", "cabinetModel", "cabinetNumber", "sealNumber", "address", "weighed", "orderPrice", "plateNumber", "ownerName", "contactNumber", "otherAmt", "companyName", "operatorName", "orderStatusStr", "remarks", "createDate" };
-			String[] titles = { "订单日期", "订单编号", "订单要求", "柜型", "柜号", "封号", "订单简址", "重量(T)", "订单金额", "车牌号", "司机姓名", "联系电话", "杂费金额", "客户公司名称", "操作人", "订单状态", "备注", "创建时间" };
+			String[] fields = { "orderDate", "orderNO",	 "cabinetModel", "addStr",  "address", "weighed", "demand", "cabinetNumber", "sealNumber",  "plateNumber", "ownerName", "contactNumber", "driverPrice", "otherAmt", "companyName", "operatorName", "orderStatusStr", "remarks", "createDate" };
+			String[] titles = { "订单日期", "订单编号", "柜型", "提还柜", "订单简址", "重量(T)",  "订单要求", "柜号", "封号", "车牌号", "司机姓名", "联系电话",  "划价金额", "杂费金额", "客户公司名称", "操作人", "订单状态", "备注", "创建时间" };
 			File file = ExcelUtil.export(null, fileName, fields, titles, orderList, null);
 			DownloadUtils.downloadExcel(request, response, file, fileName);
         } catch (Exception e) {

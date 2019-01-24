@@ -3,8 +3,11 @@
 <head>
 	<title>订单管理</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<link rel="stylesheet" type="text/css" href="/static/js/jquery-easyui-1.6.11/themes/ui-cupertino/easyui.css"></link>
 	<link rel="stylesheet" type="text/css" href='/static/css/main.css'></link>
+	<link rel="stylesheet" type="text/css" href='/static/css/table_print.css'></link>
+	<link rel="stylesheet" media="print" type="text/css" href='/static/css/table_print.css'></link>
 	<script type='text/javascript' src='/static/js/jquery-1.7.1.min.js' ></script>
 	<script src="/static/js/jquery-easyui-1.6.11/jquery.easyui.min.js"></script>
 	<script src="/static/js/jquery-easyui-1.6.11/jquery.easyui.extend.min.js"></script>
@@ -12,17 +15,18 @@
 	<script type='text/javascript' src='/static/js/mustache.min.js' ></script>
 	<script type='text/javascript' src='/static/js/project/common.js' ></script>
 	<script type='text/javascript' src='/static/js/project/order_list.js' ></script>
+	<script type='text/javascript' src='/static/js/jQuery.print.js' ></script>
 </head>
 <body>
 	<div class='main-view-content'>
 		<div class='main-query-content'>
 			<form>
 				<span class='item'><label>订单编号:</label><input type='text' name='orderNO' class="easyui-textbox" prompt="订单编号" /></span>
+				<span class='item'><label>提还柜地址:</label><input type='text' name='cabinetRecipientAddr' id='cabinetRecipientAddr_query' class="easyui-combobox" dataDic = 'cabinet_recipient_addr' prompt="提柜地" style='width:80px;' />&nbsp;-&nbsp;<input type='text' name='cabinetReturnAddr' id='cabinetReturnAddr_query' class="easyui-combobox" dataDic = 'cabinet_return_addr' prompt="还柜地"  style='width:80px;' /></span>
 				<span class='item'><label>柜号:</label><input type='text' name='cabinetNumber' class="easyui-textbox" prompt="柜号" /></span>
 				<span class='item'><label>订单简址:</label><input type='text' name='address' class="easyui-textbox" prompt="订单简址" /></span>
 				<span class='item'><label>车牌号:</label><input type='text' name='plateNumber' class="easyui-textbox" prompt="车牌号" /></span>
 				<span class='item'><label>司机姓名:</label><input type='text' name='ownerName' class="easyui-textbox" prompt="司机姓名" /></span>
-				<span class='item'><label>联系电话:</label><input type='text' name='contactNumber' class="easyui-textbox" prompt="联系电话" /></span>
 				<span class='item'><label>订单日期:</label><input type='text' id='orderDateBegin_query' name='orderDateBegin' class="easyui-datetimebox" prompt="订单起始日期" />&nbsp;-&nbsp;<input type='text' id='orderDateEnd_query' name='orderDateEnd' class="easyui-datetimebox" prompt="订单结束日期" /></span>
 				<span class='item'><label>操作人:</label><input type='text' name='operatorName' class="easyui-textbox" prompt="操作人姓名" /></span>
 				<span class='item'><label>订单状态:</label><input type='text' id='orderStatus_query' name='orderStatus' class="easyui-combobox" prompt="订单状态" /></span>
@@ -56,6 +60,7 @@
 		<p class='item'><label for='address_view'>订单简址:</label><input type='text' name='address' id='address_view' class="easyui-textbox"  prompt="请输入订单简址" value='{{address}}' /></p>
 		<p class='item'><label for='weighed_view'>重量(T):</label><input type='text' name='weighed' id='weighed_view' class="easyui-numberbox" prompt="请输入重量" value='{{weighed}}' /></p>
 		<p class='item'><label for='cabinetModel_view'>柜型:</label><input type='text' name='cabinetModel' id='cabinetModel_view' class="easyui-combobox" dataDic = 'cabinet_model' prompt="请输入柜型" value='{{cabinetModel}}' /></p>
+		<p class='item'><label for='cabinetRecipientAddr_view'>提还柜地址:</label><input type='text' name='cabinetRecipientAddr' id='cabinetRecipientAddr_view' class="easyui-combobox" dataDic = 'cabinet_recipient_addr' prompt="提柜地" value='{{cabinetRecipientAddr}}' style='width:80px;' />&nbsp;-&nbsp;<input type='text' name='cabinetReturnAddr' id='cabinetReturnAddr_view' class="easyui-combobox" dataDic = 'cabinet_return_addr' prompt="还柜地" value='{{cabinetReturnAddr}}' style='width:80px;' /></p>
 		<p class='item'><label for='cabinetNumber_view'>柜号:</label><input type='text' name='cabinetNumber' id='cabinetNumber_view' class="easyui-textbox" prompt="请输入柜号" value='{{cabinetNumber}}' /></p>
 		<p class='item'><label for='sealNumber_view'>封号:</label><input type='text' name='sealNumber' id='sealNumber_view' class="easyui-textbox" prompt="请输入封号" value='{{sealNumber}}' /></p>
 		<p class='item'><label for='customerPrice_view'>订单金额:</label><input type='text' name='customerPrice' id='customerPrice_view' class="easyui-numberbox" precision="2" data-options="required:true" prompt="请输入订单金额" value='{{customerPrice}}' /></p>
@@ -78,8 +83,131 @@
 		<p class='item'><label for='expenditureDate_view'>支出日期:</label><input type='text' name='expenditureDate' id='expenditureDate_view' class="easyui-datetimebox" prompt="请输入支出日期" value='{{expenditureDate}}' /></p>	
 		<p class='item'><label for='itemName_view'>支付项目类型:</label><input type='text' name='itemName' id='itemName_view' class="easyui-combobox" dataDic = 'other_amt_item' prompt="请输入支付项目类型" value='{{itemName}}' /></p>
 		<p class='item'><label for='price_view'>金额:</label><input type='text' name='price' id='price_view' class="easyui-numberbox" precision="2" prompt="请输入支出金额" value='{{price}}' /></p>
-		<p class='item'><label for='propertyType_true_view'>杂费归属:</label><input type='radio' name='propertyType' id='propertyType_true_view' class="valign_m radio"  value='1' /><label for='propertyType_true_view' class='radio'>归司机</label><input type='radio' name='propertyType' id='propertyType_false_view' class="valign_m radio" checked="checked"   value='2' /><label for='propertyType_false_view' class='radio'>归客户</label><input type='radio' name='propertyType' id='propertyType_myself_view' class="valign_m radio"  value='3' /><label for='propertyType_myself_view' class='radio'>自己</label></p>
+		<p class='item'><label for='propertyTypes_true_view'>杂费归属:</label><input type='checkbox' name='propertyTypes' id='propertyTypes_true_view' class="valign_m radio"  value='1' /><label for='propertyTypes_true_view' class='radio'>归司机</label><input type='checkbox' name='propertyTypes' id='propertyTypes_false_view' class="valign_m radio" checked="checked"   value='2' /><label for='propertyType_false_view' class='radio'>归客户</label><input type='checkbox' name='propertyTypes' id='propertyTypes_myself_view' class="valign_m radio"  value='3' /><label for='propertyTypes_myself_view' class='radio'>自己</label></p>
 		<p class='item'><label for='isSettle_true_view'>结算状态:</label><input type='radio' name='isSettle' id='isSettle_true_view' class="valign_m radio" value='0' /><label for='isSettle_true_view' class='radio'>已结算</label><input type='radio' name='isSettle' id='isSettle_false_view' class="valign_m radio" checked="checked"  value='1' /><label for='isSettle_false_view' class='radio'>未结算</label></p>
 		<p class='item'><label for='remarks_view'>备注:</label><input type='text' name='remarks' id='remarks_view' class="easyui-textbox" prompt="请输入备注" value='{{remarks}}' /></p>
 	</form>
+</script>
+
+<script type='text/html' id='print_dialog_content_template'>
+<div id='print_area'>
+	<div class='top_area' >
+		<table class='print_talbe'>
+			<tr class='company'>
+				<td class='tit company' colspan='5'>公司名:<input type='text' class='companyName' name='companyName' /></td>
+			</tr>
+			<tr>
+				<td class='tit'>提单号</td>
+				<td>{{orderNO}}</td>
+				<td class='tit'>柜型</td>
+				<td colspan='2'>{{cabinetModel}}</td>
+			</tr>
+			<tr>
+				<td class='tit'>订单要求</td>
+				<td colspan='4'>{{demand}}</td>
+			</tr>
+			<tr>
+				<td class='tit'>装货时间</td>
+				<td>{{orderDate}}</td>
+				<td class='tit'>提还地点</td>
+				<td>{{cabinetRecipientAddr}}</td>
+				<td>{{cabinetReturnAddr}}</td>
+			</tr>
+			<tr>
+				<td class='tit'>装货送货地址及联系电话</td>
+				<td colspan='4'>{{detailAddress}}</td>
+			</tr>
+			<tr>
+				<td class='tit'>柜号</td>
+				<td>{{cabinetNumber}}</td>
+				<td class='tit'>封号</td>
+				<td colspan='2'>{{sealNumber}}</td>
+			</tr>
+			<tr>
+				<td class='tit'>司机电话</td>
+				<td>{{contactNumber}}</td>
+				<td class='tit'>车牌</td>
+				<td colspan='2'>{{plateNumber}}</td>
+			</tr>
+			<tr>
+				<td class='tit'>司机姓名</td>
+				<td>{{ownerName}}</td>
+				<td class='tit'>时间间隔</td>
+				<td><input type='text' name='kssjje' /></td>
+				<td><input type='text' name='jssjje' /></td>
+			</tr>
+			<tr>
+				<td class='tit' colspan='5'>注意事项1：拿到单务必核对订单信息是否与收到信息不符，如有错误请及时联系，否则后果自负</td>
+			</tr>
+			<tr>
+				<td class='tit' colspan='5'>注意事项2：提柜注意验柜，切勿提烂柜，如有湿柜、油污柜等一定要事先联系</td>
+			</tr>
+			<tr>
+				<td class='tit' colspan='5'>注意事项3：提到柜务必及时发柜号资料以及对应照片，到工厂有任何异常情况请先与公司联系，切勿现场发生争执</td>
+			</tr>
+			<tr>
+				<td class='tit' colspan='5'>柜号资料发到微信（<input type='text' class='num' name='wechat' />）或QQ（<input type='text' class='num' name='qq' />），联系电话某某（<input type='text' class='num' name='tel' />）</td>
+			</tr>
+		</table>
+	</div>
+	<div class='bottom_area' >
+		<table class='print_talbe'>
+			<tr class='company'>
+				<td class='tit company' colspan='5'>公司名:<input type='text' class='companyName' name='companyName' /></td>
+			</tr>
+			<tr>
+				<td class='tit'>提单号</td>
+				<td>{{orderNO}}</td>
+				<td class='tit'>柜型</td>
+				<td colspan='2'>{{cabinetModel}}</td>
+			</tr>
+			<tr>
+				<td class='tit'>订单要求</td>
+				<td colspan='4'>{{demand}}</td>
+			</tr>
+			<tr>
+				<td class='tit'>装货时间</td>
+				<td>{{orderDate}}</td>
+				<td class='tit'>提还地点</td>
+				<td>{{cabinetRecipientAddr}}</td>
+				<td>{{cabinetReturnAddr}}</td>
+			</tr>
+			<tr>
+				<td class='tit'>装货送货地址及联系电话</td>
+				<td colspan='4'>{{detailAddress}}</td>
+			</tr>
+			<tr>
+				<td class='tit'>柜号</td>
+				<td>{{cabinetNumber}}</td>
+				<td class='tit'>封号</td>
+				<td colspan='2'>{{sealNumber}}</td>
+			</tr>
+			<tr>
+				<td class='tit'>司机电话</td>
+				<td>{{contactNumber}}</td>
+				<td class='tit'>车牌</td>
+				<td colspan='2'>{{plateNumber}}</td>
+			</tr>
+			<tr>
+				<td class='tit'>司机姓名</td>
+				<td>{{ownerName}}</td>
+				<td class='tit'>时间间隔</td>
+				<td><input type='text' name='kssjje' /></td>
+				<td><input type='text' name='jssjje' /></td>
+			</tr>
+			<tr>
+				<td class='tit' colspan='5'>注意事项1：拿到单务必核对订单信息是否与收到信息不符，如有错误请及时联系，否则后果自负</td>
+			</tr>
+			<tr>
+				<td class='tit' colspan='5'>注意事项2：提柜注意验柜，切勿提烂柜，如有湿柜、油污柜等一定要事先联系</td>
+			</tr>
+			<tr>
+				<td class='tit' colspan='5'>注意事项3：提到柜务必及时发柜号资料以及对应照片，到工厂有任何异常情况请先与公司联系，切勿现场发生争执</td>
+			</tr>
+			<tr>
+				<td class='tit' colspan='5'>柜号资料发到微信（<input type='text' class='num' name='wechat' />）或QQ（<input type='text' class='num' name='qq' />），联系电话某某（<input type='text' class='num' name='tel' />）</td>
+			</tr>
+		</table>
+	</div>
+</div>
 </script>

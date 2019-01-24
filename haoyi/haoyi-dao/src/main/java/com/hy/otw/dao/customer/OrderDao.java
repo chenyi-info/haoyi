@@ -60,6 +60,16 @@ public class OrderDao extends HibernateDao<OrderPo, Long>{
 			param.add(orderQueryVo.getOrderStatus());
 		}
 		
+		if(StringUtils.isNotBlank(orderQueryVo.getCabinetRecipientAddr())){
+			hql.append(" and cabinetRecipientAddr = ? ");
+			param.add(orderQueryVo.getCabinetRecipientAddr());
+		}
+		
+		if(StringUtils.isNotBlank(orderQueryVo.getCabinetReturnAddr())){
+			hql.append(" and cabinetReturnAddr = ? ");
+			param.add(orderQueryVo.getCabinetReturnAddr());
+		}
+		
 		if(orderQueryVo.getOrderDateBegin() != null){
 			hql.append(" and orderDate > ?");
 			param.add(orderQueryVo.getOrderDateBegin());

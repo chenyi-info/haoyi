@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.OutputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -11,15 +12,18 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.io.IOUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hy.otw.hibernate.utils.Pagination;
 import com.hy.otw.service.vehicle.VehicleService;
 import com.hy.otw.utils.DownloadUtils;
 import com.hy.otw.utils.ExcelUtil;
+import com.hy.otw.vo.OrderVo;
 import com.hy.otw.vo.VehicleVo;
 import com.hy.otw.vo.http.ResponseMsgVo;
 import com.hy.otw.vo.query.VehicleQueryVo;
@@ -88,8 +92,8 @@ public class VehicleController {
 		OutputStream outputStream = null;
         try {
 			String fileName = "车辆管理";
-			String[] fields = { "plateNumber", "ownerName",	"contactNumber", "vehicleType", "remarks", "createDate" };
-			String[] titles = { "车牌号", "司机姓名", "联系电话", "车辆类型", "备注", "创建时间" };
+			String[] fields = { "plateNumber", "ownerName",	"contactNumber", "vehicleType", "vehicleSource","remarks", "createDate" };
+			String[] titles = { "车牌号", "司机姓名", "联系电话", "车辆类型", "车辆来源", "备注", "创建时间" };
 			File file = ExcelUtil.export(null, fileName, fields, titles, vehicelVoList, null);
 			DownloadUtils.downloadExcel(request, response, file, fileName);
         } catch (Exception e) {

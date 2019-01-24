@@ -45,6 +45,10 @@ public class OrderVo extends BaseVo{
 	
 	private String cabinetModel;	//柜型
 	
+	private String cabinetRecipientAddr;	//提柜地址
+	
+	private String cabinetReturnAddr;	//还柜地址
+	
 	private String cabinetNumber;	//柜号
 	
 	private String sealNumber;		//封号

@@ -28,6 +28,10 @@ public class OrderQueryVo {
 	
 	private String cabinetNumber;	//柜号
 	
+	private String cabinetRecipientAddr; //提柜地
+	
+	private String cabinetReturnAddr;	//还柜地
+	
 	private String operatorName;	//操作人姓名
 	
 	private Integer orderStatus;	//订单状态：0-正常；1-已取消

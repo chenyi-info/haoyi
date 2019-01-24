@@ -73,6 +73,12 @@ public class OrderPo extends BasePo{
 	@Column(name = "cabinet_model")
 	private String cabinetModel;	//柜型
 	
+	@Column(name = "cabinet_recipient_addr")
+	private String cabinetRecipientAddr;	//提柜地址
+	
+	@Column(name = "cabinet_return_addr")
+	private String cabinetReturnAddr;		//还柜地址
+	
 	@Column(name = "cabinet_number")
 	private String cabinetNumber;	//柜号
 	

@@ -40,7 +40,11 @@ public class VehicleDao extends HibernateDao<VehiclePo, Long>{
 			hql.append(" and vehicleType = ?");
 			param.add(vehicleQueryVo.getVehicleType());
 		}
-		hql.append(" order by updateDate desc");
+		if(StringUtils.isNotBlank(vehicleQueryVo.getVehicleSource())){
+			hql.append(" and vehicleSource = ?");
+			param.add(vehicleQueryVo.getVehicleSource());
+		}
+		hql.append(" order by createDate desc");
 		
 		Pagination pagination = this.findPagination(page, hql.toString(), param.toArray());
 		return pagination;

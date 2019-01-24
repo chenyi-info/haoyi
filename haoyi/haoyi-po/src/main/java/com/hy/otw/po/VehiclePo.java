@@ -43,6 +43,9 @@ public class VehiclePo extends BasePo{
 	@Column(name = "vehicle_type")
 	private String vehicleType;		//车辆类型
 	
+	@Column(name = "vehicle_source")
+	private String vehicleSource;	//车辆来源: 1-合作车辆 2-固定车辆 3-散找车辆
+	
 	@Column(name = "remarks")
 	private String remarks;			//备注
 	
