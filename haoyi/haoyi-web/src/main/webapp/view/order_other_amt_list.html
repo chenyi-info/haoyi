@@ -20,6 +20,7 @@
 				<span class='item'><label>支出日期:</label><input type='text' name='expenditureDateBegin' class="easyui-datetimebox" prompt="支出起始日期" />&nbsp;-&nbsp;<input type='text' name='expenditureDateEnd' class="easyui-datetimebox" prompt="支出结束日期" /></span>
 				<span class='item'><label>订单编号:</label><input type='text' name='orderNO' class="easyui-textbox" prompt="订单编号" /></span>
 				<span class='item'><label>杂费项目:</label><input type='text' name='itemName' id='itemName_query_view' class="easyui-combobox" dataDic = 'other_amt_item' prompt="杂费项目" /></span>
+				<span class='item'><label>归属类型:</label><input type='text' name='propertyType' id='propertyType_query_view' class="easyui-combobox" prompt="归属类型" /></span>
 				<span class='item'><label>柜号:</label><input type='text' name='cabinetNumber' class="easyui-textbox" prompt="柜号" /></span>
 				<span class='item'><label>订单简址:</label><input type='text' name='address' class="easyui-textbox" prompt="订单简址" /></span>
 				<span class='item'><label>支出方标识:</label><input type='text' name='targetName' class="easyui-textbox" prompt="支出方标识" /></span>
@@ -27,6 +28,7 @@
 			</form>
 		</div>
 		<div class='dataTable-toolbar'>
+			<span class='item'><button class='btn btn-batch-settled'>批量结算</button></span>
 			<span class='item'><button class='btn btn-add'>新增</button></span>
 			<span class='item'><button class='btn btn-excel'>导出Excel</button></span>
 		</div>

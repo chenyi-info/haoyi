@@ -126,4 +126,8 @@ public class OrderOtherAmtService {
 		this.orderOtherAmtDao.statisticalAmount(orderId);
 	}
 
+	public void batchSettles(List<Long> orderOtherAmtIdList) {
+		this.orderOtherAmtDao.batchSettles(orderOtherAmtIdList);
+	}
+
 }

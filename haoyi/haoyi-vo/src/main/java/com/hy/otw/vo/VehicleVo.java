@@ -1,6 +1,8 @@
 package com.hy.otw.vo;
 
 
+import java.math.BigDecimal;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -25,6 +27,8 @@ public class VehicleVo extends BaseVo{
 	private String vehicleType;		//车辆类型
 	
 	private String vehicleSource;	//车辆来源: 1-合作车辆 2-固定车辆 3-散找车辆
+	
+	private BigDecimal selfWeight;	//自重
 	
 	private String remarks;			//备注
 	

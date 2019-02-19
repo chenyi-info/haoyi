@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 
 import com.hy.otw.common.enums.DelStatusEnum;
 import com.hy.otw.dao.sys.UserResourcesDao;
-import com.hy.otw.po.sys.MenuResourcesPo;
 import com.hy.otw.po.sys.UserResourcesPo;
 import com.hy.otw.vo.UserInfoVo;
 import com.hy.otw.vo.sys.MenuResourcesVo;
@@ -57,6 +56,11 @@ public class UserResourcesService {
 		}
 		
 		return menuResourcesVoList;
+	}
+
+
+	public List<Long> getUserResources(Long userId) {
+		return this.userResourcesDao.findUserResourcesId(userId);
 	}
 
 }

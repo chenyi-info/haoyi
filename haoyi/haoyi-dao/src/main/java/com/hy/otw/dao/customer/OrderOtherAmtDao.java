@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
+import org.hibernate.Query;
+import org.hibernate.engine.query.spi.HQLQueryPlan;
 import org.springframework.stereotype.Repository;
 
 import com.hy.otw.common.enums.DelStatusEnum;
@@ -109,5 +111,12 @@ public class OrderOtherAmtDao extends HibernateDao<OrderOtherAmtPo, Long>{
 	public void editOrderInfo(OrderPo orderPo) {
 		String sql = "update order_other_amt set order_no=?,cabinet_model=?,cabinet_number=?,seal_number=?,address=? where order_id=?";
 		this.updateSql(sql, orderPo.getOrderNO(), orderPo.getCabinetModel(),orderPo.getCabinetNumber(),orderPo.getSealNumber(),orderPo.getAddress(), orderPo.getId());
+	}
+
+	public void batchSettles(List<Long> orderOtherAmtIdList) {
+		String hql = "update OrderOtherAmtPo set isSettle = 0 where id in (:idList)";
+		Query query = this.createQuery(hql);
+		query.setParameterList("idList", orderOtherAmtIdList);
+		query.executeUpdate();
 	}
 }

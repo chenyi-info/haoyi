@@ -191,8 +191,35 @@
 		 });
 	}
 	
+	//获取已有权限
+	var getAuthorityMenuByUserId = function(userId){
+		$.ajax({
+				url:"/userResources/getUserResources.do",
+				traditional:true,
+				type:'post',
+				async:false,
+				cache:false,
+				data:{'userId':userId},
+				success:function(data){
+					if(null != data && data.length>0){
+						for (var i = 0; i < data.length; i++) {
+							$("#"+data[i]).attr("checked",true);
+						}
+					}
+				},error:function(data){
+					$.messager.alert({
+	            	      title:'提示',
+	            	      msg:'<div class="content">操作失败!</div>',
+	            	      ok:'<i class="i-ok"></i> 确定',
+	            	      icon:'error'
+	            	    });
+				}
+			});
+	}
+	
 	var loadMenu = function(){
 		var maskObj = new mask();
+		var row = $('#dataGrid').datagrid('getSelected');
 		$.ajax({
 			url:'/menuResources/findMenuList',
 			type:"GET",
@@ -204,7 +231,8 @@
 			maskObj.hideMask ();// 隐藏遮蔽罩
 			var tplInitAuthority = renderInitAuthority(data);
 			$("#editUserAuthority").dialog("open");
-			$("#main_dlg .content").html(tplInitAuthority);
+			$("#editUserAuthority .content").html(tplInitAuthority);
+			getAuthorityMenuByUserId(row.id);
 		}).fail(function(data){
 			maskObj.hideMask ();// 隐藏遮蔽罩
 			$.messager.alert('操作提示','操作失败');

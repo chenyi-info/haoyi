@@ -5,8 +5,9 @@
 	        	 {field:'contactNumber',title:'联系电话',width:'15%',align:'center'},
 	        	 {field:'vehicleType',title:'车辆类型',width:'10%',align:'center'},
 	        	 {field:'vehicleSource',title:'车辆来源',width:'10%',align:'center'},
+	        	 {field:'selfWeight',title:'自重(T)',width:'5%',align:'center'},
 	        	 {field:'remarks',title:'备注',width:'10%',align:'center'},
-	        	 {field:'createDate',title:'创建时间',width:'15%',align:'center',formatter:function(value,row,index){
+	        	 {field:'createDate',title:'创建时间',width:'10%',align:'center',formatter:function(value,row,index){
 	        		 return getYMDHMS(row.createDate);
 	        	 }},
 	        	 {field:'opt',title:'操作',width:'10%',align:'center', formatter:function(value,row,index){
@@ -69,7 +70,7 @@
 		$(diaHtml).dialog({    
 	 	    title: '新增司机',    
 	 	    width: 400,    
-	 	    height: 350,    
+	 	    height: 400,    
 	 	    closed: false,    
 	 	    modal: true,
 	 	    onOpen:function(){
@@ -101,7 +102,7 @@
 		$(diaHtml).dialog({    
 	 	    title: '修改司机('+row.ownerName+')',    
 	 	    width: 400,    
-	 	    height: 350,    
+	 	    height: 400,    
 	 	    closed: false,    
 	 	    modal: true,
 	 	    onOpen:function(){

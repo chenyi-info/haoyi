@@ -1,6 +1,8 @@
 package com.hy.otw.po;
 
 
+import java.math.BigDecimal;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -45,6 +47,9 @@ public class VehiclePo extends BasePo{
 	
 	@Column(name = "vehicle_source")
 	private String vehicleSource;	//车辆来源: 1-合作车辆 2-固定车辆 3-散找车辆
+	
+	@Column(name = "self_weight")
+	private BigDecimal selfWeight;	//自重
 	
 	@Column(name = "remarks")
 	private String remarks;			//备注

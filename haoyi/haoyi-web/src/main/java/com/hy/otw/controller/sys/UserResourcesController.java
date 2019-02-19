@@ -41,4 +41,9 @@ public class UserResourcesController {
 		return userResourcesService.findUserAuthority();
 	}
 	
+	@RequestMapping(value = "/getUserResources", method = RequestMethod.POST)
+	public List<Long> getUserResources(HttpServletRequest request,HttpServletResponse response, Long userId) {
+		return userResourcesService.getUserResources(userId);
+	}
+	
 }

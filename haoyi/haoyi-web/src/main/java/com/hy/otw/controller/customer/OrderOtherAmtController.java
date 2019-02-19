@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.OutputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -58,6 +59,12 @@ public class OrderOtherAmtController {
 	public Pagination list(HttpServletRequest request,HttpServletResponse response, OrderOtherAmtQueryVo orderOtherAmtQueryVo) throws IllegalAccessException, InvocationTargetException, NoSuchMethodException {
 		Pagination pagination = this.orderOtherAmtService.findOrderOtherAmtList(orderOtherAmtQueryVo);
 		return pagination;
+	}
+	
+	@RequestMapping(value = "/batchSettles", method = RequestMethod.POST)
+	public void batchSettles(HttpServletRequest request,HttpServletResponse response, Long[] orderOtherAmtIds) throws Exception {
+		List<Long> orderOtherAmtIdList = Arrays.asList(orderOtherAmtIds);
+		this.orderOtherAmtService.batchSettles(orderOtherAmtIdList);
 	}
 	
 	@RequestMapping(value = "/loadExcel", method = RequestMethod.POST)

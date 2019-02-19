@@ -1,6 +1,7 @@
 ﻿$(function(){
 	var columns = [[
-	             {field:'expenditureDate',title:'支出日期',width:'20%',align:'center',formatter:function(value,row,index){
+	             {field : 'id',width : '3%',align : 'center',checkbox:'true'},
+	             {field:'expenditureDate',title:'支出日期',width:'17%',align:'center',formatter:function(value,row,index){
 	        		 return getYMDHMS(row.expenditureDate);
 	        	 }}, 
 	        	 {field:'orderNO',title:'订单编号',width:'10%',align:'center'},
@@ -35,7 +36,7 @@
 			fitColumns: true, //设置是否滚动条
 			nowrap: false,
 			remotesort: true,
-			checkOnSelect: false,
+			checkOnSelect: true,
 			selectOnCheck: false,
 			method: "GET", //请求数据的方法
 			loadMsg: '数据加载中,请稍候......',
@@ -161,11 +162,52 @@
 	     }); 
 	}
 	
+	var batchSettled = function(url, dataModel){
+		var maskObj = new mask();
+		$.ajax({
+			url:url,
+			type:"post",
+			data:dataModel,
+			dataType:'json',
+			traditional: true,
+			beforeSend : function (){
+			    maskObj.showMask();// 显示遮蔽罩
+		    }
+		}).done(function(data){
+			maskObj.hideMask ();// 隐藏遮蔽罩
+			$.messager.alert('操作提示','操作成功');
+			$("#dataGrid").datagrid('reload');
+		}).fail(function(data){
+			maskObj.hideMask ();// 隐藏遮蔽罩
+			$.messager.alert('操作提示','操作失败');
+		});
+	} 
+	
 	var showDeleteDialog = function(){
 		var row = $('#dataGrid').datagrid('getSelected');
 		$.messager.confirm("删除提示", "是否删除:"+row.orderNO+"的信息?",function(e){
 		     if(e){
 		    	 operateVehicle('/orderOtherAmt/delete', {orderOtherAmtId:row.id});
+		     }
+		 });
+	}
+	
+	var showSettledDialog = function(){
+		var row = $('#dataGrid').datagrid('getChecked');
+		var ids = [];
+		$.each(row,function(i,v){
+			if(v.isSettle == 1){
+				ids[ids.length] = v.id;
+			}
+			
+		});
+		if(ids.length == 0){
+			$.messager.alert('操作提示','请选择未结算的信息');
+			return false;
+		}
+		$.messager.confirm("结算提示", "是否批量结算该批信息?",function(e){
+		     if(e){
+		    	 batchSettled('/orderOtherAmt/batchSettles', {orderOtherAmtIds:ids});
 		     }
 		 });
 	}
@@ -178,11 +220,17 @@
 	var initializeUI = function(){
 		initDataGrid();
 		initQueryDataDic();
+		$('.dataTable-toolbar').delegate('button.btn-batch-settled','click',showSettledDialog);
 		$('.dataTable-toolbar').delegate('button.btn-add','click',showAddDialog);
 		$('.dataTable-toolbar').delegate('button.btn-excel','click',downExcel);
 		$('.main-query-content').delegate('button.btn-search','click',initDataGrid);
 		$('.main-dataTable-content').delegate('button.btn-edit','click',showUpdateDialog);
 		$('.main-dataTable-content').delegate('button.btn-del','click',showDeleteDialog);
+		var propertyTypeItems = [{'text':'全部','value':' '},{'text':'司机','value':'1'},{'text':'客户','value':'2'},{'text':'自己','value':'3'}];
+		$('#propertyType_query_view').combobox({
+			data:propertyTypeItems,
+			editable:false
+		});
 	}
 	initializeUI();
 	

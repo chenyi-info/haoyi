@@ -20,9 +20,9 @@
                  {field:'address',title:'订单简址',width:'5%',align:'center'},
                  {field:'weighed',title:'重量(T)',width:'5%',align:'center'},
                  {field:'demand',title:'订单要求',width:'5%',align:'center'},
-	        	 {field:'cabinetNumber',title:'柜号',width:'5%',align:'center'},
+	        	 {field:'cabinetNumber',title:'柜号',width:'10%',align:'center'},
 	        	 {field:'sealNumber',title:'封号',width:'5%',align:'center'},
-                 {field:'plateNumber',title:'车牌号',width:'5%',align:'center',editor: {
+                 {field:'plateNumber',title:'车牌号',width:'10%',align:'center',editor: {
                      type: 'combogrid', // 指明控件类型
                      options:{
                  		mode : 'remote',//远程连接方式  
@@ -81,8 +81,10 @@
 	        			 precision:2
 	        		 }
 	        	 }},
+	        	 /**
 	        	 {field:'otherAmt',title:'杂费金额',width:'5%',align:'center'},
 	        	 {field:'companyName',title:'客户公司名称',width:'5%',align:'center'},
+	        	 */
 	        	 {field:'operatorName',title:'操作人',width:'5%',align:'center'},
 	        	 {field:'orderStatus',title:'订单状态',width:'5%',align:'center', formatter:function(value,row,index){
                  	return value == 0 ? '正常' : '已取消';
@@ -496,8 +498,8 @@
 	var initializeUI = function(){
 		var nowDate = new Date();
 		var toDay = nowDate.getFullYear() + '-'+ (nowDate.getMonth()+1) + '-' + nowDate.getDate();
-		$('#orderDateBegin_query').datetimebox('setValue', toDay+' 00:00:00');
-		$('#orderDateEnd_query').datetimebox('setValue', toDay+' 23:59:59');
+		$('#orderDateBegin_query').datebox('setValue', toDay);
+		$('#orderDateEnd_query').datebox('setValue', toDay);
 		initQueryDataDic();
 		initOrderStatus();
 		initDataGrid();
