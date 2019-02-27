@@ -3,6 +3,7 @@ package com.hy.otw.controller.order;
 import java.io.File;
 import java.io.OutputStream;
 import java.lang.reflect.InvocationTargetException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -83,9 +84,12 @@ public class OrderController {
 		Pagination pagination = this.orderService.findOrderList(orderQueryVo);
 		List<OrderVo> orderVoList = (List<OrderVo>) pagination.getRows();
 		List<JSONObject> orderList = new ArrayList<JSONObject>();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		if(CollectionUtils.isNotEmpty(orderVoList)){
 			for (OrderVo orderVo : orderVoList) {
 				JSONObject obj = JSONObject.parseObject(JSONObject.toJSON(orderVo).toString());
+				obj.put("orderDateStr", sdf.format(orderVo.getOrderDate()));
+				obj.put("createDateStr", sdf.format(orderVo.getCreateDate()));
 				obj.put("orderStatusStr", orderVo.getOrderStatus() == 0 ? "正常" : "已取消");
 				if(StringUtils.isNotBlank(orderVo.getCabinetRecipientAddr())){
 					obj.put("addStr", orderVo.getCabinetRecipientAddr()+ "/" + (StringUtils.isNotBlank(orderVo.getCabinetReturnAddr()) ? orderVo.getCabinetReturnAddr() : ""));
@@ -96,7 +100,7 @@ public class OrderController {
 		OutputStream outputStream = null;
         try {
 			String fileName = "订单管理";
-			String[] fields = { "orderDate", "orderNO",	 "cabinetModel", "addStr",  "address", "weighed", "demand", "cabinetNumber", "sealNumber",  "plateNumber", "ownerName", "contactNumber", "driverPrice", "operatorName", "orderStatusStr", "remarks", "createDate" };
+			String[] fields = { "orderDateStr", "orderNO",	 "cabinetModel", "addStr",  "address", "weighed", "demand", "cabinetNumber", "sealNumber",  "plateNumber", "ownerName", "contactNumber", "driverPrice", "operatorName", "orderStatusStr", "remarks", "createDateStr" };
 			String[] titles = { "订单日期", "订单编号", "柜型", "提还柜", "订单简址", "重量(T)",  "订单要求", "柜号", "封号", "车牌号", "司机姓名", "联系电话",  "划价金额",  "操作人", "订单状态", "备注", "创建时间" };
 			File file = ExcelUtil.export(null, fileName, fields, titles, orderList, null);
 			DownloadUtils.downloadExcel(request, response, file, fileName);

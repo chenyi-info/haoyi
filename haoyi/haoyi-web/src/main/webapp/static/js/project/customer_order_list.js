@@ -2,6 +2,7 @@
 	//结算状态：0-未结算；1-已结算
 	var settleStatus = [{'text':'全部','value':' '},{'text':'未结算','value':'0'},{'text':'已结算','value':'1'}];
 	var columns = [[
+	             {field : 'id',width : '3%',align : 'center',checkbox:'true'},
 	             {field:'orderDate',title:'订单日期',width:'10%',align:'center',formatter:function(value,row,index){
 	        		 return getYMDHMS(row.orderDate);
 	        	 }}, 
@@ -18,7 +19,7 @@
                  	return value == 1 ? '已结算' : '未结算';
                  }},
 	        	 {field:'remarks',title:'备注',width:'5%',align:'center'},
-	        	 {field:'opt',title:'操作',width:'20%',align:'center', formatter:function(value,row,index){
+	        	 {field:'opt',title:'操作',width:'17%',align:'center', formatter:function(value,row,index){
                  	return "<button class='btn btn-add-oa'>添加杂费</button><button class='btn btn-sel-oa'>查看杂费</button><button class='btn btn-edit'>修改</button>";
                  }}
 	            ]];
@@ -291,6 +292,47 @@
 	     }); 
 	}
 	
+	var batchSettled = function(url, dataModel){
+		var maskObj = new mask();
+		$.ajax({
+			url:url,
+			type:"post",
+			data:dataModel,
+			dataType:'json',
+			traditional: true,
+			beforeSend : function (){
+			    maskObj.showMask();// 显示遮蔽罩
+		    }
+		}).done(function(data){
+			maskObj.hideMask ();// 隐藏遮蔽罩
+			$.messager.alert('操作提示','操作成功');
+			$("#dataGrid").datagrid('reload');
+		}).fail(function(data){
+			maskObj.hideMask ();// 隐藏遮蔽罩
+			$.messager.alert('操作提示','操作失败');
+		});
+	} 
+	
+	var showSettledDialog = function(){
+		var row = $('#dataGrid').datagrid('getChecked');
+		var ids = [];
+		$.each(row,function(i,v){
+			if(v.settleStatus == 0){
+				ids[ids.length] = v.id;
+			}
+			
+		});
+		if(ids.length == 0){
+			$.messager.alert('操作提示','请选择未结算的信息');
+			return false;
+		}
+		$.messager.confirm("结算提示", "是否批量结算该批信息?",function(e){
+		     if(e){
+		    	 batchSettled('/customerOrder/batchSettles', {customerOrderIds:ids});
+		     }
+		 });
+	}
+	
 	var downExcel = function(){
 		var criteria = $(".main-query-content form").serializeObject();
 		buildExportFormSubmit("/customerOrder/loadExcel.do", criteria);
@@ -299,6 +341,7 @@
 	var initializeUI = function(){
 		initSettleStatus();
 		initDataGrid();
+		$('.dataTable-toolbar').delegate('button.btn-batch-settled','click',showSettledDialog);
 		$('.dataTable-toolbar').delegate('button.btn-add','click',showAddDialog);
 		$('.dataTable-toolbar').delegate('button.btn-excel','click',downExcel);
 		$('.main-query-content').delegate('button.btn-search','click',initDataGrid);

@@ -117,4 +117,11 @@ public class CustomerOrderDao extends HibernateDao<CustomerOrderPo, Long>{
 		CustomerOrderPo customerOrderPo = this.findUnique(hql, DelStatusEnum.NORMAL.getValue(), orderId);
 		return customerOrderPo;
 	}
+
+	public void batchSettles(List<Long> customerOrderIdList) {
+		String hql = "update CustomerOrderPo set settleStatus = 1 where id in (:idList)";
+		Query query = this.createQuery(hql);
+		query.setParameterList("idList", customerOrderIdList);
+		query.executeUpdate();
+	}
 }

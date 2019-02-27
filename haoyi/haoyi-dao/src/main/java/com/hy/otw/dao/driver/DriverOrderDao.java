@@ -122,4 +122,11 @@ public class DriverOrderDao extends HibernateDao<DriverOrderPo, Long>{
 		DriverOrderPo driverOrderPo = this.findUnique(hql, DelStatusEnum.NORMAL.getValue(), orderId);
 		return driverOrderPo;
 	}
+	
+	public void batchSettles(List<Long> driverOrderIdList) {
+		String hql = "update DriverOrderPo set settleStatus = 1 where id in (:idList)";
+		Query query = this.createQuery(hql);
+		query.setParameterList("idList", driverOrderIdList);
+		query.executeUpdate();
+	}
 }

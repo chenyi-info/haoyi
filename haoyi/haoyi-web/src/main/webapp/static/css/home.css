@@ -102,7 +102,7 @@
       #tabs  .tabs li a.tabs-close { background: url('images/tabs_icons.png') no-repeat -34px center;}
       #tabs .tabs-scroller-left { background: #ffffff url('images/tabs_icons.png') no-repeat 4px center;}
        #logo{
-         background:#02c1b3 url(images/logo.png) no-repeat center ;
+         background-color:#02c1b3;
          width: 194px;
          height: 60px;
           color:#fff;

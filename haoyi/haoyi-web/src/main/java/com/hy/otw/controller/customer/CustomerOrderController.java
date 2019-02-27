@@ -5,6 +5,7 @@ import java.io.OutputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -52,6 +53,12 @@ public class CustomerOrderController {
 		BigDecimal totalAmt = this.customerOrderService.findCustomerOrderTotalAmt(customerOrderQueryVo);
 		return totalAmt == null ? new BigDecimal(0.00) : totalAmt;
 	}
+	
+	@RequestMapping(value = "/batchSettles", method = RequestMethod.POST)
+	public void batchSettles(HttpServletRequest request,HttpServletResponse response, Long[] customerOrderIds) throws Exception {
+		List<Long> customerOrderIdList = Arrays.asList(customerOrderIds);
+		this.customerOrderService.batchSettles(customerOrderIdList);
+	}
 
 	@RequestMapping(value = "/loadExcel", method = RequestMethod.POST)
 	public void loadExcel(HttpServletRequest request,HttpServletResponse response, CustomerOrderQueryVo customerOrderQueryVo) throws IllegalAccessException, InvocationTargetException, NoSuchMethodException {
@@ -70,8 +77,8 @@ public class CustomerOrderController {
 		OutputStream outputStream = null;
         try {
 			String fileName = "客户账单管理";
-			String[] fields = { "orderDate", "companyName", "orderNO",	"address", "cabinetModel", "cabinetNumber", "sealNumber", "settlePrice", "otherAmt", "settleStatusStr", "remarks", "createDate" };
-			String[] titles = { "订单日期", "公司名称", "订单编号", "订单简址", "柜型", "柜号", "封号", "实结金额", "应结金额", "结算状态", "备注", "创建时间" };
+			String[] fields = { "orderDate", "companyName", "orderNO",	"address", "cabinetModel", "cabinetNumber", "sealNumber", "customerPrice", "settlePrice", "otherAmt", "settleStatusStr", "remarks", "createDate" };
+			String[] titles = { "订单日期", "公司名称", "订单编号", "订单简址", "柜型", "柜号", "封号", "订单金额", "实结金额", "应结金额", "结算状态", "备注", "创建时间" };
 			File file = ExcelUtil.export(null, fileName, fields, titles, customerOrderList, null);
 			DownloadUtils.downloadExcel(request, response, file, fileName);
         } catch (Exception e) {

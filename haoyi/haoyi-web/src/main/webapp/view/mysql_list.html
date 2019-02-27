@@ -1,40 +1,27 @@
 ﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
-	<title>瑾萱管理系统-登录</title>
+	<title>数据库备份信息管理</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<link rel="stylesheet" type="text/css" href="/static/js/jquery-easyui-1.6.11/themes/ui-cupertino/easyui.css"></link>
-	<link type="text/css" href='/static/css/login.css' rel="stylesheet" ></link>
+	<link rel="stylesheet" type="text/css" href='/static/css/main.css'></link>
 	<script type='text/javascript' src='/static/js/jquery-1.7.1.min.js' ></script>
 	<script src="/static/js/jquery-easyui-1.6.11/jquery.easyui.min.js"></script>
 	<script src="/static/js/jquery-easyui-1.6.11/jquery.easyui.extend.min.js"></script>
 	<script type='text/javascript' src='/static/js/common.js' ></script>
 	<script type='text/javascript' src='/static/js/project/common.js' ></script>
-	<script type='text/javascript' src='/static/js/login.js'></script>
+	<script type='text/javascript' src='/static/js/project/mysql_list.js' ></script>
 </head>
 <body>
-	 <!--SIGN UP-->
-	<h1>瑾萱管理系统 </h1>
-	<div class="login-form">
-		<div class="head-info">
-			登录
+	<div class='main-view-content'>
+		<div class='main-query-content'>
 		</div>
-		<div class="clear"> </div>
-		<div class="avtar">
-			<img src="/static/images/logo.png" />
+		<div class='dataTable-toolbar'>
+			<span class='item'><button class='btn btn-backup'>备份数据库</button></span>
 		</div>
-		<form>
-			<input type="text" class="text" name='userAccount'  placeholder="账号" />
-			<div class="key">
-				<input type="password" name='userPassWord'   placeholder="密码" />
-			</div>
-		</form>
-		<div class="signin">
-			<input type="submit" id='login' value="登录" />
+		<div class='main-dataTable-content'>
+			<table id="dataGrid" class="easyui-datagrid"></table>
 		</div>
-	</div>
-	 <div class="copy-rights">
-		<p>Copyright &copy; 2019.Company name All rights haoyi</p>
 	</div>
 </body>
 </html>

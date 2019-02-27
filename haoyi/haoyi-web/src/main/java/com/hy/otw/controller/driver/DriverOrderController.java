@@ -5,6 +5,7 @@ import java.io.OutputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -53,6 +54,12 @@ public class DriverOrderController {
 		return totalAmt == null ? new BigDecimal(0.00) : totalAmt;
 	}
 	
+	@RequestMapping(value = "/batchSettles", method = RequestMethod.POST)
+	public void batchSettles(HttpServletRequest request,HttpServletResponse response, Long[] driverOrderIds) throws Exception {
+		List<Long> driverOrderIdList = Arrays.asList(driverOrderIds);
+		this.driverOrderService.batchSettles(driverOrderIdList);
+	}
+	
 	@RequestMapping(value = "/loadExcel", method = RequestMethod.POST)
 	public void loadExcel(HttpServletRequest request,HttpServletResponse response, DriverOrderQueryVo driverOrderQueryVo) throws IllegalAccessException, InvocationTargetException, NoSuchMethodException {
 		driverOrderQueryVo.setPage(1);
@@ -70,8 +77,8 @@ public class DriverOrderController {
 		OutputStream outputStream = null;
         try {
 			String fileName = "车辆结算管理";
-			String[] fields = { "orderDate", "plateNumber", "ownerName", "contactNumber","orderNO",	"address", "cabinetModel", "cabinetNumber", "sealNumber", "settlePrice", "otherAmt", "settleStatusStr", "remarks", "createDate" };
-			String[] titles = { "订单日期", "车牌号", "司机姓名", "联系电话", "订单编号", "订单简址", "柜型", "柜号", "封号", "实结金额", "应结金额", "结算状态", "备注", "创建时间" };
+			String[] fields = { "orderDate", "plateNumber", "ownerName", "contactNumber","orderNO",	"address", "cabinetModel", "cabinetNumber", "sealNumber", "driverPrice", "settlePrice", "otherAmt", "settleStatusStr", "remarks", "createDate" };
+			String[] titles = { "订单日期", "车牌号", "司机姓名", "联系电话", "订单编号", "订单简址", "柜型", "柜号", "封号", "划价", "实结金额", "应结金额", "结算状态", "备注", "创建时间" };
 			File file = ExcelUtil.export(null, fileName, fields, titles, driverOrderList, null);
 			DownloadUtils.downloadExcel(request, response, file, fileName);
         } catch (Exception e) {

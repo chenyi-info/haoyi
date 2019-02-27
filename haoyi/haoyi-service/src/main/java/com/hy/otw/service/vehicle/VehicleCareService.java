@@ -86,7 +86,7 @@ public class VehicleCareService {
 			prevVehicleCarePo.setCareInterval(0l);
 			this.vehicleCareDao.editVehicleCare(prevVehicleCarePo);
 		}
-		if(nextVehicleCarePo != null && prevVehicleCarePo.getCareInterval() != null){//如果下一个不为空,并且不为最后一次保养，那么计算下一个的保养间距
+		if(nextVehicleCarePo != null && prevVehicleCarePo != null && prevVehicleCarePo.getCareInterval() != null){//如果下一个不为空,并且不为最后一次保养，那么计算下一个的保养间距
 			Long days = (Long) ((nextVehicleCarePo.getCareDate().getTime() - vehicleCarePo.getCareDate().getTime()) / (1000*3600*24));
 			nextVehicleCarePo.setCareInterval(days);
 			this.vehicleCareDao.editVehicleCare(nextVehicleCarePo);

@@ -297,7 +297,7 @@
 		}).done(function(data){
 			maskObj.hideMask ();// 隐藏遮蔽罩
 			if(data.status == 200){
-				$('#editUserAuthority').dialog('destroy');
+				$('#editUserAuthority').dialog('close');
 				$("#dataGrid").datagrid('reload');
 			}
 			$.messager.alert('操作提示',data.msg);
@@ -314,7 +314,7 @@
 		$('.main-dataTable-content').delegate('button.btn-edit','click',showUpdateDialog);
 		$('.main-dataTable-content').delegate('button.btn-del','click',showDeleteDialog);
 		$('.main-dataTable-content').delegate('button.btn-auth','click',loadMenu);
-		$('#main_dlg').delegate('#submit','click', saveUserAuthority);
+		$('#editUserAuthority').delegate('#submit','click', saveUserAuthority);
 		
 	}
 	initializeUI();

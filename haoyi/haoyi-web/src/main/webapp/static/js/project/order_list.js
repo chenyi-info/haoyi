@@ -110,7 +110,7 @@
                  }},
 	        	 
 	        	 {field:'opt',title:'操作',width:'200px',align:'center', formatter:function(value,row,index){
-                 	return "<button class='btn btn-add-oa'>添加杂费</button><button class='btn btn-sel-oa'>查看杂费</button><button class='btn btn-edit'>修改</button><button class='btn btn-del'>删除</button><button class='btn btn-print'>派车单</button>";
+                 	return "<button class='btn btn-add-oa'>添加杂费</button><button class='btn btn-sel-oa'>查看杂费</button><button class='btn btn-edit'>修改</button><button class='btn btn-del'>删除</button><button class='btn btn-print'>派车单</button><button class='btn btn-text'>文本</button>";
                  }}
 	            ]];
 	
@@ -138,9 +138,13 @@
 	}
 	
 	var initDataGrid = function(){
+		var dataModel = $(".main-query-content form").serializeObject();
+		if(dataModel.orderDateEnd){
+			dataModel.orderDateEnd = dataModel.orderDateEnd+" 23:59:59";
+		}
 		$("#dataGrid").datagrid({
 			url : '/order/list',
-			queryParams : $(".main-query-content form").serializeObject(),
+			queryParams : dataModel,
 			singleSelect: true, //是否单选
 			striped:true,//各行变色
 			pagination: true, //分页控件
@@ -169,6 +173,13 @@
             	        editIndex = index;  
             	    }
             	}
+        	},
+        	onClickCell: function(index,field,value){
+        		var rows = $('#dataGrid').datagrid('getRows');
+        		var row = rows[index];
+        		if(field == 'address' && row.detailAddress && row.detailAddress.length > 0){
+        			$.messager.alert('详细地址',row.detailAddress);
+        		}
         	},
         	onClickRow:function(index,row){
         		if (editIndex != index) {  
@@ -455,6 +466,9 @@
 	
 	var downExcel = function(){
 		var criteria = $(".main-query-content form").serializeObject();
+		if(criteria.orderDateEnd){
+			criteria.orderDateEnd = criteria.orderDateEnd+" 23:59:59";
+		}
 		buildExportFormSubmit("/order/loadExcel.do", criteria);
 	}
 	
@@ -494,7 +508,26 @@
 			}]
 	     }); 
 	}
-	
+	var showTextDialog = function(){
+		var row = $('#dataGrid').datagrid('getSelected');
+		var orderText = "单号："+row.orderNO+"，柜号："+row.cabinetNumber+"，封号："+row.sealNumber+"，车牌："+row.plateNumber+"，地址简称："+row.address+"，柜型："+row.cabinetModel+" 其他，司机电话："+row.contactNumber+"，提柜费：元";
+		$("<div>"+orderText+"</div>").dialog({    
+	 	    title: '订单信息',    
+	 	    width: '450px',    
+	 	    height: '200px',    
+	 	    closed: false,    
+	 	    modal: true,
+	 	    onClose:function(){
+	 	    	$(this).dialog('destroy');
+	 	   },
+	 	    buttons:[{
+				text:'关闭',
+				handler:function(){
+					$(this).dialog('destroy');
+				}
+			}]
+	     });
+	}
 	var initializeUI = function(){
 		var nowDate = new Date();
 		var toDay = nowDate.getFullYear() + '-'+ (nowDate.getMonth()+1) + '-' + nowDate.getDate();
@@ -511,6 +544,7 @@
 		$('.main-dataTable-content').delegate('button.btn-add-oa','click',showOtherAmtDialog);
 		$('.main-dataTable-content').delegate('button.btn-sel-oa','click',showOtherAmtItemDialog);
 		$('.main-dataTable-content').delegate('button.btn-print','click',showPrintDialog);
+		$('.main-dataTable-content').delegate('button.btn-text','click',showTextDialog);
 		$('.main-dataTable-content').delegate('.datagrid-view','click',endEditing);
 	}
 	initializeUI();

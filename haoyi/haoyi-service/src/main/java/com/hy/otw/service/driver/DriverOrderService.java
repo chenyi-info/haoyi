@@ -125,5 +125,9 @@ public class DriverOrderService {
 	public BigDecimal findDriverOrderTotalAmt(DriverOrderQueryVo driverOrderQueryVo) {
 		return this.driverOrderDao.findDriverOrderTotalAmt(driverOrderQueryVo);
 	}
+	
+	public void batchSettles(List<Long> driverOrderIdList) {
+		this.driverOrderDao.batchSettles(driverOrderIdList);
+	}
 
 }

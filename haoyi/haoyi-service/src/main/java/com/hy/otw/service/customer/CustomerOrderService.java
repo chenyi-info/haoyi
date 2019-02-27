@@ -118,4 +118,8 @@ public class CustomerOrderService {
 		return this.customerOrderDao.findCustomerOrderTotalAmt(customerOrderQueryVo);
 	}
 
+	public void batchSettles(List<Long> customerOrderIdList) {
+		this.customerOrderDao.batchSettles(customerOrderIdList);
+	}
+
 }

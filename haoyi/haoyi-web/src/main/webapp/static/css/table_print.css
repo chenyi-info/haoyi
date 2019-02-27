@@ -7,10 +7,12 @@
 .print_talbe input{border:0px;width:80%;}
 .print_talbe input.num{width:100px;}
 .print_talbe input.companyName{width:220px;font-weight: bold;margin-left: 5px;}
+.print_talbe .red{color: red;}
 @media print {
    .bottom_area{margin-top:10mm;}
    .print_talbe td.company{height:15mm;}
    .print_talbe tr th, .print_talbe tr td{height:11mm;}
+   .print_talbe .red{color: red;}
    nav, aside {   
       display: none;   
    }   
