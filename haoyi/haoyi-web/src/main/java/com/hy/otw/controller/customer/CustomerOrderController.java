@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.OutputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -68,8 +69,11 @@ public class CustomerOrderController {
 		List<CustomerOrderVo> customerOrderVoList =(List<CustomerOrderVo>) pagination.getRows();
 		List<JSONObject> customerOrderList = new ArrayList<JSONObject>();
 		if(CollectionUtils.isNotEmpty(customerOrderVoList)){
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			for (CustomerOrderVo customerOrderVo : customerOrderVoList) {
 				JSONObject obj = JSONObject.parseObject(JSONObject.toJSON(customerOrderVo).toString());
+				obj.put("orderDateStr", sdf.format(customerOrderVo.getOrderDate()));
+				obj.put("createDateStr", sdf.format(customerOrderVo.getCreateDate()));
 				obj.put("settleStatusStr", customerOrderVo.getSettleStatus() == 0 ? "未结算" : "已结算");
 				customerOrderList.add(obj);
 			}
@@ -77,7 +81,7 @@ public class CustomerOrderController {
 		OutputStream outputStream = null;
         try {
 			String fileName = "客户账单管理";
-			String[] fields = { "orderDate", "companyName", "orderNO",	"address", "cabinetModel", "cabinetNumber", "sealNumber", "customerPrice", "settlePrice", "otherAmt", "settleStatusStr", "remarks", "createDate" };
+			String[] fields = { "orderDateStr", "companyName", "orderNO",	"address", "cabinetModel", "cabinetNumber", "sealNumber", "customerPrice", "settlePrice", "otherAmt", "settleStatusStr", "remarks", "createDateStr" };
 			String[] titles = { "订单日期", "公司名称", "订单编号", "订单简址", "柜型", "柜号", "封号", "订单金额", "实结金额", "应结金额", "结算状态", "备注", "创建时间" };
 			File file = ExcelUtil.export(null, fileName, fields, titles, customerOrderList, null);
 			DownloadUtils.downloadExcel(request, response, file, fileName);

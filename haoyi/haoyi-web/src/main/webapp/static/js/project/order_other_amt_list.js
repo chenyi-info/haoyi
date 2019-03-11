@@ -1,4 +1,6 @@
 ﻿$(function(){
+	//结算状态：0-未结算；1-已结算
+	var settleStatus = [{'text':'全部','value':' '},{'text':'已结算','value':'0'},{'text':'未结算','value':'1'}];
 	var columns = [[
 	             {field : 'id',width : '3%',align : 'center',checkbox:'true'},
 	             {field:'expenditureDate',title:'支出日期',width:'17%',align:'center',formatter:function(value,row,index){
@@ -44,7 +46,14 @@
 			pagePosition: "bottom",
 			view:dataTableView,
 			emptyMsg:'未查询到内容',
-            columns:columns
+            columns:columns,
+            onCheck : function (index, row) {
+            	var total = parseInt($('.dataTable-toolbar .totalAmt').html());
+            	$('.dataTable-toolbar .totalAmt').html(total + row.price);
+            },onUncheck : function (index, row) {
+            	var total = parseInt($('.dataTable-toolbar .totalAmt').html());
+            	$('.dataTable-toolbar .totalAmt').html(total - row.price);
+            }
         });
 	}
 	
@@ -217,7 +226,15 @@
 		buildExportFormSubmit("/orderOtherAmt/loadExcel.do", criteria);
 	}
 	
+	var initSettleStatus = function(){
+		$('#settleStatus_query').combobox({
+			data:settleStatus,
+			editable:false
+		});
+	}
+	
 	var initializeUI = function(){
+		initSettleStatus();
 		initDataGrid();
 		initQueryDataDic();
 		$('.dataTable-toolbar').delegate('button.btn-batch-settled','click',showSettledDialog);

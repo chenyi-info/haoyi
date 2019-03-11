@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.OutputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -68,8 +69,11 @@ public class DriverOrderController {
 		List<DriverOrderVo> driverOrderVoList =(List<DriverOrderVo>) pagination.getRows();
 		List<JSONObject> driverOrderList = new ArrayList<JSONObject>();
 		if(CollectionUtils.isNotEmpty(driverOrderVoList)){
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			for (DriverOrderVo driverOrderVo : driverOrderVoList) {
 				JSONObject obj = JSONObject.parseObject(JSONObject.toJSON(driverOrderVo).toString());
+				obj.put("orderDateStr", sdf.format(driverOrderVo.getOrderDate()));
+				obj.put("createDateStr", sdf.format(driverOrderVo.getCreateDate()));
 				obj.put("settleStatusStr", driverOrderVo.getSettleStatus() == 0 ? "未结算" : "已结算");
 				driverOrderList.add(obj);
 			}
@@ -77,7 +81,7 @@ public class DriverOrderController {
 		OutputStream outputStream = null;
         try {
 			String fileName = "车辆结算管理";
-			String[] fields = { "orderDate", "plateNumber", "ownerName", "contactNumber","orderNO",	"address", "cabinetModel", "cabinetNumber", "sealNumber", "driverPrice", "settlePrice", "otherAmt", "settleStatusStr", "remarks", "createDate" };
+			String[] fields = { "orderDateStr", "plateNumber", "ownerName", "contactNumber","orderNO",	"address", "cabinetModel", "cabinetNumber", "sealNumber", "driverPrice", "settlePrice", "otherAmt", "settleStatusStr", "remarks", "createDateStr" };
 			String[] titles = { "订单日期", "车牌号", "司机姓名", "联系电话", "订单编号", "订单简址", "柜型", "柜号", "封号", "划价", "实结金额", "应结金额", "结算状态", "备注", "创建时间" };
 			File file = ExcelUtil.export(null, fileName, fields, titles, driverOrderList, null);
 			DownloadUtils.downloadExcel(request, response, file, fileName);

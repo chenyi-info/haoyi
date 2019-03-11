@@ -111,6 +111,9 @@ public class OrderOtherAmtDao extends HibernateDao<OrderOtherAmtPo, Long>{
 	public void editOrderInfo(OrderPo orderPo) {
 		String sql = "update order_other_amt set order_no=?,cabinet_model=?,cabinet_number=?,seal_number=?,address=? where order_id=?";
 		this.updateSql(sql, orderPo.getOrderNO(), orderPo.getCabinetModel(),orderPo.getCabinetNumber(),orderPo.getSealNumber(),orderPo.getAddress(), orderPo.getId());
+		sql = "update order_other_amt as ooa set ooa.target_name = ? where ooa.property_type = 1 and ooa.order_id = ?";
+		this.updateSql(sql, orderPo.getPlateNumber(), orderPo.getId());
+		
 	}
 
 	public void batchSettles(List<Long> orderOtherAmtIdList) {

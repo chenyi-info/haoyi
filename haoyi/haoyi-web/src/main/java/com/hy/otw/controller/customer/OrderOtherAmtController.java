@@ -3,6 +3,7 @@ package com.hy.otw.controller.customer;
 import java.io.File;
 import java.io.OutputStream;
 import java.lang.reflect.InvocationTargetException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -75,8 +76,11 @@ public class OrderOtherAmtController {
 		List<OrderOtherAmtVo> orderOtherAmtVoList =(List<OrderOtherAmtVo>) pagination.getRows();
 		List<JSONObject> orderOtherAmtList = new ArrayList<JSONObject>();
 		if(CollectionUtils.isNotEmpty(orderOtherAmtVoList)){
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			for (OrderOtherAmtVo orderOtherAmtVo : orderOtherAmtVoList) {
 				JSONObject obj = JSONObject.parseObject(JSONObject.toJSON(orderOtherAmtVo).toString());
+				obj.put("expenditureDateStr", sdf.format(orderOtherAmtVo.getExpenditureDate()));
+				obj.put("createDateStr", sdf.format(orderOtherAmtVo.getCreateDate()));
 				obj.put("propertyTypeStr", orderOtherAmtVo.getPropertyType() == 1 ? "司机" : orderOtherAmtVo.getPropertyType() == 2 ? "客户" : "自己");
 				obj.put("isSettleStr", orderOtherAmtVo.getIsSettle() == null ? "--" : orderOtherAmtVo.getIsSettle() == 0 ? "未结算" : "已结算");
 				orderOtherAmtList.add(obj);
@@ -85,7 +89,7 @@ public class OrderOtherAmtController {
 		OutputStream outputStream = null;
         try {
 			String fileName = "订单杂费管理";
-			String[] fields = { "expenditureDate", "orderNO", "price", "targetName", "cabinetNumber", "address", "itemName", "propertyTypeStr", "isSettleStr", "remarks", "createDate" };
+			String[] fields = { "expenditureDateStr", "orderNO", "price", "targetName", "cabinetNumber", "address", "itemName", "propertyTypeStr", "isSettleStr", "remarks", "createDateStr" };
 			String[] titles = { "支出日期", "订单编号", "支付金额", "支出对象", "柜号", "订单简址", "支付项目类型", "归属类型", "结算状态", "备注", "创建时间" };
 			File file = ExcelUtil.export(null, fileName, fields, titles, orderOtherAmtList, null);
 			DownloadUtils.downloadExcel(request, response, file, fileName);
