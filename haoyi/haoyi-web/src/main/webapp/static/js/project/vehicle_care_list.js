@@ -22,9 +22,13 @@
 	            ]];
 	var initDataGrid = function(){
 		loadVehicleCareAmt();
+		var dataModel = $(".main-query-content form").serializeObject();
+		if(dataModel.careDateEnd){
+			dataModel.careDateEnd = dataModel.careDateEnd+" 23:59:59";
+		}
 		$("#dataGrid").datagrid({
 			url : '/vehicleCare/list',
-			queryParams : $(".main-query-content form").serializeObject(),
+			queryParams : dataModel,
 			singleSelect: true, //是否单选
 			striped:true,//各行变色
 			pagination: true, //分页控件
@@ -159,8 +163,11 @@
 	} 
 	
 	var downExcel = function(){
-		var criteria = $(".main-query-content form").serializeObject();
-		buildExportFormSubmit("/vehicleCare/loadExcel.do", criteria);
+		var dataModel = $(".main-query-content form").serializeObject();
+		if(dataModel.careDateEnd){
+			dataModel.careDateEnd = dataModel.careDateEnd+" 23:59:59";
+		}
+		buildExportFormSubmit("/vehicleCare/loadExcel.do", dataModel);
 	}
 	
 	var initializeUI = function(){

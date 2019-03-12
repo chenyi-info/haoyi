@@ -84,7 +84,7 @@ public class OrderController {
 		Pagination pagination = this.orderService.findOrderList(orderQueryVo);
 		List<OrderVo> orderVoList = (List<OrderVo>) pagination.getRows();
 		List<JSONObject> orderList = new ArrayList<JSONObject>();
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		if(CollectionUtils.isNotEmpty(orderVoList)){
 			for (OrderVo orderVo : orderVoList) {
 				JSONObject obj = JSONObject.parseObject(JSONObject.toJSON(orderVo).toString());

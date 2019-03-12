@@ -27,9 +27,13 @@
 	            ]];
 	var initDataGrid = function(){
 		loadDriverTotalAmt();
+		var dataModel = $(".main-query-content form").serializeObject();
+		if(dataModel.orderDateEnd){
+			dataModel.orderDateEnd = dataModel.orderDateEnd+" 23:59:59";
+		}
 		$("#dataGrid").datagrid({
 			url : '/driverOrder/list',
-			queryParams : $(".main-query-content form").serializeObject(),
+			queryParams : dataModel,
 			singleSelect: true, //是否单选
 			striped:true,//各行变色
 			pagination: true, //分页控件
@@ -335,8 +339,11 @@
 	}
 	
 	var downExcel = function(){
-		var criteria = $(".main-query-content form").serializeObject();
-		buildExportFormSubmit("/driverOrder/loadExcel.do", criteria);
+		var dataModel = $(".main-query-content form").serializeObject();
+		if(dataModel.orderDateEnd){
+			dataModel.orderDateEnd = dataModel.orderDateEnd+" 23:59:59";
+		}
+		buildExportFormSubmit("/driverOrder/loadExcel.do", dataModel);
 	}
 	
 	var initializeUI = function(){

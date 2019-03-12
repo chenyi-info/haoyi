@@ -69,7 +69,7 @@ public class CustomerOrderController {
 		List<CustomerOrderVo> customerOrderVoList =(List<CustomerOrderVo>) pagination.getRows();
 		List<JSONObject> customerOrderList = new ArrayList<JSONObject>();
 		if(CollectionUtils.isNotEmpty(customerOrderVoList)){
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 			for (CustomerOrderVo customerOrderVo : customerOrderVoList) {
 				JSONObject obj = JSONObject.parseObject(JSONObject.toJSON(customerOrderVo).toString());
 				obj.put("orderDateStr", sdf.format(customerOrderVo.getOrderDate()));

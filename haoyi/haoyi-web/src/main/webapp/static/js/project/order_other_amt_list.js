@@ -24,9 +24,13 @@
                  }}
 	            ]];
 	var initDataGrid = function(){
+		var dataModel = $(".main-query-content form").serializeObject();
+		if(dataModel.expenditureDateEnd){
+			dataModel.expenditureDateEnd = dataModel.expenditureDateEnd+" 23:59:59";
+		}
 		$("#dataGrid").datagrid({
 			url : '/orderOtherAmt/list',
-			queryParams : $(".main-query-content form").serializeObject(),
+			queryParams : dataModel,
 			singleSelect: true, //是否单选
 			striped:true,//各行变色
 			pagination: true, //分页控件
@@ -47,12 +51,29 @@
 			view:dataTableView,
 			emptyMsg:'未查询到内容',
             columns:columns,
-            onCheck : function (index, row) {
+            onCheckAll:function(rows){
+            	var total = 0;
+            	$.each(rows,function(i,v){
+            		total += v.price;
+            		$('.main-dataTable-content input[name=id]').eq(i).attr('add','add'); 
+            	});
+            	$('.dataTable-toolbar .totalAmt').html(total);
+            },onUncheckAll:function(rows){
+            	$('.dataTable-toolbar .totalAmt').html('0');
+            },onCheck : function (index, row) {
+            	if($('.main-dataTable-content input[name=id]').eq(index).attr('add') == 'add'){
+            		return false;
+            	}
             	var total = parseInt($('.dataTable-toolbar .totalAmt').html());
             	$('.dataTable-toolbar .totalAmt').html(total + row.price);
+            	$('.main-dataTable-content input[name=id]').eq(index).attr('add','add'); 
             },onUncheck : function (index, row) {
+            	if($('.main-dataTable-content input[name=id]').eq(index).attr('add') != 'add'){
+            		return false;
+            	}
             	var total = parseInt($('.dataTable-toolbar .totalAmt').html());
             	$('.dataTable-toolbar .totalAmt').html(total - row.price);
+            	$('.main-dataTable-content input[name=id]').eq(index).removeAttr('add','add');
             }
         });
 	}
@@ -222,8 +243,11 @@
 	}
 	
 	var downExcel = function(){
-		var criteria = $(".main-query-content form").serializeObject();
-		buildExportFormSubmit("/orderOtherAmt/loadExcel.do", criteria);
+		var dataModel = $(".main-query-content form").serializeObject();
+		if(dataModel.expenditureDateEnd){
+			dataModel.expenditureDateEnd = dataModel.expenditureDateEnd+" 23:59:59";
+		}
+		buildExportFormSubmit("/orderOtherAmt/loadExcel.do", dataModel);
 	}
 	
 	var initSettleStatus = function(){

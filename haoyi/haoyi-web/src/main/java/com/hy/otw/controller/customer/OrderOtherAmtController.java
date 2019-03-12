@@ -76,7 +76,7 @@ public class OrderOtherAmtController {
 		List<OrderOtherAmtVo> orderOtherAmtVoList =(List<OrderOtherAmtVo>) pagination.getRows();
 		List<JSONObject> orderOtherAmtList = new ArrayList<JSONObject>();
 		if(CollectionUtils.isNotEmpty(orderOtherAmtVoList)){
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 			for (OrderOtherAmtVo orderOtherAmtVo : orderOtherAmtVoList) {
 				JSONObject obj = JSONObject.parseObject(JSONObject.toJSON(orderOtherAmtVo).toString());
 				obj.put("expenditureDateStr", sdf.format(orderOtherAmtVo.getExpenditureDate()));

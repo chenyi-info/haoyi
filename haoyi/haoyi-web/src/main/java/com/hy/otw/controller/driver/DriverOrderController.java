@@ -69,7 +69,7 @@ public class DriverOrderController {
 		List<DriverOrderVo> driverOrderVoList =(List<DriverOrderVo>) pagination.getRows();
 		List<JSONObject> driverOrderList = new ArrayList<JSONObject>();
 		if(CollectionUtils.isNotEmpty(driverOrderVoList)){
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 			for (DriverOrderVo driverOrderVo : driverOrderVoList) {
 				JSONObject obj = JSONObject.parseObject(JSONObject.toJSON(driverOrderVo).toString());
 				obj.put("orderDateStr", sdf.format(driverOrderVo.getOrderDate()));
