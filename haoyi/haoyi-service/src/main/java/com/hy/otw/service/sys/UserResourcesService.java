@@ -25,12 +25,12 @@ public class UserResourcesService {
 	@Resource private UserResourcesDao userResourcesDao;
 	@Resource private MenuResourcesService menuResourcesService;
 
-	public void addUserAuthority(List<UserResourcesVo> userResourcesVoList) throws Exception {
+	public void addUserAuthority(Long userId, List<UserResourcesVo> userResourcesVoList) throws Exception {
 		if(CollectionUtils.isEmpty(userResourcesVoList)){
 			throw new Exception("权限菜单不能为空");
 		}
 		UserInfoVo loginUser = (UserInfoVo) SecurityUtils.getSubject().getPrincipal();
-		userResourcesDao.deleteUserAuthority(loginUser.getId());
+		userResourcesDao.deleteUserAuthority(userId);
 		Date date = new Date();
 		List<UserResourcesPo> userResourcesPoList = new ArrayList<UserResourcesPo>();
 		for (UserResourcesVo userResourcesVo : userResourcesVoList) {

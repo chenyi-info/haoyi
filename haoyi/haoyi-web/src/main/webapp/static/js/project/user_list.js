@@ -186,7 +186,7 @@
 		var row = $('#dataGrid').datagrid('getSelected');
 		$.messager.confirm("删除提示", "是否删除用户:"+row.userName+"的信息?",function(e){
 		     if(e){
-		    	 operateVehicle('/userInfo/delete', {userId:row.id});
+		    	 operateVehicle('/userInfo/delete', {userInfoId:row.id});
 		     }
 		 });
 	}
@@ -285,12 +285,14 @@
 	
 	var saveUserAuthority = function(){
 		var data = {};
+		var row = $('#dataGrid').datagrid('getSelected');
+		var userId = row.id;
 		var authority = getAuthority("#editUserAuthority .content");//获取权限
 		var maskObj = new mask();
 		$.ajax({
 			url:'/userResources/userAuthority.do',
 			type:"post",
-			data:{'userResourcesStrList':JSON.stringify(authority)},
+			data:{'userId':userId,'userResourcesStrList':JSON.stringify(authority)},
 			beforeSend : function (){
 			    maskObj.showMask();// 显示遮蔽罩
 		    }
@@ -299,6 +301,7 @@
 			if(data.status == 200){
 				$('#editUserAuthority').dialog('close');
 				$("#dataGrid").datagrid('reload');
+				data.msg = '操作成功';
 			}
 			$.messager.alert('操作提示',data.msg);
 		}).fail(function(data){

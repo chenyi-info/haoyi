@@ -24,11 +24,11 @@ public class UserResourcesController {
 	@Resource private UserResourcesService userResourcesService;
 	
 	@RequestMapping(value = "/userAuthority", method = RequestMethod.POST)
-	public ResponseMsgVo userAuthority(HttpServletRequest request,HttpServletResponse response, String userResourcesStrList) {
+	public ResponseMsgVo userAuthority(HttpServletRequest request,HttpServletResponse response,Long userId, String userResourcesStrList) {
 		ResponseMsgVo msg = new ResponseMsgVo();
 		try{
 			List<UserResourcesVo> userResourcesVoList = JSONArray.parseArray(userResourcesStrList, UserResourcesVo.class);
-			userResourcesService.addUserAuthority(userResourcesVoList);
+			userResourcesService.addUserAuthority(userId, userResourcesVoList);
 		}catch(Exception e){
 			msg.setStatus(500);
 			msg.setMsg(e.getMessage());

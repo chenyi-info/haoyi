@@ -2,12 +2,12 @@
 	//订单状态：0-正常；1-已取消
 	var orderStatus = [{'text':'全部','value':' '},{'text':'正常','value':'0'},{'text':'已取消','value':'1'}];
 	var columns = [[
-	             {field:'orderDate',title:'订单日期',width:'5%',align:'center',formatter:function(value,row,index){
+	             {field:'orderDate',title:'订单日期',width:'100px',align:'center',formatter:function(value,row,index){
 	        		 return getYMDHMS(row.orderDate);
 	        	 }}, 
-	        	 {field:'orderNO',title:'订单编号',width:'8%',align:'center'},
-	        	 {field:'cabinetModel',title:'柜型',width:'5%',align:'center'},
-	        	 {field:'cabinetRecipientAddr',title:'提还柜',width:'5%',align:'center',formatter:function(value,row,index){
+	        	 {field:'orderNO',title:'订单编号',width:'12%',align:'center'},
+	        	 {field:'cabinetModel',title:'柜型',width:'4%',align:'center'},
+	        	 {field:'cabinetRecipientAddr',title:'提还柜',width:'45px',align:'center',formatter:function(value,row,index){
 	        		 var addr = '';
 	        		 if(row.cabinetRecipientAddr != null && row.cabinetRecipientAddr != ''){
 	        			 addr = row.cabinetRecipientAddr+"/";
@@ -17,12 +17,12 @@
 	        		 }
                  	return  addr;
                  }},
-                 {field:'address',title:'订单简址',width:'5%',align:'center'},
-                 {field:'weighed',title:'重量(T)',width:'4%',align:'center'},
+                 {field:'address',title:'订单简址',width:'6%',align:'center'},
+                 {field:'weighed',title:'重量(T)',width:'40px',align:'center'},
                  {field:'demand',title:'订单要求',width:'5%',align:'center'},
-	        	 {field:'cabinetNumber',title:'柜号',width:'15%',align:'center'},
+	        	 {field:'cabinetNumber',title:'柜号',width:'11%',align:'center'},
 	        	 {field:'sealNumber',title:'封号',width:'5%',align:'center'},
-                 {field:'plateNumber',title:'车牌号',width:'8%',align:'center',editor: {
+                 {field:'plateNumber',title:'车牌号',width:'7%',align:'center',editor: {
                      type: 'combogrid', // 指明控件类型
                      options:{
                  		mode : 'remote',//远程连接方式  
@@ -62,7 +62,7 @@
                         	}
                         }}
                  }},    
-	        	 {field:'ownerName',title:'司机姓名',width:'5%',align:'center',editor:{
+	        	 {field:'ownerName',title:'司机姓名',width:'4%',align:'center',editor:{
 	        		 type:'textbox',
 	        		 options:{
 	        			 editable:false
@@ -145,6 +145,7 @@
 		$("#dataGrid").datagrid({
 			url : '/order/list',
 			queryParams : dataModel,
+			rownumbers:true,
 			singleSelect: true, //是否单选
 			striped:true,//各行变色
 			pagination: true, //分页控件
@@ -178,7 +179,22 @@
         		var rows = $('#dataGrid').datagrid('getRows');
         		var row = rows[index];
         		if(field == 'address' && row.detailAddress && row.detailAddress.length > 0){
-        			$.messager.alert('详细地址',row.detailAddress);
+        			$("<div id='detail_addr' style='padding:10px;' >"+row.detailAddress+"</div>").dialog({    
+        		 	    title: '详细地址',    
+        		 	    width: '450px',    
+        		 	    height: '360px',    
+        		 	    closed: false,    
+        		 	    modal: true,
+        		 	    onClose:function(){
+        		 	    	$('#detail_addr').dialog('destroy');
+        		 	   },
+        		 	    buttons:[{
+        					text:'关闭',
+        					handler:function(){
+        						$('#detail_addr').dialog('destroy');
+        					}
+        				}]
+        		     });
         		}
         	},
         	onClickRow:function(index,row){
@@ -382,6 +398,14 @@
 	 	    onOpen:function(){
 	 	    	$.parser.parse('#main_dlg');
 	 	    	initDataDic();
+	 	    	$('#itemName_view').combobox({
+	 	    		onChange: function (n,o) {
+	 	    			if(n == '办单费'){
+	 	    				$('input[name=propertyTypes]').removeAttr("checked");
+	 	    				$('#propertyTypes_myself_view').attr("checked",'checked');
+	 	    			}
+	 	    		}
+	 	    	});
 	 	    },
 	 	    onClose:function(){
 	 	    	$('#main_dlg').dialog('destroy');
@@ -514,7 +538,7 @@
 		$("<div>"+orderText+"</div>").dialog({    
 	 	    title: '订单信息',    
 	 	    width: '450px',    
-	 	    height: '200px',    
+	 	    height: '300px',    
 	 	    closed: false,    
 	 	    modal: true,
 	 	    onClose:function(){
