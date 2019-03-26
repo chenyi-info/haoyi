@@ -36,6 +36,10 @@
 		<div class='dataTable-toolbar'>
 			<span class='item'><button class='btn btn-add'>新增</button></span>
 			<span class='item'><button class='btn btn-excel'>导出Excel</button></span>
+			<form id="uploadWord">
+	            <input type="file" name="file" accept='application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document'/>
+	            <button class='btn btn-upload' type='button'>上传派车单</button>
+		    </form>
 		</div>
 		<div class='main-dataTable-content'>
 			<table id="dataGrid" class="easyui-datagrid"></table>

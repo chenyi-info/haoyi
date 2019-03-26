@@ -271,8 +271,11 @@
 		});
 	} 
 	
-	var showAddDialog = function(){
-		var html = Mustache.render($('#dialog_content_template').html(),{});
+	var showAddDialog = function(orderModel){
+		if(orderModel){
+			orderModel.orderDate = dateFormat(orderModel.orderDate,"yyyy-MM-dd HH:mm:ss");
+	    }
+		var html = Mustache.render($('#dialog_content_template').html(),orderModel);
 		var diaHtml = "<div id='main_dlg'>"+html+"</div>";
 		$(diaHtml).dialog({    
 	 	    title: '订单管理',    
@@ -552,6 +555,24 @@
 			}]
 	     });
 	}
+	
+	var upload = function(){
+        var form = new FormData(document.getElementById("uploadWord"));
+        $.ajax({
+            url:"/order/uploadWord",
+            type:"post",
+            data:form,
+            processData:false,
+            contentType:false,
+            success:function(data){
+            	showAddDialog(data);
+            },
+            error:function(e){
+                alert("错误！！");
+            }
+        });        
+    }
+	
 	var initializeUI = function(){
 		var nowDate = new Date();
 		var toDay = nowDate.getFullYear() + '-'+ (nowDate.getMonth()+1) + '-' + nowDate.getDate();
@@ -562,6 +583,7 @@
 		initDataGrid();
 		$('.dataTable-toolbar').delegate('button.btn-add','click',showAddDialog);
 		$('.dataTable-toolbar').delegate('button.btn-excel','click',downExcel);
+		$('.dataTable-toolbar').delegate('button.btn-upload','click',upload);
 		$('.main-query-content').delegate('button.btn-search','click',initDataGrid);
 		$('.main-dataTable-content').delegate('button.btn-edit','click',showUpdateDialog);
 		$('.main-dataTable-content').delegate('button.btn-del','click',showDeleteDialog);
