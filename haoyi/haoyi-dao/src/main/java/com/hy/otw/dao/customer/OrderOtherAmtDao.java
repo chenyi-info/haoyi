@@ -122,4 +122,12 @@ public class OrderOtherAmtDao extends HibernateDao<OrderOtherAmtPo, Long>{
 		query.setParameterList("idList", orderOtherAmtIdList);
 		query.executeUpdate();
 	}
+
+	public List<OrderOtherAmtPo> findOrderOtherAmtList(List<Long> orderIdlist, Integer propertyType) {
+		String hql = "from OrderOtherAmtPo where orderId in (:orderIdlist) and propertyType =:propertyType";
+		Query query = this.createQuery(hql);
+		query.setParameterList("orderIdlist", orderIdlist);
+		query.setParameter("propertyType", propertyType);
+		return query.list();
+	}
 }

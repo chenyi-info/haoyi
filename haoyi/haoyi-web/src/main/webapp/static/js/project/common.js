@@ -273,6 +273,11 @@ var loadDataDic = function(eId,dictionaryCode){
 			data:dataList,
 			editable:false
 		});
+		var val = $('#'+eId).combobox('getValue');
+		var selectedVal = $('#'+eId).attr('defaultSel');
+		if((val == '' || val == null) && selectedVal){
+			$('#'+eId).combobox('select', selectedVal);
+		}
 	}).fail(function(data){
 		$.messager.alert('操作提示','获取数据字典失败');
 	});

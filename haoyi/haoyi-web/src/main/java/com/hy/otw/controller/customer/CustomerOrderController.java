@@ -15,16 +15,21 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.fastjson.JSONObject;
+import com.google.common.base.Function;
+import com.google.common.collect.Lists;
 import com.hy.otw.hibernate.utils.Pagination;
 import com.hy.otw.service.customer.CustomerOrderService;
+import com.hy.otw.service.customer.OrderOtherAmtService;
 import com.hy.otw.utils.DownloadUtils;
 import com.hy.otw.utils.ExcelUtil;
 import com.hy.otw.vo.CustomerOrderVo;
+import com.hy.otw.vo.OrderOtherAmtVo;
 import com.hy.otw.vo.query.CustomerOrderQueryVo;
 
 @RestController
@@ -32,6 +37,8 @@ import com.hy.otw.vo.query.CustomerOrderQueryVo;
 public class CustomerOrderController {
 	
 	@Resource private CustomerOrderService customerOrderService;
+	
+	@Resource private OrderOtherAmtService orderOtherAmtService;
 	
 	@RequestMapping(value = "/edit", method = RequestMethod.POST)
 	public void edit(HttpServletRequest request,HttpServletResponse response, CustomerOrderVo customerOrderVo) throws Exception {
@@ -68,21 +75,45 @@ public class CustomerOrderController {
 		Pagination pagination = this.customerOrderService.findCustomerOrderList(customerOrderQueryVo);
 		List<CustomerOrderVo> customerOrderVoList =(List<CustomerOrderVo>) pagination.getRows();
 		List<JSONObject> customerOrderList = new ArrayList<JSONObject>();
+		List<Long> orderIdlist = null;
 		if(CollectionUtils.isNotEmpty(customerOrderVoList)){
+			orderIdlist = Lists.transform(customerOrderVoList, new Function<CustomerOrderVo, Long>() {
+				 @Override
+				 public Long apply( CustomerOrderVo customerOrderVo ) {
+					 return customerOrderVo.getOrderId();
+				 }
+			});
+			List<OrderOtherAmtVo> orderOtherAmtVoList = orderOtherAmtService.findOrderOtherAmtList(orderIdlist, 2);
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 			for (CustomerOrderVo customerOrderVo : customerOrderVoList) {
+				if(customerOrderVo.getSettlePrice() == null){
+					customerOrderVo.setSettlePrice(BigDecimal.ZERO);
+				}
+				if(customerOrderVo.getOtherAmt() == null){
+					customerOrderVo.setOtherAmt(BigDecimal.ZERO);
+				}
+				if(customerOrderVo.getCustomerPrice() == null){
+					customerOrderVo.setCustomerPrice(BigDecimal.ZERO);
+				}
 				JSONObject obj = JSONObject.parseObject(JSONObject.toJSON(customerOrderVo).toString());
 				obj.put("orderDateStr", sdf.format(customerOrderVo.getOrderDate()));
 				obj.put("createDateStr", sdf.format(customerOrderVo.getCreateDate()));
 				obj.put("settleStatusStr", customerOrderVo.getSettleStatus() == 0 ? "未结算" : "已结算");
+				obj.put("settleItems", orderOtherAmtService.getItemsText(orderOtherAmtVoList, customerOrderVo.getOrderId(), 0));
+				obj.put("unsettleItems", orderOtherAmtService.getItemsText(orderOtherAmtVoList, customerOrderVo.getOrderId(), 1));
+				String total = "";
+				total += StringUtils.isNotBlank(obj.getString("settleItems")) ? obj.getString("settleItems") : "";
+				total += StringUtils.isNotBlank(obj.getString("unsettleItems")) ? obj.getString("unsettleItems") : "";
+				obj.put("totalSettleItems", total);
+				obj.put("totalSettle", customerOrderVo.getOtherAmt().subtract(customerOrderVo.getSettlePrice()).add(customerOrderVo.getCustomerPrice()));
 				customerOrderList.add(obj);
 			}
 		}
 		OutputStream outputStream = null;
         try {
 			String fileName = "客户账单管理";
-			String[] fields = { "orderDateStr", "companyName", "orderNO",	"address", "cabinetModel", "cabinetNumber", "sealNumber", "customerPrice", "settlePrice", "otherAmt", "settleStatusStr", "remarks", "createDateStr" };
-			String[] titles = { "订单日期", "公司名称", "订单编号", "订单简址", "柜型", "柜号", "封号", "订单金额", "实结金额", "应结金额", "结算状态", "备注", "创建时间" };
+			String[] fields = { "orderDateStr", "companyName", "orderNO",	"address", "cabinetModel", "cabinetNumber", "sealNumber", "customerPrice",  "otherAmt", "settleItems", "totalSettle","totalSettleItems", "settleStatusStr", "remarks", "createDateStr" };
+			String[] titles = { "订单日期", "公司名称", "订单编号", "订单简址", "柜型", "柜号", "封号", "订单金额", "应结算杂费金额", "已结杂费金额","应结总额","杂费明细", "结算状态", "备注", "创建时间" };
 			File file = ExcelUtil.export(null, fileName, fields, titles, customerOrderList, null);
 			DownloadUtils.downloadExcel(request, response, file, fileName);
         } catch (Exception e) {

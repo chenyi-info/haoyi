@@ -66,7 +66,7 @@ public class DriverOrderDao extends HibernateDao<DriverOrderPo, Long>{
 	}
 
 	public DriverOrderPo getDriverOrder(Long driverOrderId) {
-		String hql = "from DriverOrderPo where delStatus=? and id=?";
+		String hql = "from DriverOrderPo where delStatus=? and orderId=?";
 		DriverOrderPo driverOrderPo = this.findUnique(hql, DelStatusEnum.NORMAL.getValue(), driverOrderId);
 		return driverOrderPo;
 	}

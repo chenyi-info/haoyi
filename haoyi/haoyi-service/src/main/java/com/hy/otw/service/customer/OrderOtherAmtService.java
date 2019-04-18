@@ -130,4 +130,27 @@ public class OrderOtherAmtService {
 		this.orderOtherAmtDao.batchSettles(orderOtherAmtIdList);
 	}
 
+	public List<OrderOtherAmtVo> findOrderOtherAmtList(List<Long> orderIdlist, Integer propertyType) throws IllegalAccessException, InvocationTargetException, NoSuchMethodException {
+		List<OrderOtherAmtPo> orderOtherAmtPoList = this.orderOtherAmtDao.findOrderOtherAmtList(orderIdlist, propertyType);
+		List<OrderOtherAmtVo> orderOtherAmtVoList = new ArrayList<OrderOtherAmtVo>();
+		if(CollectionUtils.isNotEmpty(orderOtherAmtPoList)){
+			for (OrderOtherAmtPo orderOtherAmtPo : orderOtherAmtPoList) {
+				OrderOtherAmtVo orderOtherAmtVo = new OrderOtherAmtVo();
+				PropertyUtils.copyProperties(orderOtherAmtVo, orderOtherAmtPo);
+				orderOtherAmtVoList.add(orderOtherAmtVo);
+			}
+		}
+		return orderOtherAmtVoList;
+	}
+
+	public String getItemsText(List<OrderOtherAmtVo> orderOtherAmtVoList, Long orderId, int settleStatus) {
+		StringBuffer itemsText = new StringBuffer();
+		for (OrderOtherAmtVo orderOtherAmtVo : orderOtherAmtVoList) {
+			if(orderOtherAmtVo.getOrderId().equals(orderId) && orderOtherAmtVo.getIsSettle() == settleStatus){
+				itemsText.append(orderOtherAmtVo.getItemName()).append(":").append(orderOtherAmtVo.getPrice()).append("元").append("\r\n");
+			}
+		}
+		return itemsText.toString();
+	}
+
 }

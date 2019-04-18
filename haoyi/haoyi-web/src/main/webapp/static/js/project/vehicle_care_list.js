@@ -32,6 +32,7 @@
 			singleSelect: true, //是否单选
 			striped:true,//各行变色
 			pagination: true, //分页控件
+			rownumbers:true,
 			pageNumber: 1,
 			pageSize: 50,
 			pageList: [50, 100, 150],

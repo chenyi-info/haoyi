@@ -110,7 +110,7 @@
                  }},
 	        	 
 	        	 {field:'opt',title:'操作',width:'200px',align:'center', formatter:function(value,row,index){
-                 	return "<button class='btn btn-add-oa'>添加杂费</button><button class='btn btn-sel-oa'>查看杂费</button><button class='btn btn-edit'>修改</button><button class='btn btn-del'>删除</button><button class='btn btn-print'>派车单</button><button class='btn btn-text'>文本</button>";
+                 	return "<button class='btn btn-add-oa'>添加杂费</button><button class='btn btn-sel-oa'>查看杂费</button><button class='btn btn-edit'>修改</button><button class='btn btn-del'>删除</button><button class='btn btn-print'>派车单</button><button class='btn btn-text'>文本</button><button class='btn btn-copy'>复制</button>";
                  }}
 	            ]];
 	
@@ -270,6 +270,13 @@
 			$.messager.alert('操作提示','操作失败');
 		});
 	} 
+	
+	var showCopyDialog = function(){
+		var row = $('#dataGrid').datagrid('getSelected');
+		row.id=null;
+		row.orderDate = getYMDHMS(row.orderDate);
+		showAddDialog(row);
+	}
 	
 	var showAddDialog = function(orderModel){
 		if(orderModel){
@@ -591,6 +598,7 @@
 		$('.main-dataTable-content').delegate('button.btn-sel-oa','click',showOtherAmtItemDialog);
 		$('.main-dataTable-content').delegate('button.btn-print','click',showPrintDialog);
 		$('.main-dataTable-content').delegate('button.btn-text','click',showTextDialog);
+		$('.main-dataTable-content').delegate('button.btn-copy','click',showCopyDialog);
 		$('.main-dataTable-content').delegate('.datagrid-view','click',endEditing);
 	}
 	initializeUI();

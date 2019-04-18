@@ -37,6 +37,7 @@
 			singleSelect: true, //是否单选
 			striped:true,//各行变色
 			pagination: true, //分页控件
+			rownumbers:true,
 			pageNumber: 1,
 			pageSize: 50,
 			pageList: [50, 100, 150],
@@ -158,10 +159,14 @@
 	}
 	
 	var loadDriverTotalAmt = function(){
+		var dataModel = $(".main-query-content form").serializeObject();
+		if(dataModel.orderDateEnd){
+			dataModel.orderDateEnd = dataModel.orderDateEnd+" 23:59:59";
+		}
 		$.ajax({
 			url:'/driverOrder/totalAmt',
 			type:"get",
-			data:$(".main-query-content form").serializeObject(),
+			data:dataModel,
 			dataType:'json'
 		}).done(function(data){
 			$('.dataTable-toolbar .totalAmt').html(data);
@@ -172,6 +177,7 @@
 	
 	var addOtherAmt = function(url, dataModel){
 		var maskObj = new mask();
+		dataModel.propertyTypes=dataModel.propertyType;
 		$.ajax({
 			url:url,
 			type:"post",
