@@ -20,8 +20,18 @@
                  {field:'address',title:'订单简址',width:'6%',align:'center'},
                  {field:'weighed',title:'重量(T)',width:'40px',align:'center'},
                  {field:'demand',title:'订单要求',width:'5%',align:'center'},
-	        	 {field:'cabinetNumber',title:'柜号',width:'11%',align:'center'},
-	        	 {field:'sealNumber',title:'封号',width:'5%',align:'center'},
+	        	 {field:'cabinetNumber',title:'柜号',width:'11%',align:'center',editor:{
+	        		 type:'textbox',
+	        		 options:{
+	        			 editable:true
+	        		 }
+	        	 }},
+	        	 {field:'sealNumber',title:'封号',width:'5%',align:'center',editor:{
+	        		 type:'textbox',
+	        		 options:{
+	        			 editable:true
+	        		 }
+	        	 }},
                  {field:'plateNumber',title:'车牌号',width:'7%',align:'center',editor: {
                      type: 'combogrid', // 指明控件类型
                      options:{
@@ -167,7 +177,7 @@
 			emptyMsg:'未查询到内容',
             columns:columns,
             onDblClickCell: function(index,field,value){
-            	var fields = ['plateNumber','orderStatus'];
+            	var fields = ['cabinetNumber','sealNumber','plateNumber','orderStatus'];
             	if(fields.indexOf(field) > -1){
             		if (editIndex != index && endEditing()) {  
             			$(this).datagrid('beginEdit', index);       

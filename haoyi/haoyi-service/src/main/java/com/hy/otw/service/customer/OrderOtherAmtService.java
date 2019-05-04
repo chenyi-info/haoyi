@@ -128,6 +128,12 @@ public class OrderOtherAmtService {
 
 	public void batchSettles(List<Long> orderOtherAmtIdList) {
 		this.orderOtherAmtDao.batchSettles(orderOtherAmtIdList);
+		List<OrderOtherAmtPo> orderOtherAmtPoList = this.orderOtherAmtDao.findOrderOtherAmtListByIds(orderOtherAmtIdList);
+		if(CollectionUtils.isNotEmpty(orderOtherAmtPoList)){
+			for (OrderOtherAmtPo orderOtherAmtPo : orderOtherAmtPoList) {
+				this.statisticalAmount(orderOtherAmtPo.getOrderId());
+			}
+		}
 	}
 
 	public List<OrderOtherAmtVo> findOrderOtherAmtList(List<Long> orderIdlist, Integer propertyType) throws IllegalAccessException, InvocationTargetException, NoSuchMethodException {
