@@ -97,7 +97,7 @@ public class DriverOrderService {
 	}
 	
 	public void editDriverOrder(DriverOrderVo driverOrderVo) throws Exception {
-		DriverOrderPo driverOrderPo = driverOrderDao.getDriverOrder(driverOrderVo.getId());
+		DriverOrderPo driverOrderPo = driverOrderDao.getDriverOrderId(driverOrderVo.getId());
 		if(driverOrderPo == null){
 			throw new Exception("未找到该条信息");
 		}

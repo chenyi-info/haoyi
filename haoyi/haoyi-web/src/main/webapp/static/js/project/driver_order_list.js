@@ -122,6 +122,7 @@
 	 	    modal: true,
 	 	    onOpen:function(){
 	 	    	$.parser.parse('#main_dlg');
+	 	    	$('.main-form-content input[name=settleStatus][value='+row.settleStatus+']').attr("checked",true);
 	 	    },
 	 	    onClose:function(){
 	 	    	$('#main_dlg').dialog('destroy');
@@ -200,7 +201,7 @@
 	var showOtherAmtDialog = function(){
 		var row = $('#dataGrid').datagrid('getSelected');
 		var dataModel = {};
-		dataModel.orderId = row.id;
+		dataModel.orderId = row.orderId;
 		dataModel.orderNO = row.orderNO;
 		dataModel.address = row.address;
 		dataModel.cabinetModel = row.cabinetModel;
