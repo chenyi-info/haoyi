@@ -57,6 +57,22 @@ public class CustomerOrderDao extends HibernateDao<CustomerOrderPo, Long>{
 			hql.append(" and orderDate < ?");
 			param.add(customerOrderQueryVo.getOrderDateEnd());
 		}
+		//如果要查询司机信息
+		if(StringUtils.isNotBlank(customerOrderQueryVo.getContactNumber()) || StringUtils.isNotBlank(customerOrderQueryVo.getOwnerName()) || StringUtils.isNotBlank(customerOrderQueryVo.getPlateNumber())) {
+			hql.append(" and orderId in (select id from OrderPo where delStatus=? ");
+			param.add(DelStatusEnum.NORMAL.getValue());
+			if(StringUtils.isNotBlank(customerOrderQueryVo.getContactNumber())){
+				hql.append(" and contactNumber like '%").append(customerOrderQueryVo.getContactNumber()).append("%'");
+			}
+			if(StringUtils.isNotBlank(customerOrderQueryVo.getOwnerName())){
+				hql.append(" and ownerName like '%").append(customerOrderQueryVo.getOwnerName()).append("%'");
+			}
+			if(StringUtils.isNotBlank(customerOrderQueryVo.getPlateNumber())){
+				hql.append(" and plateNumber like '%").append(customerOrderQueryVo.getPlateNumber()).append("%'");
+			}
+			hql.append(")");
+		}
+		
 		hql.append(" order by orderDate desc");
 		
 		Pagination pagination = this.findPagination(page, hql.toString(), param.toArray());
@@ -104,6 +120,23 @@ public class CustomerOrderDao extends HibernateDao<CustomerOrderPo, Long>{
 			hql.append(" and orderDate < ?");
 			param.add(customerOrderQueryVo.getOrderDateEnd());
 		}
+		
+		//如果要查询司机信息
+		if(StringUtils.isNotBlank(customerOrderQueryVo.getContactNumber()) || StringUtils.isNotBlank(customerOrderQueryVo.getOwnerName()) || StringUtils.isNotBlank(customerOrderQueryVo.getPlateNumber())) {
+			hql.append(" and orderId in (select id from OrderPo where delStatus=? ");
+			param.add(DelStatusEnum.NORMAL.getValue());
+			if(StringUtils.isNotBlank(customerOrderQueryVo.getContactNumber())){
+				hql.append(" and contactNumber like '%").append(customerOrderQueryVo.getContactNumber()).append("%'");
+			}
+			if(StringUtils.isNotBlank(customerOrderQueryVo.getOwnerName())){
+				hql.append(" and ownerName like '%").append(customerOrderQueryVo.getOwnerName()).append("%'");
+			}
+			if(StringUtils.isNotBlank(customerOrderQueryVo.getPlateNumber())){
+				hql.append(" and plateNumber like '%").append(customerOrderQueryVo.getPlateNumber()).append("%'");
+			}
+			hql.append(")");
+		}
+				
 		hql.append(" order by orderDate desc");
 		
 		Query query = this.createQuery(hql.toString(), param.toArray());

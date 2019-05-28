@@ -30,6 +30,12 @@ public class CustomerOrderQueryVo {
 	
 	private Date orderDateEnd;		//订单日期
 	
+	private String plateNumber;		//车牌号
+	
+	private String ownerName;		//司机姓名
+	
+	private String contactNumber;	//司机联系电话
+	
 	private int page = 1;
 	
 	private int rows = 10;
