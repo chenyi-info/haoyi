@@ -28,7 +28,6 @@ import com.hy.otw.service.customer.OrderOtherAmtService;
 import com.hy.otw.service.driver.DriverOrderService;
 import com.hy.otw.utils.DownloadUtils;
 import com.hy.otw.utils.ExcelUtil;
-import com.hy.otw.vo.CustomerOrderVo;
 import com.hy.otw.vo.DriverOrderVo;
 import com.hy.otw.vo.OrderOtherAmtVo;
 import com.hy.otw.vo.query.DriverOrderQueryVo;

@@ -36,6 +36,8 @@ public class DriverOrderQueryVo {
 	
 	private Integer settleStatus;	//结算状态：0-未结算；1-已结算
 	
+	private String companyName;		//公司名称
+	
 	private int page = 1;
 	
 	private int rows = 10;

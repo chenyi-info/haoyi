@@ -59,6 +59,15 @@ public class DriverOrderDao extends HibernateDao<DriverOrderPo, Long>{
 			hql.append(" and orderDate < ?");
 			param.add(driverOrderQueryVo.getOrderDateEnd());
 		}
+		
+		//如果要查询公司信息
+		if(StringUtils.isNotBlank(driverOrderQueryVo.getCompanyName())) {
+			hql.append(" and orderId in (select id from OrderPo where delStatus=? ");
+			param.add(DelStatusEnum.NORMAL.getValue());
+			hql.append(" and companyName like '%").append(driverOrderQueryVo.getCompanyName()).append("%'");
+			hql.append(")");
+		}
+				
 		hql.append(" order by orderDate desc");
 		
 		Pagination pagination = this.findPagination(page, hql.toString(), param.toArray());
@@ -108,6 +117,15 @@ public class DriverOrderDao extends HibernateDao<DriverOrderPo, Long>{
 		if(driverOrderQueryVo.getOrderDateEnd() != null){
 			hql.append(" and orderDate < ?");
 			param.add(driverOrderQueryVo.getOrderDateEnd());
+		}
+		
+		
+		//如果要查询公司信息
+		if(StringUtils.isNotBlank(driverOrderQueryVo.getCompanyName())) {
+			hql.append(" and orderId in (select id from OrderPo where delStatus=? ");
+			param.add(DelStatusEnum.NORMAL.getValue());
+			hql.append(" and companyName like '%").append(driverOrderQueryVo.getCompanyName()).append("%'");
+			hql.append(")");
 		}
 		hql.append(" order by orderDate desc");
 		
