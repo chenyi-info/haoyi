@@ -27,6 +27,10 @@ public class VehicleQueryVo {
 	private int page = 1;
 	private int rows = 10;
 	
+	private String sort = "createDate";
+	
+	private String order = "desc";
+	
 	@Override
 	public String toString() {
 		return ToStringBuilder.reflectionToString(this);

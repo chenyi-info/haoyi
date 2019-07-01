@@ -73,7 +73,7 @@ public class OrderOtherAmtDao extends HibernateDao<OrderOtherAmtPo, Long>{
 			hql.append(" and expenditureDate < ?");
 			param.add(orderOtherAmtQueryVo.getExpenditureDateEnd());
 		}
-		hql.append(" order by expenditureDate desc");
+		hql.append(" order by ").append(orderOtherAmtQueryVo.getSort()).append(" ").append(orderOtherAmtQueryVo.getOrder());
 		
 		Pagination pagination = this.findPagination(page, hql.toString(), param.toArray());
 		return pagination;

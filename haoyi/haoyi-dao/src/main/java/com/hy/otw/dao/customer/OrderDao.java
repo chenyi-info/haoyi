@@ -78,7 +78,7 @@ public class OrderDao extends HibernateDao<OrderPo, Long>{
 			hql.append(" and orderDate < ?");
 			param.add(orderQueryVo.getOrderDateEnd());
 		}
-		hql.append(" order by orderDate asc");
+		hql.append(" order by ").append(orderQueryVo.getSort()).append(" ").append(orderQueryVo.getOrder());
 		
 		Pagination pagination = this.findPagination(page, hql.toString(), param.toArray());
 		return pagination;

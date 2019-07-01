@@ -73,7 +73,7 @@ public class CustomerOrderDao extends HibernateDao<CustomerOrderPo, Long>{
 			hql.append(")");
 		}
 		
-		hql.append(" order by orderDate desc");
+		hql.append(" order by ").append(customerOrderQueryVo.getSort()).append(" ").append(customerOrderQueryVo.getOrder());
 		
 		Pagination pagination = this.findPagination(page, hql.toString(), param.toArray());
 		return pagination;
@@ -137,7 +137,7 @@ public class CustomerOrderDao extends HibernateDao<CustomerOrderPo, Long>{
 			hql.append(")");
 		}
 				
-		hql.append(" order by orderDate desc");
+		hql.append(" order by ").append(customerOrderQueryVo.getSort()).append(" ").append(customerOrderQueryVo.getOrder());
 		
 		Query query = this.createQuery(hql.toString(), param.toArray());
 		Object amt = query.uniqueResult();

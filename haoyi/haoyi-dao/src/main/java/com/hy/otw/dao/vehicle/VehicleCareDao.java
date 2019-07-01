@@ -51,7 +51,7 @@ public class VehicleCareDao extends HibernateDao<VehicleCarePo, Long>{
 			hql.append(" and careDate < ?");
 			param.add(vehicleCareQueryVo.getCareDateEnd());
 		}
-		hql.append(" order by careDate desc");
+		hql.append(" order by ").append(vehicleCareQueryVo.getSort()).append(" ").append(vehicleCareQueryVo.getOrder());
 		
 		Pagination pagination = this.findPagination(page, hql.toString(), param.toArray());
 		return pagination;
@@ -88,7 +88,7 @@ public class VehicleCareDao extends HibernateDao<VehicleCarePo, Long>{
 			hql.append(" and careDate < ?");
 			param.add(vehicleCareQueryVo.getCareDateEnd());
 		}
-		hql.append(" order by careDate desc");
+		hql.append(" order by ").append(vehicleCareQueryVo.getSort()).append(" ").append(vehicleCareQueryVo.getOrder());
 		Query query = this.createQuery(hql.toString(), param.toArray());
 		BigDecimal totalAmt = (BigDecimal) query.uniqueResult();
 		return totalAmt;

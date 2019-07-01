@@ -1,12 +1,12 @@
 ﻿$(function(){
 	var columns = [[
-	           	 {field:'companyName',title:'公司名称',width:'10%',align:'center'},    
-	        	 {field:'contactName',title:'联系人姓名',width:'10%',align:'center'}, 
-	        	 {field:'contactNumber',title:'联系人电话',width:'10%',align:'center'}, 
-	        	 {field:'address',title:'公司地址',width:'20%',align:'center'}, 
-	        	 {field:'settleInterval',title:'结算周期(月)',width:'10%',align:'center'}, 
+	           	 {field:'companyName',title:'公司名称',width:'10%',sortable :true,align:'center'},    
+	        	 {field:'contactName',title:'联系人姓名',width:'10%',sortable :true,align:'center'}, 
+	        	 {field:'contactNumber',title:'联系人电话',width:'10%',sortable :true,align:'center'}, 
+	        	 {field:'address',title:'公司地址',width:'20%',sortable :true,align:'center'}, 
+	        	 {field:'settleInterval',title:'结算周期(月)',width:'10%',sortable :true,align:'center'}, 
 	        	 {field:'remarks',title:'备注',width:'10%',align:'center'},
-	        	 {field:'createDate',title:'创建时间',width:'10%',align:'center',formatter:function(value,row,index){
+	        	 {field:'createDate',title:'创建时间',width:'10%',align:'center',sortable :true,formatter:function(value,row,index){
 	        		 return getYMDHMS(row.createDate);
 	        	 }},
 	        	 {field:'opt',title:'操作',width:'20%',align:'center', formatter:function(value,row,index){
@@ -48,7 +48,9 @@
 			pagePosition: "bottom",
 			view:dataTableView,
 			emptyMsg:'未查询到内容',
-            columns:columns
+            columns:columns,
+            sortName:'createDate',
+            sortOrder:'desc',
         });
 	}
 	

@@ -42,6 +42,10 @@ public class OrderOtherAmtQueryVo {
 	
 	private int rows = 10;
 	
+	private String sort = "expenditureDate";
+	
+	private String order = "desc";
+	
 	@Override
 	public String toString() {
 		return ToStringBuilder.reflectionToString(this);

@@ -44,6 +44,12 @@ public class OrderQueryVo {
 	
 	private int rows = 10;
 	
+	private String sort = "orderDate";
+	
+	private String order = "asc";
+	
+	
+	
 	@Override
 	public String toString() {
 		return ToStringBuilder.reflectionToString(this);

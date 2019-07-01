@@ -67,8 +67,8 @@ public class DriverOrderDao extends HibernateDao<DriverOrderPo, Long>{
 			hql.append(" and companyName like '%").append(driverOrderQueryVo.getCompanyName()).append("%'");
 			hql.append(")");
 		}
-				
-		hql.append(" order by orderDate desc");
+		
+		hql.append(" order by ").append(driverOrderQueryVo.getSort()).append(" ").append(driverOrderQueryVo.getOrder());
 		
 		Pagination pagination = this.findPagination(page, hql.toString(), param.toArray());
 		return pagination;
@@ -127,7 +127,7 @@ public class DriverOrderDao extends HibernateDao<DriverOrderPo, Long>{
 			hql.append(" and companyName like '%").append(driverOrderQueryVo.getCompanyName()).append("%'");
 			hql.append(")");
 		}
-		hql.append(" order by orderDate desc");
+		hql.append(" order by ").append(driverOrderQueryVo.getSort()).append(" ").append(driverOrderQueryVo.getOrder());
 		
 		Query query = this.createQuery(hql.toString(), param.toArray());
 		Object amt = query.uniqueResult();

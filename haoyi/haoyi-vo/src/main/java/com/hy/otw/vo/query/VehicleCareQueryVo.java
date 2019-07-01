@@ -31,6 +31,10 @@ public class VehicleCareQueryVo {
 	private int page = 1;
 	private int rows = 10;
 	
+	private String sort = "careDate";
+	
+	private String order = "desc";
+	
 	@Override
 	public String toString() {
 		return ToStringBuilder.reflectionToString(this);

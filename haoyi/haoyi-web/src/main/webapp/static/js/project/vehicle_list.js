@@ -1,13 +1,13 @@
 ﻿$(function(){
 	var columns = [[
-	           	 {field:'plateNumber',title:'车牌号',width:'20%',align:'center'},    
-	        	 {field:'ownerName',title:'司机姓名',width:'10%',align:'center'}, 
-	        	 {field:'contactNumber',title:'联系电话',width:'15%',align:'center'},
-	        	 {field:'vehicleType',title:'车辆类型',width:'10%',align:'center'},
-	        	 {field:'vehicleSource',title:'车辆来源',width:'10%',align:'center'},
-	        	 {field:'selfWeight',title:'自重(T)',width:'5%',align:'center'},
+	           	 {field:'plateNumber',title:'车牌号',width:'20%',sortable :true,align:'center'},    
+	        	 {field:'ownerName',title:'司机姓名',width:'10%',sortable :true,align:'center'}, 
+	        	 {field:'contactNumber',title:'联系电话',width:'15%',sortable :true,align:'center'},
+	        	 {field:'vehicleType',title:'车辆类型',width:'10%',sortable :true,align:'center'},
+	        	 {field:'vehicleSource',title:'车辆来源',width:'10%',sortable :true,align:'center'},
+	        	 {field:'selfWeight',title:'自重(T)',width:'5%',sortable :true,align:'center'},
 	        	 {field:'remarks',title:'备注',width:'10%',align:'center'},
-	        	 {field:'createDate',title:'创建时间',width:'10%',align:'center',formatter:function(value,row,index){
+	        	 {field:'createDate',title:'创建时间',width:'10%',align:'center',sortable :true,formatter:function(value,row,index){
 	        		 return getYMDHMS(row.createDate);
 	        	 }},
 	        	 {field:'opt',title:'操作',width:'10%',align:'center', formatter:function(value,row,index){
@@ -38,7 +38,9 @@
 			pagePosition: "bottom",
 			view:dataTableView,
 			emptyMsg:'未查询到内容',
-            columns:columns
+            columns:columns,
+            sortName:'createDate',
+            sortOrder:'desc'
         });
 	}
 	

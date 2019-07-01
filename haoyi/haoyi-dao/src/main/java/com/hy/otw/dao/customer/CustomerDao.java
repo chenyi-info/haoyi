@@ -36,7 +36,7 @@ public class CustomerDao extends HibernateDao<CustomerPo, Long>{
 		if(StringUtils.isNotBlank(customerQueryVo.getContactName())){
 			hql.append(" and contactName like '%").append(customerQueryVo.getContactName()).append("%'");
 		}
-		hql.append(" order by updateDate desc");
+		hql.append(" order by ").append(customerQueryVo.getSort()).append(" ").append(customerQueryVo.getOrder());
 		
 		Pagination pagination = this.findPagination(page, hql.toString(), param.toArray());
 		return pagination;

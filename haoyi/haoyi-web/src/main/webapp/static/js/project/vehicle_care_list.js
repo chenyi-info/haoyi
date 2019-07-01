@@ -1,14 +1,14 @@
 ﻿$(function(){
 	var columns = [[
-	             {field:'careDate',title:'保养日期',width:'10%',align:'center',formatter:function(value,row,index){
+	             {field:'careDate',title:'保养日期',width:'10%',align:'center',sortable :true,formatter:function(value,row,index){
 	        		 return getYMDHMS(row.careDate);
 	        	 }}, 
-	           	 {field:'plateNumber',title:'车牌号',width:'10%',align:'center'},    
-	        	 {field:'ownerName',title:'司机姓名',width:'10%',align:'center'}, 
-	        	 {field:'contactNumber',title:'联系电话',width:'10%',align:'center'},
-	        	 {field:'itemName',title:'保养项目',width:'10%',align:'center'},
-	        	 {field:'price',title:'保养金额',width:'10%',align:'center'},
-	        	 {field:'careInterval',title:'保养间距(天)',width:'20%',align:'center',formatter:function(value,row,index){
+	           	 {field:'plateNumber',title:'车牌号',width:'10%',sortable :true,align:'center'},    
+	        	 {field:'ownerName',title:'司机姓名',width:'10%',sortable :true,align:'center'}, 
+	        	 {field:'contactNumber',title:'联系电话',width:'10%',sortable :true,align:'center'},
+	        	 {field:'itemName',title:'保养项目',width:'10%',sortable :true,align:'center'},
+	        	 {field:'price',title:'保养金额',width:'10%',sortable :true,align:'center'},
+	        	 {field:'careInterval',title:'保养间距(天)',width:'20%',align:'center',sortable :true,formatter:function(value,row,index){
 	        		 if(row.careInterval != null && row.careInterval > 0){
 	        			 return row.careInterval;
 	        		 }
@@ -49,7 +49,9 @@
 			pagePosition: "bottom",
 			view:dataTableView,
 			emptyMsg:'未查询到内容',
-            columns:columns
+            columns:columns,
+            sortName:'careDate',
+            sortOrder:'desc'
         });
 	}
 	

@@ -2,12 +2,12 @@
 	//订单状态：0-正常；1-已取消
 	var orderStatus = [{'text':'全部','value':' '},{'text':'正常','value':'0'},{'text':'已取消','value':'1'}];
 	var columns = [[
-	             {field:'orderDate',title:'订单日期',width:'100px',align:'center',formatter:function(value,row,index){
+	             {field:'orderDate',title:'订单日期',width:'100px',align:'center',sortable :true,formatter:function(value,row,index){
 	        		 return getYMDHMS(row.orderDate);
 	        	 }}, 
-	        	 {field:'orderNO',title:'订单编号',width:'12%',align:'center'},
-	        	 {field:'cabinetModel',title:'柜型',width:'4%',align:'center'},
-	        	 {field:'cabinetRecipientAddr',title:'提还柜',width:'45px',align:'center',formatter:function(value,row,index){
+	        	 {field:'orderNO',title:'订单编号',width:'12%',sortable :true,align:'center'},
+	        	 {field:'cabinetModel',title:'柜型',width:'4%',sortable :true,align:'center'},
+	        	 {field:'cabinetRecipientAddr',title:'提还柜',width:'45px',align:'center',sortable :true,formatter:function(value,row,index){
 	        		 var addr = '';
 	        		 if(row.cabinetRecipientAddr != null && row.cabinetRecipientAddr != ''){
 	        			 addr = row.cabinetRecipientAddr+"/";
@@ -17,22 +17,22 @@
 	        		 }
                  	return  addr;
                  }},
-                 {field:'address',title:'订单简址',width:'6%',align:'center'},
-                 {field:'weighed',title:'重量(T)',width:'40px',align:'center'},
-                 {field:'demand',title:'订单要求',width:'5%',align:'center'},
-	        	 {field:'cabinetNumber',title:'柜号',width:'11%',align:'center',editor:{
+                 {field:'address',title:'订单简址',width:'6%',sortable :true,align:'center'},
+                 {field:'weighed',title:'重量(T)',width:'40px',sortable :true,align:'center'},
+                 {field:'demand',title:'订单要求',width:'5%',sortable :true,align:'center'},
+	        	 {field:'cabinetNumber',title:'柜号',width:'11%',align:'center',sortable :true,editor:{
 	        		 type:'textbox',
 	        		 options:{
 	        			 editable:true
 	        		 }
 	        	 }},
-	        	 {field:'sealNumber',title:'封号',width:'5%',align:'center',editor:{
+	        	 {field:'sealNumber',title:'封号',width:'5%',align:'center',sortable :true,editor:{
 	        		 type:'textbox',
 	        		 options:{
 	        			 editable:true
 	        		 }
 	        	 }},
-                 {field:'plateNumber',title:'车牌号',width:'7%',align:'center',editor: {
+                 {field:'plateNumber',title:'车牌号',width:'7%',align:'center',sortable :true,editor: {
                      type: 'combogrid', // 指明控件类型
                      options:{
                  		mode : 'remote',//远程连接方式  
@@ -72,19 +72,19 @@
                         	}
                         }}
                  }},    
-	        	 {field:'ownerName',title:'司机姓名',width:'4%',align:'center',editor:{
+	        	 {field:'ownerName',title:'司机姓名',width:'4%',align:'center',sortable :true,editor:{
 	        		 type:'textbox',
 	        		 options:{
 	        			 editable:false
 	        		 }
 	        	 }}, 
-	        	 {field:'contactNumber',title:'联系电话',width:'8%',align:'center',editor:{
+	        	 {field:'contactNumber',title:'联系电话',width:'8%',align:'center',sortable :true,editor:{
 	        		 type:'textbox',
 	        		 options:{
 	        			 editable:false
 	        		 }
 	        	 }},
-	        	 {field:'driverPrice',title:'划价',width:'4%',align:'center',editor:{
+	        	 {field:'driverPrice',title:'划价',width:'4%',align:'center',sortable :true,editor:{
 	        		 type:'numberbox',
 	        		 options:{
 	        			 editable:true,
@@ -95,8 +95,8 @@
 	        	 {field:'otherAmt',title:'杂费金额',width:'5%',align:'center'},
 	        	 {field:'companyName',title:'客户公司名称',width:'5%',align:'center'},
 	        	 */
-	        	 {field:'operatorName',title:'操作人',width:'4%',align:'center'},
-	        	 {field:'orderStatus',title:'订单状态',width:'4%',align:'center', formatter:function(value,row,index){
+	        	 {field:'operatorName',title:'操作人',width:'4%',sortable :true,align:'center'},
+	        	 {field:'orderStatus',title:'订单状态',width:'4%',align:'center', sortable :true,formatter:function(value,row,index){
                  	return value == 0 ? '正常' : '已取消';
                  },editor: {
                      type: 'combobox', // 指明控件类型
@@ -176,6 +176,8 @@
 			view:dataTableView,
 			emptyMsg:'未查询到内容',
             columns:columns,
+            sortName:'orderDate',
+            sortOrder:'asc',
             onDblClickCell: function(index,field,value){
             	var fields = ['cabinetNumber','sealNumber','plateNumber','orderStatus'];
             	if(fields.indexOf(field) > -1){

@@ -42,6 +42,10 @@ public class DriverOrderQueryVo {
 	
 	private int rows = 10;
 	
+	private String sort = "orderDate";
+	
+	private String order = "desc";
+	
 	@Override
 	public String toString() {
 		return ToStringBuilder.reflectionToString(this);
