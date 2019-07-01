@@ -92,6 +92,7 @@
 	
 	var operateVehicle = function(url, dataModel){
 		var maskObj = new mask();
+		dataModel.propertyTypes=dataModel.propertyType;
 		$.ajax({
 			url:url,
 			type:"post",

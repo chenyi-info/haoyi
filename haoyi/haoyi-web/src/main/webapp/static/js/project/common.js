@@ -232,6 +232,9 @@ var loadOrderGrid = function(){
             	if($('#address_view').length == 1){
             		$('#address_view').textbox('setValue', r.address);
             	}
+            	if($('#expenditureDate_view').length == 1){
+            		$('#expenditureDate_view').datetimebox('setValue',  dateFormat(r.orderDate,"yyyy-MM-dd HH:mm:ss"));
+            	}
         	}else{
             	$('#orderId_form').val('');
             	if($('#cabinetModel_view').length == 1){
@@ -245,6 +248,9 @@ var loadOrderGrid = function(){
             	}
             	if($('#address_view').length == 1){
             		$('#address_view').textbox('setValue', '');
+            	}
+            	if($('#expenditureDate_view').length == 1){
+            		$('#expenditureDate_view').datetimebox('setValue',  '');
             	}
         	}
         }

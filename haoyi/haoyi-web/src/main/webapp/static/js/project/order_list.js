@@ -409,6 +409,7 @@
 		dataModel.cabinetModel = row.cabinetModel;
 		dataModel.cabinetNumber = row.cabinetNumber;
 		dataModel.sealNumber = row.sealNumber;
+		dataModel.expenditureDate = dateFormat(row.orderDate,"yyyy-MM-dd HH:mm:ss");
 		var html = Mustache.render($('#otherAmt_dialog_content_template').html(),dataModel);
 		var diaHtml = "<div id='main_dlg'>"+html+"</div>";
 		$(diaHtml).dialog({    
