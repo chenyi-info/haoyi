@@ -101,17 +101,20 @@ public class OrderOtherAmtService {
 		this.orderOtherAmtDao.editOrderOtherAmt(orderOtherAmtPo);
 	}
 
-	public void deleteOrderOtherAmt(Long orderOtherAmtId) throws Exception {
+	public Long deleteOrderOtherAmt(Long orderOtherAmtId) throws Exception {
+		Long orderId = null;
 		OrderOtherAmtPo orderOtherAmtPo = orderOtherAmtDao.getOrderOtherAmt(orderOtherAmtId);
 		if(orderOtherAmtPo == null){
 			throw new Exception("未找到该条信息");
 		}
+		orderId = orderOtherAmtPo.getOrderId();
 		UserInfoVo loginUser = (UserInfoVo) SecurityUtils.getSubject().getPrincipal();
 		Date date = new Date();
 		orderOtherAmtPo.setDelStatus(DelStatusEnum.HIDE.getValue());
 		orderOtherAmtPo.setUpdateBy(loginUser.getId());
 		orderOtherAmtPo.setUpdateDate(date);
 		this.orderOtherAmtDao.editOrderOtherAmt(orderOtherAmtPo);
+		return orderId;
 	}
 
 	public void deleteOrder(Long orderId) {

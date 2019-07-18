@@ -53,7 +53,8 @@ public class OrderOtherAmtController {
 	
 	@RequestMapping(value = "/delete", method = RequestMethod.POST)
 	public void delete(HttpServletRequest request,HttpServletResponse response, Long orderOtherAmtId) throws Exception {
-		this.orderOtherAmtService.deleteOrderOtherAmt(orderOtherAmtId);
+		Long orderId = this.orderOtherAmtService.deleteOrderOtherAmt(orderOtherAmtId);
+		this.orderOtherAmtService.statisticalAmount(orderId);
 	}
 	
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
