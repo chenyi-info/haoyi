@@ -117,7 +117,7 @@ public class OrderOtherAmtDao extends HibernateDao<OrderOtherAmtPo, Long>{
 	}
 
 	public void batchSettles(List<Long> orderOtherAmtIdList) {
-		String hql = "update OrderOtherAmtPo set isSettle = 0 where id in (:idList)";
+		String hql = "update OrderOtherAmtPo set isSettle = 0, settleDate = now() where id in (:idList)";
 		Query query = this.createQuery(hql);
 		query.setParameterList("idList", orderOtherAmtIdList);
 		query.executeUpdate();

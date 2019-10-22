@@ -458,6 +458,9 @@ $.fn.serializeObject = function() {
  * 时间戳转日期
  */
 function getYMDHMS(time){
+	if(time == null || time == ''){
+		return '';
+	}
 	var date = new Date(time);
     var y = date.getFullYear();  
     var m = date.getMonth() + 1;  

@@ -90,7 +90,7 @@ public class MySQLDatabaseBackupController {
 	@RequestMapping(value = "/backup", method = RequestMethod.POST)
     public static boolean exportDatabaseTool() throws InterruptedException, IOException { 
 		SimpleDateFormat sdf = new SimpleDateFormat("yyMMdd-HHmmss");
-		String hostIP = "";
+		String hostIP = "127.0.0.1";
 		String userName = "";
 		String password = "";
 		String fileName = ""+sdf.format(new Date())+".sql"; 

@@ -3,10 +3,10 @@
 	var settleStatus = [{'text':'全部','value':' '},{'text':'未结算','value':'0'},{'text':'已结算','value':'1'}];
 	var columns = [[
 	             {field : 'id',width : '3%',align : 'center',checkbox:'true'},
-	             {field:'orderDate',title:'订单日期',width:'10%',align:'center',sortable :true,formatter:function(value,row,index){
+	             {field:'orderDate',title:'订单日期',width:'6%',align:'center',sortable :true,formatter:function(value,row,index){
 	        		 return getYMDHMS(row.orderDate);
 	        	 }}, 
-	           	 {field:'companyName',title:'公司名称',width:'10%',sortable :true,align:'center'},  
+	           	 {field:'companyName',title:'公司名称',width:'8%',sortable :true,align:'center'},  
 	           	 {field:'orderNO',title:'订单编号',width:'10%',sortable :true,align:'center'},
 	           	 {field:'address',title:'订单简址',width:'5%',sortable :true,align:'center'},
 	           	 {field:'cabinetModel',title:'柜型',width:'5%',sortable :true,align:'center'},
@@ -18,8 +18,14 @@
 	        	 {field:'settleStatus',title:'结算状态',width:'5%',align:'center', sortable :true,formatter:function(value,row,index){
                  	return value == 1 ? '已结算' : '未结算';
                  }},
+                 {field:'settleDate',title:'结算日期',width:'5%',align:'center', sortable :true,formatter:function(value,row,index){
+                	 return getYMDHMS(row.settleDate);
+                 }},
 	        	 {field:'remarks',title:'备注',width:'5%',align:'center'},
-	        	 {field:'opt',title:'操作',width:'17%',align:'center', formatter:function(value,row,index){
+	        	 {field:'updateDate',title:'修改日期',width:'5%',align:'center', sortable :true,formatter:function(value,row,index){
+                	 return getYMDHMS(row.updateDate);
+                 }},
+	        	 {field:'opt',title:'操作',width:'15%',align:'center', formatter:function(value,row,index){
                  	return "<button class='btn btn-add-oa'>添加杂费</button><button class='btn btn-sel-oa'>查看杂费</button><button class='btn btn-edit'>修改</button>";
                  }}
 	            ]];

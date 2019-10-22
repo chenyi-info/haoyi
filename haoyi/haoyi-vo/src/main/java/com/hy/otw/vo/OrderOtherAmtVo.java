@@ -47,6 +47,8 @@ public class OrderOtherAmtVo extends BaseVo{
 	
 	private Integer isSettle;		//是否结算：0-已结算,1-未结算
 	
+	private Date settleDate;	//结算时间
+	
 	private String remarks;			//备注
 	
 	@Override

@@ -103,6 +103,9 @@ public class DriverOrderService {
 		}
 		UserInfoVo loginUser = (UserInfoVo) SecurityUtils.getSubject().getPrincipal();
 		Date date = new Date();
+		if(driverOrderVo.getSettleStatus() == 1 && driverOrderPo.getSettleDate() == null) {
+			driverOrderPo.setSettleDate(date);
+		}
 		driverOrderPo.setRemarks(driverOrderVo.getRemarks());
 		driverOrderPo.setSettleStatus(driverOrderVo.getSettleStatus());
 		driverOrderPo.setUpdateBy(loginUser.getId());

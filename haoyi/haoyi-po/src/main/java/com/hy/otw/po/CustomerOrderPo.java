@@ -73,6 +73,9 @@ public class CustomerOrderPo extends BasePo{
 	@Column(name = "settle_status")
 	private Integer settleStatus;	//结算状态：0-未结算；1-已结算
 	
+	@Column(name = "settle_date")
+	private Date settleDate;	//结算时间
+	
 	@Column(name = "remarks")
 	private String remarks;			//备注
 	

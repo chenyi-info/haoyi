@@ -73,6 +73,9 @@ public class OrderOtherAmtPo extends BasePo{
 	@Column(name = "is_settle")
 	private Integer isSettle;		//是否结算：0-已结算,1-未结算
 	
+	@Column(name = "settle_date")
+	private Date settleDate;	//结算时间
+	
 	@Column(name = "remarks")
 	private String remarks;			//备注
 	

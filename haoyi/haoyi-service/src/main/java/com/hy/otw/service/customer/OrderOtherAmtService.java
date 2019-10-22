@@ -92,6 +92,10 @@ public class OrderOtherAmtService {
 			throw new Exception("未找到该条信息");
 		}
 		Date date = new Date();
+		if(orderOtherAmtVo.getIsSettle() == 0 && orderOtherAmtPo.getSettleDate() == null) {
+			orderOtherAmtPo.setSettleDate(date);
+		}
+		orderOtherAmtVo.setSettleDate(orderOtherAmtPo.getSettleDate());
 		orderOtherAmtVo.setCreateBy(orderOtherAmtPo.getCreateBy());
 		orderOtherAmtVo.setCreateDate(orderOtherAmtPo.getCreateDate());
 		orderOtherAmtVo.setUpdateBy(loginUser.getId());

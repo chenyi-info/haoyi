@@ -1,6 +1,6 @@
 ﻿$(function(){
 	var columns = [[
-	           	 {field:'plateNumber',title:'车牌号',width:'20%',sortable :true,align:'center'},    
+	           	 {field:'plateNumber',title:'车牌号',width:'15%',sortable :true,align:'center'},    
 	        	 {field:'ownerName',title:'司机姓名',width:'10%',sortable :true,align:'center'}, 
 	        	 {field:'contactNumber',title:'联系电话',width:'15%',sortable :true,align:'center'},
 	        	 {field:'vehicleType',title:'车辆类型',width:'10%',sortable :true,align:'center'},
@@ -10,6 +10,9 @@
 	        	 {field:'createDate',title:'创建时间',width:'10%',align:'center',sortable :true,formatter:function(value,row,index){
 	        		 return getYMDHMS(row.createDate);
 	        	 }},
+	        	 {field:'updateDate',title:'修改日期',width:'5%',align:'center', sortable :true,formatter:function(value,row,index){
+                	 return getYMDHMS(row.updateDate);
+                 }},
 	        	 {field:'opt',title:'操作',width:'10%',align:'center', formatter:function(value,row,index){
                  	return "<button class='btn btn-edit'>修改</button><button class='btn btn-del'>删除</button>";
                  }}

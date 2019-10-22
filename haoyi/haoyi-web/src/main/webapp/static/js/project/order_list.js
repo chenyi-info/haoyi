@@ -6,7 +6,7 @@
 	        		 return getYMDHMS(row.orderDate);
 	        	 }}, 
 	        	 {field:'orderNO',title:'订单编号',width:'12%',sortable :true,align:'center'},
-	        	 {field:'cabinetModel',title:'柜型',width:'4%',sortable :true,align:'center'},
+	        	 {field:'cabinetModel',title:'柜型',width:'5%',sortable :true,align:'center'},
 	        	 {field:'cabinetRecipientAddr',title:'提还柜',width:'45px',align:'center',sortable :true,formatter:function(value,row,index){
 	        		 var addr = '';
 	        		 if(row.cabinetRecipientAddr != null && row.cabinetRecipientAddr != ''){
@@ -118,7 +118,9 @@
                          missingMessage: '请选择订单类型'
                      }
                  }},
-	        	 
+                 {field:'updateDate',title:'修改日期',width:'5%',align:'center', sortable :true,formatter:function(value,row,index){
+                	 return getYMDHMS(row.updateDate);
+                 }},
 	        	 {field:'opt',title:'操作',width:'200px',align:'center', formatter:function(value,row,index){
                  	return "<button class='btn btn-add-oa'>添加杂费</button><button class='btn btn-sel-oa'>查看杂费</button><button class='btn btn-edit'>修改</button><button class='btn btn-del'>删除</button><button class='btn btn-print'>派车单</button><button class='btn btn-text'>文本</button><button class='btn btn-copy'>复制</button>";
                  }}

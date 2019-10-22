@@ -4,11 +4,14 @@
 	        	 {field:'contactName',title:'联系人姓名',width:'10%',sortable :true,align:'center'}, 
 	        	 {field:'contactNumber',title:'联系人电话',width:'10%',sortable :true,align:'center'}, 
 	        	 {field:'address',title:'公司地址',width:'20%',sortable :true,align:'center'}, 
-	        	 {field:'settleInterval',title:'结算周期(月)',width:'10%',sortable :true,align:'center'}, 
+	        	 {field:'settleInterval',title:'结算周期(月)',width:'5%',sortable :true,align:'center'}, 
 	        	 {field:'remarks',title:'备注',width:'10%',align:'center'},
 	        	 {field:'createDate',title:'创建时间',width:'10%',align:'center',sortable :true,formatter:function(value,row,index){
 	        		 return getYMDHMS(row.createDate);
 	        	 }},
+	        	 {field:'updateDate',title:'修改日期',width:'5%',align:'center', sortable :true,formatter:function(value,row,index){
+                	 return getYMDHMS(row.updateDate);
+                 }},
 	        	 {field:'opt',title:'操作',width:'20%',align:'center', formatter:function(value,row,index){
                  	return "<button class='btn btn-dictionaryItem'>操作人</button><button class='btn btn-addItem'>新增操作</button><button class='btn btn-edit'>修改</button><button class='btn btn-del'>删除</button>";
                  }}

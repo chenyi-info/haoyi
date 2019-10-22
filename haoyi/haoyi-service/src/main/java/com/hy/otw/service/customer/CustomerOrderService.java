@@ -95,6 +95,9 @@ public class CustomerOrderService {
 		}
 		Date date = new Date();
 		UserInfoVo loginUser = (UserInfoVo) SecurityUtils.getSubject().getPrincipal();
+		if(customerOrderVo.getSettleStatus() == 1 && customerOrderPo.getSettleDate() == null) {
+			customerOrderPo.setSettleDate(date);
+		}
 		customerOrderPo.setRemarks(customerOrderVo.getRemarks());
 		customerOrderPo.setSettleStatus(customerOrderVo.getSettleStatus());
 		customerOrderPo.setUpdateBy(loginUser.getId());

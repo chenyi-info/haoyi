@@ -142,7 +142,7 @@ public class DriverOrderDao extends HibernateDao<DriverOrderPo, Long>{
 	}
 	
 	public void batchSettles(List<Long> driverOrderIdList) {
-		String hql = "update DriverOrderPo set settleStatus = 1 where id in (:idList)";
+		String hql = "update DriverOrderPo set settleStatus = 1,settleDate = now() where id in (:idList)";
 		Query query = this.createQuery(hql);
 		query.setParameterList("idList", driverOrderIdList);
 		query.executeUpdate();

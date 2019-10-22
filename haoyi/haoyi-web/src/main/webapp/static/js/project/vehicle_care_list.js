@@ -8,7 +8,7 @@
 	        	 {field:'contactNumber',title:'联系电话',width:'10%',sortable :true,align:'center'},
 	        	 {field:'itemName',title:'保养项目',width:'10%',sortable :true,align:'center'},
 	        	 {field:'price',title:'保养金额',width:'10%',sortable :true,align:'center'},
-	        	 {field:'careInterval',title:'保养间距(天)',width:'20%',align:'center',sortable :true,formatter:function(value,row,index){
+	        	 {field:'careInterval',title:'保养间距(天)',width:'15%',align:'center',sortable :true,formatter:function(value,row,index){
 	        		 if(row.careInterval != null && row.careInterval > 0){
 	        			 return row.careInterval;
 	        		 }
@@ -16,6 +16,9 @@
 	        		 return Math.abs(parseInt((nowDate.getTime() - row.careDate)/1000/3600/24));
 	        	 }},
 	        	 {field:'remarks',title:'备注',width:'10%',align:'center'},
+	        	 {field:'updateDate',title:'修改日期',width:'5%',align:'center', sortable :true,formatter:function(value,row,index){
+                	 return getYMDHMS(row.updateDate);
+                 }},
 	        	 {field:'opt',title:'操作',width:'10%',align:'center', formatter:function(value,row,index){
                  	return "<button class='btn btn-edit'>修改</button><button class='btn btn-del'>删除</button>";
                  }}

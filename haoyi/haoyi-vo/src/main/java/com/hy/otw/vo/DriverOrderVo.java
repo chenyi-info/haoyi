@@ -47,6 +47,8 @@ public class DriverOrderVo extends BaseVo{
 	
 	private Integer settleStatus;	//结算状态：0-未结算；1-已结算
 	
+	private Date settleDate;	//结算时间
+	
 	private String remarks;			//备注
 	
 	@Override
