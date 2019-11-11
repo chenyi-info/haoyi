@@ -6,6 +6,7 @@
 .print_talbe .tit{font-weight: bold;}
 .print_talbe input{border:0px;width:80%;}
 .print_talbe input.num{width:100px;}
+.print_talbe tr input.tel{width:140px;}
 .print_talbe input.companyName{width:220px;font-weight: bold;margin-left: 5px;}
 .print_talbe .red{color: red;}
 @media print {
