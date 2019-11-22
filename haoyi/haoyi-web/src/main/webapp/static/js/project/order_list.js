@@ -559,8 +559,30 @@
 	}
 	var showTextDialog = function(){
 		var row = $('#dataGrid').datagrid('getSelected');
-		var orderText = "单号："+row.orderNO+"，柜号："+row.cabinetNumber+"，封号："+row.sealNumber+"，车牌："+row.plateNumber+"，地址简称："+row.address+"，柜型："+row.cabinetModel+" 其他，司机电话："+row.contactNumber+"，提柜费：元";
-		$("<div>"+orderText+"</div>").dialog({    
+		var maskObj = new mask();
+		var orderText = "单号："+row.orderNO+"，<br/>柜号："+row.cabinetNumber+"，<br/>封号："+row.sealNumber+"，<br/>车牌："+row.plateNumber+"，<br/>地址简称："+row.address+"，<br/>柜型："+row.cabinetModel+" <br/>司机电话："+row.contactNumber+"，<br/>";
+		$.ajax({
+			url:'/orderOtherAmt/list',
+			type:"get",
+			data:{'orderId':row.id,'propertyType':2},
+			dataType:'json',
+			async: false,
+			traditional:true,
+			beforeSend : function (){
+			    maskObj.showMask();// 显示遮蔽罩
+		    }
+		}).done(function(data){
+			maskObj.hideMask ();// 隐藏遮蔽罩
+			$('#main_dlg').dialog('destroy');
+			$(data.rows).each(function(i,v){
+				orderText += (v.itemName+":"+v.price+"元，<br/>");
+			});
+		}).fail(function(data){
+			maskObj.hideMask ();// 隐藏遮蔽罩
+			$.messager.alert('操作提示','提柜费查询失败');
+		});
+		
+		$("<div id='main_text_dlg'>"+orderText+"</div>").dialog({    
 	 	    title: '订单信息',    
 	 	    width: '450px',    
 	 	    height: '300px',    
@@ -572,7 +594,7 @@
 	 	    buttons:[{
 				text:'关闭',
 				handler:function(){
-					$(this).dialog('destroy');
+					$('#main_text_dlg').dialog('destroy');
 				}
 			}]
 	     });
