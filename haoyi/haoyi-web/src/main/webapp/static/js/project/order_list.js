@@ -289,6 +289,11 @@
 		var row = $('#dataGrid').datagrid('getSelected');
 		row.id=null;
 		row.orderDate = getYMDHMS(row.orderDate);
+		row.ownerName = null;
+		row.plateNumber = null;
+		row.contactNumber = null;
+		row.cabinetNumber = null;
+		row.sealNumber = null;
 		showAddDialog(row);
 	}
 	
