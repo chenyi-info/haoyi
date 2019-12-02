@@ -18,6 +18,8 @@ public class DriverOrderQueryVo {
 	
 	private Integer id;				//主键
 	
+	private String vehicleSource;	//车辆来源: 1-合作车辆 2-固定车辆 3-散找车辆
+	
 	private String plateNumber;		//车牌号
 	
 	private String ownerName;		//司机姓名

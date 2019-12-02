@@ -29,13 +29,13 @@ public class DriverOrderDao extends HibernateDao<DriverOrderPo, Long>{
 		Page<DriverOrderPo> page = new Page<DriverOrderPo>();
 		page.setPageNo(driverOrderQueryVo.getPage());
 		page.setPageSize(driverOrderQueryVo.getRows());
-		if(StringUtils.isNotBlank(driverOrderQueryVo.getContactNumber())){
+		if(StringUtils.isBlank(driverOrderQueryVo.getVehicleSource()) && StringUtils.isNotBlank(driverOrderQueryVo.getContactNumber())){
 			hql.append(" and contactNumber like '%").append(driverOrderQueryVo.getContactNumber()).append("%'");
 		}
-		if(StringUtils.isNotBlank(driverOrderQueryVo.getOwnerName())){
+		if(StringUtils.isBlank(driverOrderQueryVo.getVehicleSource()) && StringUtils.isNotBlank(driverOrderQueryVo.getOwnerName())){
 			hql.append(" and ownerName like '%").append(driverOrderQueryVo.getOwnerName()).append("%'");
 		}
-		if(StringUtils.isNotBlank(driverOrderQueryVo.getPlateNumber())){
+		if(StringUtils.isBlank(driverOrderQueryVo.getVehicleSource()) &&  StringUtils.isNotBlank(driverOrderQueryVo.getPlateNumber())){
 			hql.append(" and plateNumber like '%").append(driverOrderQueryVo.getPlateNumber()).append("%'");
 		}
 		if(StringUtils.isNotBlank(driverOrderQueryVo.getOrderNO())){
@@ -65,6 +65,27 @@ public class DriverOrderDao extends HibernateDao<DriverOrderPo, Long>{
 			hql.append(" and orderId in (select id from OrderPo where delStatus=? ");
 			param.add(DelStatusEnum.NORMAL.getValue());
 			hql.append(" and companyName like '%").append(driverOrderQueryVo.getCompanyName()).append("%'");
+			hql.append(")");
+		}
+		
+		//如果要按车辆来源查询
+		if(StringUtils.isNotBlank(driverOrderQueryVo.getVehicleSource())) {
+			hql.append(" and plateNumber in (select plateNumber from VehiclePo where delStatus=? ");
+			param.add(DelStatusEnum.NORMAL.getValue());
+			hql.append(" and vehicleSource = ? ");
+			param.add(driverOrderQueryVo.getVehicleSource());
+			
+			if(StringUtils.isNotBlank(driverOrderQueryVo.getContactNumber())){
+				hql.append(" and contactNumber like '%").append(driverOrderQueryVo.getContactNumber()).append("%'");
+			}
+			if(StringUtils.isNotBlank(driverOrderQueryVo.getOwnerName())){
+				hql.append(" and ownerName like '%").append(driverOrderQueryVo.getOwnerName()).append("%'");
+			}
+			if(StringUtils.isNotBlank(driverOrderQueryVo.getPlateNumber())){
+				hql.append(" and plateNumber like '%").append(driverOrderQueryVo.getPlateNumber()).append("%'");
+			}
+			
+			
 			hql.append(")");
 		}
 		

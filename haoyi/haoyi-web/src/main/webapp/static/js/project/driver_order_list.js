@@ -363,6 +363,7 @@
 	}
 	
 	var initializeUI = function(){
+		initQueryDataDic();
 		initDataGrid();
 		initSettleStatus();
 		$('.dataTable-toolbar').delegate('button.btn-batch-settled','click',showSettledDialog);
