@@ -65,6 +65,9 @@
             	$('.main-dataTable-content input[name=id]:checked').each(function(i,v){
             		$(v).attr('add','add'); 
             		var price = $(v).parents('tr').find('td[field=price]').text();
+            		if(isNaN(price) || price == ''){
+	         			price = 0;
+	         		}
             		total += parseInt(price);
             	});
             	$('.dataTable-toolbar .totalAmt').html(total);

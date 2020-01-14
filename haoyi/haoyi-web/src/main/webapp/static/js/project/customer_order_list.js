@@ -60,7 +60,51 @@
 			emptyMsg:'未查询到内容',
             columns:columns,
             sortName:'orderDate',
-            sortOrder:'desc'
+            sortOrder:'desc',
+            onLoadSuccess:function(data){
+	         	var total = 0;
+	         	$('.main-dataTable-content input[name=id]:checked').each(function(i,v){
+	         		$(v).attr('add','add'); 
+	         		var price = $(v).parents('tr').find('td[field=customerPrice]').text();
+	         		var otherAmt = $(v).parents('tr').find('td[field=otherAmt]').text();
+	         		var settlePrice = $(v).parents('tr').find('td[field=settlePrice]').text();
+	         		if(isNaN(price) || price == ''){
+	         			price = 0;
+	         		}
+	         		if(isNaN(otherAmt) || otherAmt == ''){
+	         			otherAmt = 0;
+	         		}
+	         		if(isNaN(settlePrice) || settlePrice == ''){
+	         			settlePrice = 0;
+	         		}
+	         		total += (parseInt(price)+parseInt(otherAmt)-parseInt(settlePrice));
+	         	});
+	         	$('.dataTable-toolbar .selTotalAmt').html(total);
+	         },onCheckAll:function(rows){
+	         	var total = 0;
+	         	$.each(rows,function(i,v){
+	         		total += (v.customerPrice + v.otherAmt - v.settlePrice);
+	         		$('.main-dataTable-content input[name=id]').eq(i).attr('add','add'); 
+	         	});
+	         	$('.dataTable-toolbar .selTotalAmt').html(total);
+	         },onUncheckAll:function(rows){
+	        	 $('.dataTable-toolbar .selTotalAmt').html('0');
+	        	 $('.main-dataTable-content input[name=id]').removeAttr('add');
+	         },onCheck : function (index, row) {
+	         	if($('.main-dataTable-content input[name=id]').eq(index).attr('add') == 'add'){
+	         		return false;
+	         	}
+	         	var total = parseInt($('.dataTable-toolbar .selTotalAmt').html());
+	         	$('.dataTable-toolbar .selTotalAmt').html(total + (row.customerPrice + row.otherAmt - row.settlePrice));
+	         	$('.main-dataTable-content input[name=id]').eq(index).attr('add','add'); 
+	         },onUncheck : function (index, row) {
+	         	if($('.main-dataTable-content input[name=id]').eq(index).attr('add') != 'add'){
+	         		return false;
+	         	}
+	         	var total = parseInt($('.dataTable-toolbar .selTotalAmt').html());
+	         	$('.dataTable-toolbar .selTotalAmt').html(total - (row.customerPrice + row.otherAmt - row.settlePrice));
+	         	$('.main-dataTable-content input[name=id]').eq(index).removeAttr('add');
+	         }
         });
 	}
 	

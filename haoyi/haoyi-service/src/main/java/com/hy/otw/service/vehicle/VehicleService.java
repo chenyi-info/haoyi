@@ -59,7 +59,7 @@ public class VehicleService {
 
 	public void editVehicle(VehicleVo vehicleVo) throws Exception {
 		VehiclePo vehiclePo = vehicleDao.getVehicleByPlateNumber(vehicleVo.getPlateNumber());
-		if(vehiclePo != null && vehiclePo.getId() != vehicleVo.getId()){
+		if(vehiclePo != null && !vehiclePo.getId().equals(vehicleVo.getId())){
 			throw new Exception("车牌号不能重复");
 		}
 		if(vehiclePo == null){
