@@ -30,6 +30,8 @@
 			</form>
 		</div>
 		<div class='dataTable-toolbar'>
+			<span class='item'><button class='btn btn-batch-lock'>批量锁单</button></span>
+			<span class='item'><button class='btn btn-batch-unlock'>批量解单</button></span>
 			<span class='item'><button class='btn btn-batch-settled'>批量结算</button></span>
 			<span class='item'><button class='btn btn-excel'>导出Excel</button></span>
 			<span class='item'><label>合计总金额:</label><label class='red totalAmt'>0</label><label>元</label></span>
@@ -56,7 +58,7 @@
 		<p class='item'><label for='customerPrice_view'>订单金额:</label><label>{{customerPrice}}</label></p>
 		<p class='item'><label for='settlePrice_view'>实结金额:</label><label>{{#settlePrice}}{{settlePrice}}{{/settlePrice}}{{^settlePrice}}0.00{{/settlePrice}}</label></p>
 		<p class='item'><label for='otherAmt_view'>应结金额:</label><label>{{#otherAmt}}{{otherAmt}}{{/otherAmt}}{{^otherAmt}}0.00{{/otherAmt}}</label></p>
-		<p class='item'><label for='settleStatus_true_view'>结算状态:</label><input type='radio' name='settleStatus' id='settleStatus_true_view' class="valign_m radio"  value='1' /><label for='settleStatus_true_view' class='radio'>是</label><input type='radio' name='settleStatus' id='settleStatus_false_view' class="valign_m radio" checked="checked"   value='0' /><label for='settleStatus_false_view' class='radio'>否</label></p>
+		<p class='item'><label for='settleStatus_true_view'>结算状态:</label><input type='radio' name='settleStatus' id='settleStatus_true_view' class="valign_m radio"  value='1' /><label for='settleStatus_true_view' class='radio'>是</label><input type='radio' name='settleStatus' id='settleStatus_false_view' class="valign_m radio" checked="checked"   value='0' /><label for='settleStatus_false_view' class='radio'>否</label><input type='radio' name='settleStatus' id='settleStatus_false_view' class="valign_m radio" value='2' /><label for='settleStatus_false_view' class='radio'>锁单</label></p>
 		<p class='item'><label for='remarks_view'>备注:</label><input type='text' name='remarks' id='remarks_view' class="easyui-textbox" prompt="请输入备注" value='{{remarks}}' /></p>
 	</form>
 </script>

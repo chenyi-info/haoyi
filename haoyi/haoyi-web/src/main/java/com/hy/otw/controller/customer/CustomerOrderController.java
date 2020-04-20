@@ -68,6 +68,18 @@ public class CustomerOrderController {
 		this.customerOrderService.batchSettles(customerOrderIdList);
 	}
 
+	@RequestMapping(value = "/batchLock", method = RequestMethod.POST)
+	public void batchLock(HttpServletRequest request,HttpServletResponse response, Long[] customerOrderIds) throws Exception {
+		List<Long> customerOrderIdList = Arrays.asList(customerOrderIds);
+		this.customerOrderService.batchLockOrUnLock(customerOrderIdList, 2);
+	}
+	
+	@RequestMapping(value = "/batchUNLock", method = RequestMethod.POST)
+	public void batchUNLock(HttpServletRequest request,HttpServletResponse response, Long[] customerOrderIds) throws Exception {
+		List<Long> customerOrderIdList = Arrays.asList(customerOrderIds);
+		this.customerOrderService.batchLockOrUnLock(customerOrderIdList, 0);
+	}
+	
 	@RequestMapping(value = "/loadExcel", method = RequestMethod.POST)
 	public void loadExcel(HttpServletRequest request,HttpServletResponse response, CustomerOrderQueryVo customerOrderQueryVo) throws IllegalAccessException, InvocationTargetException, NoSuchMethodException {
 		customerOrderQueryVo.setPage(1);
@@ -98,7 +110,7 @@ public class CustomerOrderController {
 				JSONObject obj = JSONObject.parseObject(JSONObject.toJSON(customerOrderVo).toString());
 				obj.put("orderDateStr", sdf.format(customerOrderVo.getOrderDate()));
 				obj.put("createDateStr", sdf.format(customerOrderVo.getCreateDate()));
-				obj.put("settleStatusStr", customerOrderVo.getSettleStatus() == 0 ? "未结算" : "已结算");
+				obj.put("settleStatusStr", customerOrderVo.getSettleStatus() == 0 ? "未结算" : customerOrderVo.getSettleStatus() == 1 ? "已结算" : "锁定");
 				obj.put("settleItems", orderOtherAmtService.getItemsText(orderOtherAmtVoList, customerOrderVo.getOrderId(), 0));
 				obj.put("unsettleItems", orderOtherAmtService.getItemsText(orderOtherAmtVoList, customerOrderVo.getOrderId(), 1));
 				String total = "";

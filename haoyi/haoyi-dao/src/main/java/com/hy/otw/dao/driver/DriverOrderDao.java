@@ -48,8 +48,12 @@ public class DriverOrderDao extends HibernateDao<DriverOrderPo, Long>{
 			hql.append(" and cabinetNumber like '%").append(driverOrderQueryVo.getCabinetNumber()).append("%'");
 		}
 		if(driverOrderQueryVo.getSettleStatus() != null){
-			hql.append(" and settleStatus = ? ");
-			param.add(driverOrderQueryVo.getSettleStatus());
+			if(driverOrderQueryVo.getSettleStatus() == 0 ) {
+				hql.append(" and settleStatus in (0,2) ");
+			}else {
+				hql.append(" and settleStatus = ? ");
+				param.add(driverOrderQueryVo.getSettleStatus());
+			}
 		}
 		if(driverOrderQueryVo.getOrderDateBegin() != null){
 			hql.append(" and orderDate > ?");
@@ -189,11 +193,23 @@ public class DriverOrderDao extends HibernateDao<DriverOrderPo, Long>{
 		Query query = this.createQuery(hql);
 		query.setParameterList("idList", driverOrderIdList);
 		query.executeUpdate();
+		hql = "update OrderOtherAmtPo set is_settle = 0, settle_date = now() where order_id in (select orderId from DriverOrderPo where id in (:idList)) and property_type = 1 and del_status = 0";
+		query = this.createQuery(hql);
+		query.setParameterList("idList", driverOrderIdList);
+		query.executeUpdate();
 	}
 
 	public DriverOrderPo getDriverOrderId(Long id) {
 		String hql = "from DriverOrderPo where delStatus=? and id=?";
 		DriverOrderPo driverOrderPo = this.findUnique(hql, DelStatusEnum.NORMAL.getValue(), id);
 		return driverOrderPo;
+	}
+
+	public void batchLockOrUnLock(List<Long> driverOrderIdList, int status) {
+		String hql = "update DriverOrderPo set settleStatus =:status, update_date = now() where id in (:idList)";
+		Query query = this.createQuery(hql);
+		query.setParameter("status", status);
+		query.setParameterList("idList", driverOrderIdList);
+		query.executeUpdate();
 	}
 }

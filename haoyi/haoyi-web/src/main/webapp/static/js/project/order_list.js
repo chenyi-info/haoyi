@@ -92,9 +92,8 @@
 	        		 }
 	        	 }},
 	        	 /**
-	        	 {field:'otherAmt',title:'杂费金额',width:'5%',align:'center'},
+	        	 {field:'otherAmt',title:'杂费金额',width:'5%',align:'center'},*/
 	        	 {field:'companyName',title:'客户公司名称',width:'5%',align:'center'},
-	        	 */
 	        	 {field:'operatorName',title:'操作人',width:'4%',sortable :true,align:'center'},
 	        	 {field:'orderStatus',title:'订单状态',width:'4%',align:'center', sortable :true,formatter:function(value,row,index){
                  	return value == 0 ? '正常' : '已取消';
@@ -457,7 +456,7 @@
 	}
 	
 	var itemColumns = [[
-	   	             {field:'expenditureDate',title:'支出日期',width:'20%',align:'center',formatter:function(value,row,index){
+	   	             {field:'expenditureDate',title:'支出日期',width:'10%',align:'center',formatter:function(value,row,index){
 		        		 return getYMDHMS(row.expenditureDate);
 		        	 }}, 
 		        	 {field:'orderNO',title:'订单编号',width:'15%',align:'center'},
@@ -469,7 +468,10 @@
 		        	 {field:'propertyType',title:'归属类型',width:'10%',align:'center', formatter:function(value,row,index){
 		        		 return value == 1 ? '司机' : value == 2 ? '客户' : '自己';
 	                 }},
-		        	 {field:'remarks',title:'备注',width:'5%',align:'center'}
+		        	 {field:'remarks',title:'备注',width:'5%',align:'center'},
+		        	 {field:'opt',title:'操作',width:'10%',align:'center', formatter:function(value,row,index){
+		                 	return "<button class='btn btn-edit edit-other-amt' otherId='"+row.id+"' orderNO='"+row.orderNO+"'>修改</button><button class='btn btn-del del-other-amt' otherId='"+row.id+"' orderNO='"+row.orderNO+"'>删除</button>";
+		                 }}
 		            ]];
 	var initDialogDataGrid = function(dataModel){
 		$("#dialogDataGrid").datagrid({
@@ -500,7 +502,7 @@
 	
 	var showOtherAmtItemDialog = function(){
 		var row = $('#dataGrid').datagrid('getSelected');
-		var diaHtml = "<div id='main_dlg' class='main-dialog-view-content'><table id='dialogDataGrid' class='easyui-datagrid'></table></div>";
+		var diaHtml = "<div id='main_oth_dlg' class='main-dialog-view-content'><table id='dialogDataGrid' class='easyui-datagrid'></table></div>";
 		$(diaHtml).dialog({    
 	 	    title: '杂费项('+row.orderNO+')',    
 	 	    width: 850,    
@@ -509,11 +511,16 @@
 	 	    resizable:true,
 	 	    modal: true,
 	 	    onOpen:function(){
-	 	    	$.parser.parse('#main_dlg');
+	 	    	$.parser.parse('#main_oth_dlg');
 	 	    	initDialogDataGrid({'orderId':row.id});
+	 	    	$('#main_oth_dlg').delegate('button.del-other-amt','click',showDeleteOtherAmtDialog);
+	 	    	$('#main_oth_dlg').delegate('button.edit-other-amt','click',showUpdateOtherAmtDialog);
+	 	    	
 	 	    },
 	 	    onClose:function(){
-	 	    	$('#main_dlg').dialog('destroy');
+	 	    	$('#main_oth_dlg').dialog('destroy');
+	 	    	$('#main_oth_dlg').undelegate('button.del-other-amt','click',showDeleteOtherAmtDialog);
+	 	    	$('#main_oth_dlg').undelegate('button.edit-other-amt','click',showUpdateOtherAmtDialog);
 	 	   }
 	     }); 
 	}
@@ -622,6 +629,93 @@
         });        
     }
 	
+	
+	var operateOtherAmt = function(url, dataModel){
+		var maskObj = new mask();
+		dataModel.propertyTypes=dataModel.propertyType;
+		$.ajax({
+			url:url,
+			type:"post",
+			data:dataModel,
+			dataType:'json',
+			beforeSend : function (){
+			    maskObj.showMask();// 显示遮蔽罩
+		    }
+		}).done(function(data){
+			maskObj.hideMask ();// 隐藏遮蔽罩
+			$('#edit_main_ot_dlg').dialog('destroy');
+			$.messager.alert('操作提示','操作成功');
+			$("#dialogDataGrid").datagrid('reload');
+		}).fail(function(data){
+			maskObj.hideMask ();// 隐藏遮蔽罩
+			$.messager.alert('操作提示','操作失败');
+		});
+	}
+	
+	var showDeleteOtherAmtDialog = function(){
+		var otherId = $(this).attr('otherId');
+		var orderNO = $(this).attr('orderNO');
+		$.messager.confirm("删除提示", "是否删除:"+orderNO+"的杂费信息?",function(e){
+		     if(e){
+		    	 operateOtherAmt('/orderOtherAmt/delete', {orderOtherAmtId:otherId});
+		     }
+		 });
+	}
+	
+	var chooseAddViewRadio = function(){
+		var itemName = $('#itemName_view').combobox('getValue');//项目类型
+		var propertyType = $('.main-form-content input[name=propertyType]:checked').val();//归属类型 1-司机 2-客户
+		var isProfit = $('.main-form-content input[name=isProfit]:checked').val();//是否盈利 0-盈利 1-亏损
+		if(isProfit == 0 && itemName != '办单费'){
+			 //是否计入杂费 0-计入 1-不计入
+			 $(".main-form-content input[name=isAdd][value='0']").attr('checked','true');
+		}else{
+			 $(".main-form-content input[name=isAdd][value='1']").attr('checked','true');
+		}
+	}
+	var showUpdateOtherAmtDialog = function(){
+		var row = $('#dialogDataGrid').datagrid('getSelected');
+		row.expenditureDate = getYMDHMS(row.expenditureDate);
+		var html = Mustache.render($('#otherAmt_edit_dialog_content_template').html(),row);
+		var diaHtml = "<div id='edit_main_ot_dlg'>"+html+"</div>";
+		$(diaHtml).dialog({    
+	 	    title: '订单杂费管理('+row.orderNO+')',    
+	 	    width: 400,    
+	 	    height: 500,    
+	 	    closed: false,    
+	 	    modal: true,
+	 	    onOpen:function(){
+	 	    	$.parser.parse('#edit_main_ot_dlg');
+	 	    	initDataDic();
+	 	    	loadOrderGrid();
+	 	    	$('.main-form-content input[name=propertyType][value='+row.propertyType+']').attr("checked",true);
+	 	    	$('.main-form-content input[name=isSettle][value='+row.isSettle+']').attr("checked",true);
+	 	    	$('.main-form-content').delegate('input[name=propertyType]','click',chooseAddViewRadio);
+	 	    	$('#itemName_view').combobox({
+	 	    		onChange:function(n,o){
+	 	    			chooseAddViewRadio();
+	 	    		}
+	 			});
+	 	    },
+	 	    onClose:function(){
+	 	    	$('#edit_main_ot_dlg').dialog('destroy');
+	 	   },
+	 	    buttons:[{
+				text:'修改',
+				handler:function(){
+					if($(".main-form-content").form ("validate")){
+						operateOtherAmt('/orderOtherAmt/edit', $(".main-form-content").serializeObject());
+					}
+				}
+			},{
+				text:'关闭',
+				handler:function(){
+					$('#edit_main_ot_dlg').dialog('destroy');
+				}
+			}]
+	     }); 
+	}
+	
 	var initializeUI = function(){
 		var nowDate = new Date();
 		var toDay = nowDate.getFullYear() + '-'+ (nowDate.getMonth()+1) + '-' + nowDate.getDate();
@@ -642,6 +736,7 @@
 		$('.main-dataTable-content').delegate('button.btn-text','click',showTextDialog);
 		$('.main-dataTable-content').delegate('button.btn-copy','click',showCopyDialog);
 		$('.main-dataTable-content').delegate('.datagrid-view','click',endEditing);
+		
 	}
 	initializeUI();
 	

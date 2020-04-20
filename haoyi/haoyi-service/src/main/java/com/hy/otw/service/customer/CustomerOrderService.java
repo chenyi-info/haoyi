@@ -72,6 +72,9 @@ public class CustomerOrderService {
 		if(customerOrderPo == null){
 			throw new Exception("未找到该条信息");
 		}
+		if(customerOrderPo.getSettleStatus() == 2) {
+			throw new Exception("锁定客户订单不允许修改");
+		}
 		customerOrderPo.setOrderId(orderPo.getId());
 		customerOrderPo.setAddress(orderPo.getAddress());
 		customerOrderPo.setCustomerPrice(orderPo.getCustomerPrice());
@@ -94,10 +97,13 @@ public class CustomerOrderService {
 			throw new Exception("未找到该条信息");
 		}
 		Date date = new Date();
-		UserInfoVo loginUser = (UserInfoVo) SecurityUtils.getSubject().getPrincipal();
+		if(customerOrderPo.getSettleStatus() == 2) {
+			throw new Exception("锁定客户订单不允许修改");
+		}
 		if(customerOrderVo.getSettleStatus() == 1 && customerOrderPo.getSettleDate() == null) {
 			customerOrderPo.setSettleDate(date);
 		}
+		UserInfoVo loginUser = (UserInfoVo) SecurityUtils.getSubject().getPrincipal();
 		customerOrderPo.setRemarks(customerOrderVo.getRemarks());
 		customerOrderPo.setSettleStatus(customerOrderVo.getSettleStatus());
 		customerOrderPo.setUpdateBy(loginUser.getId());
@@ -123,6 +129,14 @@ public class CustomerOrderService {
 
 	public void batchSettles(List<Long> customerOrderIdList) {
 		this.customerOrderDao.batchSettles(customerOrderIdList);
+	}
+
+	public void batchLockOrUnLock(List<Long> customerOrderIdList, int status) {
+		this.customerOrderDao.batchLockOrUnLock(customerOrderIdList, status);
+	}
+
+	public CustomerOrderPo getCustomerOrderByOrderId(Long orderId) {
+		return customerOrderDao.getCustomerOrderByOrderId(orderId);
 	}
 
 }

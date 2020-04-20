@@ -67,6 +67,18 @@ public class DriverOrderController {
 		this.driverOrderService.batchSettles(driverOrderIdList);
 	}
 	
+	@RequestMapping(value = "/batchLock", method = RequestMethod.POST)
+	public void batchLock(HttpServletRequest request,HttpServletResponse response, Long[] driverOrderIds) throws Exception {
+		List<Long> driverOrderIdList = Arrays.asList(driverOrderIds);
+		this.driverOrderService.batchLockOrUnLock(driverOrderIdList, 2);
+	}
+	
+	@RequestMapping(value = "/batchUNLock", method = RequestMethod.POST)
+	public void batchUNLock(HttpServletRequest request,HttpServletResponse response, Long[] driverOrderIds) throws Exception {
+		List<Long> driverOrderIdList = Arrays.asList(driverOrderIds);
+		this.driverOrderService.batchLockOrUnLock(driverOrderIdList, 0);
+	}
+	
 	@RequestMapping(value = "/loadExcel", method = RequestMethod.POST)
 	public void loadExcel(HttpServletRequest request,HttpServletResponse response, DriverOrderQueryVo driverOrderQueryVo) throws IllegalAccessException, InvocationTargetException, NoSuchMethodException {
 		driverOrderQueryVo.setPage(1);
@@ -97,7 +109,7 @@ public class DriverOrderController {
 				JSONObject obj = JSONObject.parseObject(JSONObject.toJSON(driverOrderVo).toString());
 				obj.put("orderDateStr", sdf.format(driverOrderVo.getOrderDate()));
 				obj.put("createDateStr", sdf.format(driverOrderVo.getCreateDate()));
-				obj.put("settleStatusStr", driverOrderVo.getSettleStatus() == 0 ? "未结算" : "已结算");
+				obj.put("settleStatusStr", driverOrderVo.getSettleStatus() == 0 ? "未结算" : driverOrderVo.getSettleStatus() == 1 ? "已结算" : "锁定");
 				obj.put("settleItems", orderOtherAmtService.getItemsText(orderOtherAmtVoList, driverOrderVo.getOrderId(), 0));
 				obj.put("unsettleItems", orderOtherAmtService.getItemsText(orderOtherAmtVoList, driverOrderVo.getOrderId(), 1));
 				String total = "";

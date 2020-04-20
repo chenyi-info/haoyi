@@ -124,8 +124,9 @@ public class OrderOtherAmtDao extends HibernateDao<OrderOtherAmtPo, Long>{
 	}
 
 	public List<OrderOtherAmtPo> findOrderOtherAmtList(List<Long> orderIdlist, Integer propertyType) {
-		String hql = "from OrderOtherAmtPo where orderId in (:orderIdlist) and propertyType =:propertyType";
+		String hql = "from OrderOtherAmtPo where delStatus =:delStatus and orderId in (:orderIdlist) and propertyType =:propertyType";
 		Query query = this.createQuery(hql);
+		query.setParameter("delStatus", DelStatusEnum.NORMAL.getValue());
 		query.setParameterList("orderIdlist", orderIdlist);
 		query.setParameter("propertyType", propertyType);
 		return query.list();

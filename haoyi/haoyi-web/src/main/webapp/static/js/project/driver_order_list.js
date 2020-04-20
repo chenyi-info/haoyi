@@ -1,6 +1,6 @@
 ﻿$(function(){
 	//结算状态：0-未结算；1-已结算
-	var settleStatus = [{'text':'全部','value':' '},{'text':'未结算','value':'0'},{'text':'已结算','value':'1'}];
+	var settleStatus = [{'text':'全部','value':' '},{'text':'未结算','value':'0'},{'text':'已结算','value':'1'},{'text':'锁定','value':'2'}];
 	var columns = [[
 	             {field : 'id',width : '3%',align : 'center',checkbox:'true'},
 	             {field:'orderDate',title:'订单日期',width:'6%',align:'center',sortable :true,formatter:function(value,row,index){
@@ -18,7 +18,7 @@
 	        	 {field:'settlePrice',title:'实结金额',width:'4%',sortable :true,align:'center'},
 	        	 {field:'otherAmt',title:'应结金额',width:'4%',sortable :true,align:'center'},
 	        	 {field:'settleStatus',title:'结算状态',width:'5%',align:'center',sortable :true, formatter:function(value,row,index){
-                 	return value == 1 ? '已结算' : '未结算';
+                 	return  value == 1 ? '已结算' : value == 0 ? '未结算' : '<label style="color:red;">锁定</label>';
                  }},
                  {field:'settleDate',title:'结算日期',width:'5%',align:'center', sortable :true,formatter:function(value,row,index){
                 	 return getYMDHMS(row.settleDate);
@@ -182,6 +182,10 @@
 	 	    buttons:[{
 				text:'修改',
 				handler:function(){
+					if(row.settleStatus == 2){
+						$.messager.alert('操作提示','锁定订单无法操作');
+						return;
+					}
 					if($(".main-form-content").form ("validate")){
 						operateVehicle('/driverOrder/edit', $(".main-form-content").serializeObject());
 					}
@@ -252,6 +256,10 @@
 	
 	var showOtherAmtDialog = function(){
 		var row = $('#dataGrid').datagrid('getSelected');
+		if(row.settleStatus == 2){
+			$.messager.alert('操作提示','锁定订单无法操作');
+			return;
+		}
 		var dataModel = {};
 		dataModel.orderId = row.orderId;
 		dataModel.orderNO = row.orderNO;
@@ -382,6 +390,25 @@
 		var row = $('#dataGrid').datagrid('getChecked');
 		var ids = [];
 		$.each(row,function(i,v){
+			if(v.settleStatus == 0 || v.settleStatus == 2){
+				ids[ids.length] = v.id;
+			}
+			
+		});
+		if(ids.length == 0){
+			$.messager.alert('操作提示','请选择未结算或锁单的信息');
+			return false;
+		}
+		$.messager.confirm("结算提示", "是否批量结算该批信息?",function(e){
+		     if(e){
+		    	 batchSettled('/driverOrder/batchSettles', {driverOrderIds:ids});
+		     }
+		 });
+	}
+	var showLockDialog = function(){
+		var row = $('#dataGrid').datagrid('getChecked');
+		var ids = [];
+		$.each(row,function(i,v){
 			if(v.settleStatus == 0){
 				ids[ids.length] = v.id;
 			}
@@ -391,9 +418,29 @@
 			$.messager.alert('操作提示','请选择未结算的信息');
 			return false;
 		}
-		$.messager.confirm("结算提示", "是否批量结算该批信息?",function(e){
+		$.messager.confirm("结算提示", "是否批量锁定该批信息?",function(e){
 		     if(e){
-		    	 batchSettled('/driverOrder/batchSettles', {driverOrderIds:ids});
+		    	 batchSettled('/driverOrder/batchLock', {driverOrderIds:ids});
+		     }
+		 });
+	}
+	
+	var showUNLockDialog = function(){
+		var row = $('#dataGrid').datagrid('getChecked');
+		var ids = [];
+		$.each(row,function(i,v){
+			if(v.settleStatus == 2){
+				ids[ids.length] = v.id;
+			}
+			
+		});
+		if(ids.length == 0){
+			$.messager.alert('操作提示','请选择锁单的信息');
+			return false;
+		}
+		$.messager.confirm("结算提示", "是否批量解锁该批信息?",function(e){
+		     if(e){
+		    	 batchSettled('/driverOrder/batchUNLock', {driverOrderIds:ids});
 		     }
 		 });
 	}
@@ -410,6 +457,8 @@
 		initQueryDataDic();
 		initDataGrid();
 		initSettleStatus();
+		$('.dataTable-toolbar').delegate('button.btn-batch-lock','click',showLockDialog);
+		$('.dataTable-toolbar').delegate('button.btn-batch-unlock','click',showUNLockDialog);
 		$('.dataTable-toolbar').delegate('button.btn-batch-settled','click',showSettledDialog);
 		$('.dataTable-toolbar').delegate('button.btn-add','click',showAddDialog);
 		$('.dataTable-toolbar').delegate('button.btn-excel','click',downExcel);

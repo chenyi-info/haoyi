@@ -13,8 +13,12 @@ import org.apache.shiro.SecurityUtils;
 import org.springframework.stereotype.Service;
 
 import com.hy.otw.common.enums.DelStatusEnum;
+import com.hy.otw.dao.customer.CustomerOrderDao;
 import com.hy.otw.dao.customer.OrderOtherAmtDao;
+import com.hy.otw.dao.driver.DriverOrderDao;
 import com.hy.otw.hibernate.utils.Pagination;
+import com.hy.otw.po.CustomerOrderPo;
+import com.hy.otw.po.DriverOrderPo;
 import com.hy.otw.po.OrderOtherAmtPo;
 import com.hy.otw.po.OrderPo;
 import com.hy.otw.service.order.OrderService;
@@ -28,7 +32,9 @@ public class OrderOtherAmtService {
 	
 	@Resource private OrderOtherAmtDao orderOtherAmtDao;
 	@Resource private OrderService orderService;
-
+	@Resource private CustomerOrderDao customerOrderDao;
+	@Resource private DriverOrderDao driverOrderDao;
+	
 	public void addOrderOtherAmt(OrderOtherAmtVo orderOtherAmtVo) throws Exception {
 		OrderVo orderVo = this.orderService.getOrderInfoById(orderOtherAmtVo.getOrderId());
 		if(orderVo == null){
@@ -36,8 +42,16 @@ public class OrderOtherAmtService {
 		}
 		UserInfoVo loginUser = (UserInfoVo) SecurityUtils.getSubject().getPrincipal();
 		if(orderOtherAmtVo.getPropertyType() == 1){//归属类型 1-司机 2-客户 3-自己
+			DriverOrderPo driverOrderPo = driverOrderDao.getDriverOrderByOrderId(orderOtherAmtVo.getOrderId());
+			if(driverOrderPo.getSettleStatus() == 2) {
+				throw new Exception("锁定车辆订单不允许添加杂费");
+			}
 			orderOtherAmtVo.setTargetName(orderVo.getPlateNumber());
 		}else if(orderOtherAmtVo.getPropertyType() == 2){
+			CustomerOrderPo customerOrderPo = customerOrderDao.getCustomerOrderByOrderId(orderOtherAmtVo.getOrderId());
+			if(customerOrderPo.getSettleStatus() == 2) {
+				throw new Exception("锁定客户订单不允许添加杂费");
+			}
 			orderOtherAmtVo.setTargetId(orderVo.getCustomerId());
 			orderOtherAmtVo.setTargetName(orderVo.getCompanyName());
 		}else if(orderOtherAmtVo.getPropertyType() == 3){
@@ -79,8 +93,16 @@ public class OrderOtherAmtService {
 		}
 		UserInfoVo loginUser = (UserInfoVo) SecurityUtils.getSubject().getPrincipal();
 		if(orderOtherAmtVo.getPropertyType() == 1){//归属类型 1-司机 2-客户 3-自己
+			DriverOrderPo driverOrderPo = driverOrderDao.getDriverOrderByOrderId(orderOtherAmtVo.getOrderId());
+			if(driverOrderPo.getSettleStatus() == 2) {
+				throw new Exception("锁定车辆订单不允许修改杂费");
+			}
 			orderOtherAmtVo.setTargetName(orderVo.getPlateNumber());
 		}else if(orderOtherAmtVo.getPropertyType() == 2){
+			CustomerOrderPo customerOrderPo = customerOrderDao.getCustomerOrderByOrderId(orderOtherAmtVo.getOrderId());
+			if(customerOrderPo.getSettleStatus() == 2) {
+				throw new Exception("锁定客户订单不允许添加杂费");
+			}
 			orderOtherAmtVo.setTargetId(orderVo.getCustomerId());
 			orderOtherAmtVo.setTargetName(orderVo.getCompanyName());
 		}else if(orderOtherAmtVo.getPropertyType() == 3){

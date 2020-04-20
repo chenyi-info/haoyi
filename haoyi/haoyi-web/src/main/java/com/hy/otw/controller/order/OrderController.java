@@ -263,8 +263,8 @@ public class OrderController {
 		OutputStream outputStream = null;
         try {
 			String fileName = "订单管理";
-			String[] fields = {"rowNum", "orderDateStr", "orderNO",	 "cabinetModel", "addStr",  "address", "weighed", "demand", "cabinetNumber", "sealNumber",  "plateNumber", "ownerName", "contactNumber", "driverPrice", "operatorName", "orderStatusStr", "remarks", "createDateStr" };
-			String[] titles = { "序号","订单日期", "订单编号", "柜型", "提还柜", "订单简址", "重量(T)",  "订单要求", "柜号", "封号", "车牌号", "司机姓名", "联系电话",  "划价金额",  "操作人", "订单状态", "备注", "创建时间" };
+			String[] fields = {"rowNum", "orderDateStr", "orderNO",	 "cabinetModel", "addStr",  "address", "weighed", "demand", "cabinetNumber", "sealNumber",  "plateNumber", "ownerName", "contactNumber", "driverPrice", "companyName", "operatorName", "orderStatusStr", "remarks", "createDateStr" };
+			String[] titles = { "序号","订单日期", "订单编号", "柜型", "提还柜", "订单简址", "重量(T)",  "订单要求", "柜号", "封号", "车牌号", "司机姓名", "联系电话",  "划价金额",  "客户公司名称", "操作人", "订单状态", "备注", "创建时间" };
 			File file = ExcelUtil.export(null, fileName, fields, titles, orderList, null);
 			DownloadUtils.downloadExcel(request, response, file, fileName);
         } catch (Exception e) {

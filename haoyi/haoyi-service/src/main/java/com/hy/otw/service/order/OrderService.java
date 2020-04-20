@@ -17,6 +17,8 @@ import org.springframework.web.portlet.bind.annotation.ResourceMapping;
 import com.hy.otw.common.enums.DelStatusEnum;
 import com.hy.otw.dao.customer.OrderDao;
 import com.hy.otw.hibernate.utils.Pagination;
+import com.hy.otw.po.CustomerOrderPo;
+import com.hy.otw.po.DriverOrderPo;
 import com.hy.otw.po.OrderPo;
 import com.hy.otw.service.customer.CustomerOrderService;
 import com.hy.otw.service.customer.OrderOtherAmtService;
@@ -90,6 +92,17 @@ public class OrderService {
 		OrderPo orderPo = orderDao.getOrder(orderVo.getId());
 		if(orderPo == null){
 			throw new Exception("未找到该条信息");
+		}
+		DriverOrderPo driverOrderPo = this.driverOrderService.getDriverOrderByOrderId(orderPo.getId());
+		if(driverOrderPo != null && driverOrderPo.getSettleStatus() == 2) {
+			throw new Exception("锁定车辆订单不允许修改");
+		}
+		CustomerOrderPo customerOrderPo = customerOrderService.getCustomerOrderByOrderId(orderPo.getId());
+		if(customerOrderPo == null){
+			throw new Exception("未找到该条信息");
+		}
+		if(customerOrderPo.getSettleStatus() == 2) {
+			throw new Exception("锁定客户订单不允许修改");
 		}
 		UserInfoVo loginUser = (UserInfoVo) SecurityUtils.getSubject().getPrincipal();
 		Date date = new Date();

@@ -101,6 +101,9 @@ public class DriverOrderService {
 		if(driverOrderPo == null){
 			throw new Exception("未找到该条信息");
 		}
+		if(driverOrderPo.getSettleStatus() == 2) {
+			throw new Exception("锁定车辆订单不允许修改");
+		}
 		UserInfoVo loginUser = (UserInfoVo) SecurityUtils.getSubject().getPrincipal();
 		Date date = new Date();
 		if(driverOrderVo.getSettleStatus() == 1 && driverOrderPo.getSettleDate() == null) {
@@ -131,6 +134,14 @@ public class DriverOrderService {
 	
 	public void batchSettles(List<Long> driverOrderIdList) {
 		this.driverOrderDao.batchSettles(driverOrderIdList);
+	}
+
+	public void batchLockOrUnLock(List<Long> driverOrderIdList, int status) {
+		this.driverOrderDao.batchLockOrUnLock(driverOrderIdList, status);
+	}
+
+	public DriverOrderPo getDriverOrderByOrderId(Long orderId) {
+		return driverOrderDao.getDriverOrderByOrderId(orderId);
 	}
 
 }

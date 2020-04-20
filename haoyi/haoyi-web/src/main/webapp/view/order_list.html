@@ -28,7 +28,7 @@
 				<span class='item'><label>车牌号:</label><input type='text' name='plateNumber' class="easyui-textbox" prompt="车牌号" /></span>
 				<span class='item'><label>司机姓名:</label><input type='text' name='ownerName' class="easyui-textbox" prompt="司机姓名" /></span>
 				<span class='item'><label>订单日期:</label><input type='text' id='orderDateBegin_query' name='orderDateBegin' class="easyui-datebox" prompt="订单起始日期" />&nbsp;-&nbsp;<input type='text' id='orderDateEnd_query' name='orderDateEnd' class="easyui-datebox" prompt="订单结束日期" /></span>
-				<span class='item'><label>操作人:</label><input type='text' name='operatorName' class="easyui-textbox" prompt="操作人姓名" /></span>
+				<span class='item'><label>公司名称:</label><input type='text' name='companyName' class="easyui-textbox" prompt="公司名称" /></span>
 				<span class='item'><label>订单状态:</label><input type='text' id='orderStatus_query' name='orderStatus' class="easyui-combobox" prompt="订单状态" /></span>
 				<span class='item'><button type='button' class='btn btn-search'>查询</button></span>
 			</form>
@@ -92,7 +92,23 @@
 		<p class='item'><label for='remarks_view'>备注:</label><input type='text' name='remarks' id='remarks_view' class="easyui-textbox" prompt="请输入备注" value='{{remarks}}' /></p>
 	</form>
 </script>
-
+<script type='text/html' id='otherAmt_edit_dialog_content_template'>
+	<form class='main-form-content dialog-content'>
+		<input name='id' type='hidden' value='{{id}}' />
+		<input name='orderId' id='orderId_form' type='hidden' value='{{orderId}}' />
+		<p class='item'><label for='orderNO_view'>订单编号:</label><input type='text' name='orderNO' id='orderNO_view' class="easyui-combogrid" prompt="请输入订单编号" value='{{orderNO}}' /></p>
+		<p class='item'><label for='cabinetModel_view'>柜型:</label><input type='text' name='cabinetModel' id='cabinetModel_view' class="easyui-textbox" editable='false' prompt="请完善订单柜型" value='{{cabinetModel}}' /></p>
+		<p class='item'><label for='cabinetNumber_view'>订单柜号:</label><input type='text' name='cabinetNumber' id='cabinetNumber_view' class="easyui-textbox" editable='false' prompt="请完善订单柜号" value='{{cabinetNumber}}' /></p>
+		<p class='item'><label for='sealNumber_view'>订单封号:</label><input type='text' name='sealNumber' id='sealNumber_view' class="easyui-textbox" editable='false' prompt="请完善订单封号" value='{{sealNumber}}' /></p>
+		<p class='item'><label for='address_view'>订单简址:</label><input type='text' name='address' id='address_view' class="easyui-textbox"  prompt="请完善订单简址" value='{{address}}' /></p>
+		<p class='item'><label for='expenditureDate_view'>支出日期:</label><input type='text' name='expenditureDate' id='expenditureDate_view' class="easyui-datetimebox" prompt="请输入支出日期" value='{{expenditureDate}}' /></p>	
+		<p class='item'><label for='itemName_view'>支付项目类型:</label><input type='text' name='itemName' id='itemName_view' class="easyui-combobox" dataDic = 'other_amt_item' prompt="请输入支付项目类型" value='{{itemName}}' /></p>
+		<p class='item'><label for='price_view'>金额:</label><input type='text' name='price' id='price_view' class="easyui-numberbox" precision="2" prompt="请输入支出金额" value='{{price}}' /></p>
+		<p class='item'><label for='propertyType_true_view'>杂费归属:</label><input type='radio' name='propertyType' id='propertyType_true_view' class="valign_m radio"  value='1' /><label for='propertyType_true_view' class='radio'>归司机</label><input type='radio' name='propertyType' id='propertyType_false_view' class="valign_m radio" checked="checked"   value='2' /><label for='propertyType_false_view' class='radio'>归客户</label><input type='radio' name='propertyType' id='propertyType_myself_view' class="valign_m radio"  value='3' /><label for='propertyType_myself_view' class='radio'>自己</label></p>
+		<p class='item'><label for='isSettle_true_view'>结算状态:</label><input type='radio' name='isSettle' id='isSettle_true_view' class="valign_m radio" value='0' /><label for='isSettle_true_view' class='radio'>已结算</label><input type='radio' name='isSettle' id='isSettle_false_view' class="valign_m radio" checked="checked" value='1' /><label for='isSettle_false_view' class='radio'>未结算</label></p>
+		<p class='item'><label for='remarks_view'>备注:</label><input type='text' name='remarks' id='remarks_view' class="easyui-textbox" prompt="请输入备注" value='{{remarks}}' /></p>
+	</form>
+</script>
 <script type='text/html' id='print_dialog_content_template'>
 <div id='print_area'>
 	<div class='top_area' >

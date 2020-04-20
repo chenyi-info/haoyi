@@ -42,6 +42,10 @@ public class OrderDao extends HibernateDao<OrderPo, Long>{
 		if(StringUtils.isNotBlank(orderQueryVo.getOperatorName())){
 			hql.append(" and operatorName like '%").append(orderQueryVo.getOperatorName()).append("%'");
 		}
+		if(StringUtils.isNotBlank(orderQueryVo.getCompanyName())){
+			hql.append(" and companyName like '%").append(orderQueryVo.getCompanyName()).append("%'");
+		}
+		
 		
 		if(StringUtils.isNotBlank(orderQueryVo.getOrderNO())){
 			hql.append(" and orderNO like '%").append(orderQueryVo.getOrderNO()).append("%'");

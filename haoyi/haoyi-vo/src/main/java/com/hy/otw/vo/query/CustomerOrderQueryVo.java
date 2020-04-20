@@ -24,7 +24,7 @@ public class CustomerOrderQueryVo {
 	
 	private String cabinetNumber;	//柜号
 	
-	private Integer settleStatus;	//结算状态：0-未结算；1-已结算
+	private Integer settleStatus;	//结算状态：0-未结算；1-已结算; 2-锁定
 	
 	private Date orderDateBegin;	//订单日期
 	

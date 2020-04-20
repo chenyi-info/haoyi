@@ -45,8 +45,12 @@ public class CustomerOrderDao extends HibernateDao<CustomerOrderPo, Long>{
 		}
 		
 		if(customerOrderQueryVo.getSettleStatus() != null){
-			hql.append(" and settleStatus = ? ");
-			param.add(customerOrderQueryVo.getSettleStatus());
+			if(customerOrderQueryVo.getSettleStatus() == 0 ) {
+				hql.append(" and settleStatus in (0,2) ");
+			}else {
+				hql.append(" and settleStatus = ? ");
+				param.add(customerOrderQueryVo.getSettleStatus());
+			}
 		}
 		
 		if(customerOrderQueryVo.getOrderDateBegin() != null){
@@ -154,6 +158,19 @@ public class CustomerOrderDao extends HibernateDao<CustomerOrderPo, Long>{
 	public void batchSettles(List<Long> customerOrderIdList) {
 		String hql = "update CustomerOrderPo set settleStatus = 1, settle_date = now() where id in (:idList)";
 		Query query = this.createQuery(hql);
+		query.setParameterList("idList", customerOrderIdList);
+		query.executeUpdate();
+		
+		hql = "update OrderOtherAmtPo set is_settle = 0, settle_date = now() where order_id in (select orderId from CustomerOrderPo where id in (:idList)) and property_type = 2 and del_status = 0";
+		query = this.createQuery(hql);
+		query.setParameterList("idList", customerOrderIdList);
+		query.executeUpdate();
+	}
+
+	public void batchLockOrUnLock(List<Long> customerOrderIdList, int status) {
+		String hql = "update CustomerOrderPo set settleStatus =:status, update_date = now() where id in (:idList)";
+		Query query = this.createQuery(hql);
+		query.setParameter("status", status);
 		query.setParameterList("idList", customerOrderIdList);
 		query.executeUpdate();
 	}

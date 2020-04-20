@@ -34,6 +34,8 @@ public class OrderQueryVo {
 	
 	private String operatorName;	//操作人姓名
 	
+	private String companyName;		//公司名称
+	
 	private Integer orderStatus;	//订单状态：0-正常；1-已取消
 	
 	private Date orderDateBegin;	//结算日期
