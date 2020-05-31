@@ -6,12 +6,16 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<link rel="stylesheet" type="text/css" href="/static/js/jquery-easyui-1.6.11/themes/ui-cupertino/easyui.css"></link>
 	<link rel="stylesheet" type="text/css" href='/static/css/main.css'></link>
+	<link rel="stylesheet" type="text/css" href='/static/css/main.css'></link>
 	<link rel="stylesheet" type="text/css" href='/static/css/table_print.css'></link>
 	<link rel="stylesheet" media="print" type="text/css" href='/static/css/table_print.css'></link>
+	
 	<script type='text/javascript' src='/static/js/jquery-1.7.1.min.js' ></script>
 	<script src="/static/js/jquery-easyui-1.6.11/jquery.easyui.min.js"></script>
-	<script src="/static/js/jquery-easyui-1.6.11/jquery.easyui.extend.min.js"></script>
+	<script src="/static/js/jquery-easyui-1.6.11/locale/easyui-lang-zh_CN.js"></script>
+	<script src="/static/js/webuploader-0.1.5/webuploader.min.js"></script>
 	<script type='text/javascript' src='/static/js/common.js' ></script>
+	<script type='text/javascript' src='/static/js/mustache.min.js' ></script>
 	<script type='text/javascript' src='/static/js/mustache.min.js' ></script>
 	<script type='text/javascript' src='/static/js/project/common.js' ></script>
 	<script type='text/javascript' src='/static/js/project/order_list.js' ></script>
@@ -171,63 +175,7 @@
 		</table>
 	</div>
 	<div class='bottom_area' >
-		<table class='print_talbe'>
-			<tr class='company'>
-				<td class='tit company' colspan='5'>公司名:<input type='text' class='companyName' name='companyName' value='广州市宣顺物流有限公司' /></td>
-			</tr>
-			<tr>
-				<td class='tit'>提单号</td>
-				<td class='red'>{{orderNO}}</td>
-				<td class='tit'>柜型</td>
-				<td colspan='2' class='red'>{{cabinetModel}}</td>
-			</tr>
-			<tr>
-				<td class='tit'>订单要求</td>
-				<td colspan='4' class='important'>{{demand}}</td>
-			</tr>
-			<tr>
-				<td class='tit'>装货时间</td>
-				<td class='red'>{{orderDate}}</td>
-				<td class='tit'>提还地点</td>
-				<td>{{cabinetRecipientAddr}}</td>
-				<td>{{cabinetReturnAddr}}</td>
-			</tr>
-			<tr>
-				<td class='tit'>装货送货地址及联系电话</td>
-				<td colspan='4'>{{detailAddress}}</td>
-			</tr>
-			<tr>
-				<td class='tit'>柜号</td>
-				<td>{{cabinetNumber}}</td>
-				<td class='tit'>封号</td>
-				<td colspan='2'>{{sealNumber}}</td>
-			</tr>
-			<tr>
-				<td class='tit'>司机电话</td>
-				<td>{{contactNumber}}</td>
-				<td class='tit'>车牌</td>
-				<td colspan='2'>{{plateNumber}}</td>
-			</tr>
-			<tr>
-				<td class='tit'>司机姓名</td>
-				<td>{{ownerName}}</td>
-				<td class='tit'>时间间隔</td>
-				<td><input type='text' name='kssjje' /></td>
-				<td><input type='text' name='jssjje' /></td>
-			</tr>
-			<tr>
-				<td class='red' colspan='5'>注意事项1：拿到单务必核对订单信息是否与收到信息不符，如有错误请及时联系，否则后果自负</td>
-			</tr>
-			<tr>
-				<td class='red' colspan='5'>注意事项2：提柜注意验柜，切勿提烂柜，如有湿柜、油污柜等一定要事先联系</td>
-			</tr>
-			<tr>
-				<td class='red' colspan='5'>注意事项3：提到柜务必及时发柜号资料以及对应照片，到工厂有任何异常情况请先与公司联系，切勿现场发生争执</td>
-			</tr>
-			<tr>
-				<td class='tit' colspan='5'>柜号资料发到微信（<input type='text' class='num' name='wechat' value='15088053590' />）或QQ（<input type='text' class='num' name='qq' value='2811392794' />），联系电话（<input type='text' class='num tel' name='tel' value='小肖15088053590' style='font-weight: bold;' />）</td>
-			</tr>
-		</table>
+		 {{#filePath}}<img src='{{filePath}}'  />{{/filePath}}
 	</div>
 </div>
 </script>

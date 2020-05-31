@@ -62,7 +62,7 @@ public class OSSClientUtil {
 	 * @throws IOException
 	 */
 	public static String putImage(InputStream content,String suffix) throws RuntimeException {
-		String desName = "";
+		String desName = picBucket+"/";
 		try {
 			ObjectMetadata meta = new ObjectMetadata();
 			// 必须设置ContentLength
@@ -70,7 +70,7 @@ public class OSSClientUtil {
 			meta.setContentType("image/jpeg");
 			// 上传Object.
 		
-			desName = UUIDUtil.getUUID()+suffix;
+			desName += UUIDUtil.getUUID()+suffix;
 			
 			ossClient.putObject(picBucket, desName, content, meta);
 		} catch (Exception e) {

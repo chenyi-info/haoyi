@@ -143,4 +143,9 @@ public class OrderService {
 		return orderVo;
 	}
 
+	public void updateFile(Long orderId, String filePath) {
+		this.orderDao.updateFile(orderId,filePath);
+		
+	}
+
 }

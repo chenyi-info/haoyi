@@ -5,7 +5,17 @@
 	             {field:'orderDate',title:'订单日期',width:'100px',align:'center',sortable :true,formatter:function(value,row,index){
 	        		 return getYMDHMS(row.orderDate);
 	        	 }}, 
-	        	 {field:'orderNO',title:'订单编号',width:'12%',sortable :true,align:'center'},
+	        	 {field:'orderNO',title:'订单编号',width:'12%',sortable :true,align:'center',formatter:function(value,row,index){
+	        		 var img = '';
+	        		 if(row.filePath != null  && row.filePath != ''){
+	        			 img = '<img src="'+row.filePath+'" style="float:left;width:30px;height:30px;" name="orderImg"/>'
+	        		 }else{
+	        			 img = '<img src="" style="float:left;width:30px;height:30px;display:none;" name="orderImg"/>'
+	        		 }
+	        		
+	        		 var btn = '<div style="float:right;width:120px;height:60px;" title="'+value+'" class="easyui-tooltip">'+value+' <br/><a class="uploadOrderFile" name="filePicker" data-id="'+row.id+'">上传条码</a></div>';
+                 	return  img+btn;
+                 }},
 	        	 {field:'cabinetModel',title:'柜型',width:'5%',sortable :true,align:'center'},
 	        	 {field:'cabinetRecipientAddr',title:'提还柜',width:'45px',align:'center',sortable :true,formatter:function(value,row,index){
 	        		 var addr = '';
@@ -16,10 +26,16 @@
 	        			 addr += row.cabinetReturnAddr;
 	        		 }
                  	return  addr;
-                 }},
+                 },styler: function(value, row, index){
+                	 	if (row.cabinetReturnAddr !=  row.cabinetRecipientAddr){  
+                	        return 'background-color:yellow;';
+                	    }
+                	}},
                  {field:'address',title:'订单简址',width:'6%',sortable :true,align:'center'},
                  {field:'weighed',title:'重量(T)',width:'40px',sortable :true,align:'center'},
-                 {field:'demand',title:'订单要求',width:'5%',sortable :true,align:'center'},
+                 {field:'demand',title:'订单要求',width:'5%',sortable :true,align:'center', formatter:function(value,row,index){
+                 	return "<div style='height:60px;' title='"+value+"'  class='easyui-tooltip'>"+value+"</div>";
+                 }},
 	        	 {field:'cabinetNumber',title:'柜号',width:'11%',align:'center',sortable :true,editor:{
 	        		 type:'textbox',
 	        		 options:{
@@ -120,7 +136,7 @@
                  {field:'updateDate',title:'修改日期',width:'5%',align:'center', sortable :true,formatter:function(value,row,index){
                 	 return getYMDHMS(row.updateDate);
                  }},
-	        	 {field:'opt',title:'操作',width:'200px',align:'center', formatter:function(value,row,index){
+	        	 {field:'opt',title:'操作',width:'320px',align:'center', formatter:function(value,row,index){
                  	return "<button class='btn btn-add-oa'>添加杂费</button><button class='btn btn-sel-oa'>查看杂费</button><button class='btn btn-edit'>修改</button><button class='btn btn-del'>删除</button><button class='btn btn-print'>派车单</button><button class='btn btn-text'>文本</button><button class='btn btn-copy'>复制</button>";
                  }}
 	            ]];
@@ -163,7 +179,7 @@
 			pageNumber: 1,
 			pageSize: 50,
 			pageList: [50, 100, 150],
-			autoRowHeight: true,
+			autoRowHeight: false,
 			fit: true,
 			fitColumns: true, //设置是否滚动条
 			nowrap: false,
@@ -222,6 +238,16 @@
         				disabled: true   //是否可编辑
         			});
         		}
+			},onLoadSuccess: function(){
+				                    $(".easyui-tooltip").tooltip({
+					                        onShow: function () {
+					                            $(this).tooltip('tip').css({
+					                                borderColor: '#000',
+													width:'300px'
+					                            });
+					                        }
+					                    });
+				fileUpload();
 			}
         });
 	}
@@ -483,7 +509,8 @@
 			pageNumber: 1,
 			pageSize: 50,
 			pageList: [50, 100, 150],
-			autoRowHeight: true,
+			autoRowHeight: false,
+			fixRowHeight:'40',
 			fit: true,
 			fitColumns: true, //设置是否滚动条
 			nowrap: false,
@@ -716,6 +743,165 @@
 	     }); 
 	}
 	
+	var fileUpload = function() {
+		var maxLength = 1;
+		var setHeader = function(object, data, headers) {
+			if (document.all) {
+				headers['Access-Control-Allow-Origin'] = '*';
+				headers['Access-Control-Request-Headers'] = 'content-type';
+				headers['Access-Control-Request-Method'] = 'POST';
+			}
+		}
+		WebUploader.create({
+			auto: true,
+			duplicate:true, // 图片可以重复
+			compress:null,
+			swf: '../static/js/webuploader-0.1.5/Uploader.swf',
+			server: '/upload/uploadImg.do',
+			threads:1,
+			pick: {
+				id: 'a[name=filePicker]',
+				multiple: false		//是否可以选择多张图片
+			},
+			accept: {
+				title: 'Images',
+				extensions: 'jpg,jpeg,bmp,png',
+				mimeTypes: 'image/jpg,image/jpeg,image/bmp,image/png'			//弹窗会加快
+			},
+			fileSingleSizeLimit:10242880,
+			onUploadBeforeSend: setHeader,
+			onFilesQueued:function(files){
+			  if(files.length > maxLength){
+				$.messager.alert({
+					title: '图片上传提示',
+					msg: '<div class="content">最多同时上传'+maxLength+'张图</div>',
+					ok: '<i class="i-ok"></i> 确定',
+					icon: 'warning'
+				});
+				this.reset();
+			  }
+			},
+			onUploadError: function(file, reason) {
+				if (reason == "http") {
+					$.messager.alert({
+						title: '图片上传提示',
+						msg: '<div class="content">网络异常!</div>',
+						ok: '<i class="i-ok"></i> 确定',
+						icon: 'warning'
+					});
+				} else {
+					$.messager.alert({
+						title: '图片上传提示',
+						msg: '<div class="content">不支持的图片,换张图片试试!</div>',
+						ok: '<i class="i-ok"></i> 确定',
+						icon: 'warning'
+					});
+				}
+				this.removeFile(file);
+			},
+			onUploadProgress: function(file, percentage) {},
+			onUploadSuccess: function(file, response) {
+				updateOrderFile('#rt_' + file.source.ruid,response.path);
+				var ossImage = response.path;
+				$('.friend-head').css({'background-image':'url('+ossImage+')','background-repeat':'no-repeat','background-size':'100% 100%','-moz-background-size':'100% 100%'});
+				$('input[name=showImg]').val(ossImage);
+				this.removeFile(file);
+			},
+			onError: function(file, response) {
+				switch (file) {
+					case "Q_EXCEED_NUM_LIMIT":
+						$.messager.alert({
+							title: '图片上传提示',
+							msg: '<div class="content">最多同时上30张图片</div>',
+							ok: '<i class="i-ok"></i> 确定',
+							icon: 'warning'
+						});
+						break;
+					case "F_DUPLICATE":
+						$.messager.alert({
+							title: '图片上传提示',
+							msg: '<div class="content">文件重复!</div>',
+							ok: '<i class="i-ok"></i> 确定',
+							icon: 'warning'
+						});
+						break;
+					case "F_EXCEED_SIZE":
+						$.messager.alert({
+							title: '图片上传提示',
+							msg: '<div class="content">图片大小不超10M!</div>',
+							ok: '<i class="i-ok"></i> 确定',
+							icon: 'warning'
+						});
+
+						break;
+					case "Q_TYPE_DENIED":
+						$.messager.alert({
+							title: '图片上传提示',
+							msg: '<div class="content">请上传jpg,jpeg,bmp,png格式图片!</div>',
+							ok: '<i class="i-ok"></i> 确定',
+							icon: 'warning'
+						});
+						break;
+					default:
+						$.messager.alert({
+							title: '图片上传提示',
+							msg: '<div class="content">上传失败!</div>',
+							ok: '<i class="i-ok"></i> 确定',
+							icon: 'warning'
+						});
+						break;
+				}
+			}
+
+		});
+		$('input.webuploader-element-invisible').hide();//
+		$('a.uploadOrderFile div.webuploader-pick').addClass('btn');
+	};
+	
+	var updateOrderFile = function(uploaderId,ossImage){
+		var orderId = $(uploaderId).parents('a.webuploader-container').attr('data-id');
+		var url = '/order/updateFile.do';
+		var dataModel = {};
+		dataModel.orderId = orderId;
+		dataModel.filePath = ossImage;
+		$.ajax({
+			url:url,
+			type:"post",
+			data:dataModel,
+			dataType:'json'
+		}).done(function(data){
+			$("#dataGrid").datagrid('reload');
+			//$(uploaderId).parents('td').find('img').attr('src',ossImage);
+			//$(uploaderId).parents('td').find('img').css('display','');
+			$.messager.alert('操作提示','上传成功');
+		}).fail(function(data){
+			$.messager.alert('操作提示','上传失败');
+		});
+	}
+	
+	  var x = 50;
+	  var y = 90;
+	var showOrderImg = function(e){
+	    var tooltip = "<div id='tooltip'><img src='"+ $(this)[0].src +"' alt='预览图'/><\/div>";
+	    //创建 div 元素
+	    $("body").append(tooltip);
+	    //把它追加到文档中             
+	    $("#tooltip")
+	      .css({
+	        "top": (e.pageY+y) + "px",
+	        "left": (e.pageX+x) + "px"
+	      }).show("fast"); //设置x坐标和y坐标，并且显示
+	} 
+	var removeOrderImg = function(){
+		$("#tooltip").remove(); //移除 
+	}
+	var showInOrderImg = function(e){
+		$("#tooltip")
+	      .css({
+	        "top": (e.pageY+y) + "px",
+	        "left": (e.pageX+x) + "px"
+	      });
+	}
 	var initializeUI = function(){
 		var nowDate = new Date();
 		var toDay = nowDate.getFullYear() + '-'+ (nowDate.getMonth()+1) + '-' + nowDate.getDate();
@@ -736,8 +922,9 @@
 		$('.main-dataTable-content').delegate('button.btn-text','click',showTextDialog);
 		$('.main-dataTable-content').delegate('button.btn-copy','click',showCopyDialog);
 		$('.main-dataTable-content').delegate('.datagrid-view','click',endEditing);
-		
+		//$('.main-dataTable-content').delegate('img[name=orderImg]','mouseover',showOrderImg);
+		//$('.main-dataTable-content').delegate('img[name=orderImg]','mouseout',removeOrderImg);
+		//$('.main-dataTable-content').delegate('img[name=orderImg]','mousemove',showInOrderImg);
 	}
 	initializeUI();
-	
 })

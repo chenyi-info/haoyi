@@ -1,6 +1,8 @@
 ﻿#main_print_dlg{background-color: #ffffff;}
 #print_area{height:100%;}
-.top_area{height:50%;width:100%;}
+.top_area{width:100%;}
+.bottom_area{text-align:center;}
+.bottom_area img{margin-top:10px;max-height:210px;}
 .print_talbe,.print_talbe tr th, .print_talbe tr td { border:1px solid #000000;min-width: 125px;padding: 3px 0;}
 .print_talbe{text-align: center; border-collapse: collapse;margin: 0 auto;}
 .print_talbe .tit{font-weight: bold;}
@@ -10,10 +12,11 @@
 .print_talbe input.companyName{width:220px;font-weight: bold;margin-left: 5px;}
 .print_talbe .red{color: red;}
 @media print {
-   .bottom_area{margin-top:10mm;}
+   .bottom_area{margin-top:5mm;}
    .print_talbe td.company{height:15mm;}
    .print_talbe tr th, .print_talbe tr td{height:11mm;}
    .print_talbe .red{color: red;}
+   .bottom_area img{min-height:120mm;min-width:160mm;}
    nav, aside {   
       display: none;   
    }   

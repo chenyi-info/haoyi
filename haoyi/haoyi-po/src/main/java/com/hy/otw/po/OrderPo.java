@@ -103,6 +103,9 @@ public class OrderPo extends BasePo{
 	@Column(name = "remarks")
 	private String remarks;			//备注
 	
+	@Column(name = "file_path")
+	private String filePath;		//订单图片
+	
 	@Override
 	public String toString() {
 		return ToStringBuilder.reflectionToString(this);

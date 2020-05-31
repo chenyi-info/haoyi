@@ -91,6 +91,18 @@ public class OrderController {
 		return msg;
 	}
 	
+	@RequestMapping(value = "/updateFile", method = RequestMethod.POST)
+	public ResponseMsgVo updateFile(HttpServletRequest request,HttpServletResponse response, Long orderId, String filePath){
+		ResponseMsgVo msg = new ResponseMsgVo();
+		try{
+			this.orderService.updateFile(orderId, filePath);
+		}catch(Exception e){
+			msg.setStatus(500);
+			msg.setMsg(e.getMessage());
+		}
+		return msg;
+	}
+	
 	@RequestMapping(value = "/uploadWord", method = RequestMethod.POST)
 	public OrderVo uploadWord(HttpServletRequest request,HttpServletResponse response, @RequestParam("file") MultipartFile file) {
 		OrderVo orderVo = new OrderVo();

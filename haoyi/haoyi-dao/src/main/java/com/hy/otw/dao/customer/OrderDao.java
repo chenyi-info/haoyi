@@ -119,4 +119,9 @@ public class OrderDao extends HibernateDao<OrderPo, Long>{
 		Long total = (Long) query.uniqueResult();
 		return total > 0l;
 	}
+
+	public void updateFile(Long orderId, String filePath) {
+		String sql = "update order_info as oi set oi.file_path = ?  where  oi.del_status = ? and oi.id = ?";
+		this.updateSql(sql, filePath,  DelStatusEnum.NORMAL.getValue(), orderId);
+	}
 }
